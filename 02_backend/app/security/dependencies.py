@@ -3,7 +3,7 @@ Defence Security Dependencies - Current User, Granular RBAC, and Edge Anti-DDoS
 """
 
 import time
-from typing import List, Callable, Dict
+from typing import List, Callable, Dict, Optional
 from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
 import jwt
@@ -15,7 +15,7 @@ from app.config import settings
 
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl=f"{settings.API_V1_STR}/auth/login",
-    auto_error=True
+    auto_error=False
 )
 
 
@@ -67,13 +67,30 @@ def verify_rate_limit(request: Request) -> None:
 
 
 def get_current_user(
-    token: str = Depends(oauth2_scheme),
+    token: Optional[str] = Depends(oauth2_scheme),
     db: Session = Depends(get_db)
 ) -> User:
     """
     Extracts and cryptographically validates the JWT bearer token.
     Returns the authenticated User ORM record.
+    If DEV_DISABLE_AUTH is True, immediately returns a mock commander identity.
     """
+    if settings.DEV_DISABLE_AUTH:
+        return User(
+            id="00000000-0000-0000-0000-000000000001",
+            username="dev_commander",
+            role="CORPS_COMMANDER",
+            is_active=True,
+            unit_id="HQ_LEH"
+        )
+
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate defence operational credentials",
@@ -112,6 +129,7 @@ def require_role(allowed_roles: List[str]) -> Callable[[User], User]:
     """
     Granular RBAC Dependency Factory.
     Enforces operational role compartmentalization.
+    If DEV_DISABLE_AUTH is True, bypasses role checks.
     """
     # Normalize aliases: allow COMMANDER to match CORPS_COMMANDER and vice-versa
     normalized_allowed = set(r.upper() for r in allowed_roles)
@@ -121,6 +139,9 @@ def require_role(allowed_roles: List[str]) -> Callable[[User], User]:
         normalized_allowed.add("COMMANDER")
 
     def role_checker(current_user: User = Depends(get_current_user)) -> User:
+        if settings.DEV_DISABLE_AUTH:
+            return current_user
+
         user_role = current_user.role.upper()
         # Handle alias match
         is_match = (user_role in normalized_allowed) or (

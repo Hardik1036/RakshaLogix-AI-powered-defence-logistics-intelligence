@@ -25,6 +25,10 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"  # Dual-mode support: "RS256" or "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 120
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
+    DEV_DISABLE_AUTH: bool = Field(
+        default=False,
+        description="Development flag to bypass JWT and RBAC checks during frontend prototyping"
+    )
 
     # Optional Asymmetric RS256 PEM keys for zero-trust token signing
     RSA_PRIVATE_KEY_PATH: Optional[str] = None

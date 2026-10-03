@@ -21,7 +21,30 @@ def test_security_headers_present(client):
     assert headers.get("x-content-type-options") == "nosniff"
     assert headers.get("x-frame-options") == "DENY"
     assert "max-age=31536000" in headers.get("strict-transport-security", "")
-    assert "default-src 'none'" in headers.get("content-security-policy", "")
+    assert "default-src 'self'" in headers.get("content-security-policy", "")
+
+
+def test_swagger_docs_csp_allows_cdn(client):
+    """Verifies that Swagger docs endpoint allows jsdelivr CDN scripts and styles."""
+    response = client.get("/docs")
+    assert response.status_code == 200
+    csp = response.headers.get("content-security-policy", "")
+    assert "https://cdn.jsdelivr.net" in csp
+    assert "https://fastapi.tiangolo.com" in csp
+
+
+def test_dev_disable_auth_bypass(client, monkeypatch):
+    """Verifies that when DEV_DISABLE_AUTH=True, endpoints can be accessed without credentials."""
+    from app.config import settings
+    monkeypatch.setattr(settings, "DEV_DISABLE_AUTH", True)
+
+    # Calling protected endpoint without any Authorization header
+    response = client.get("/api/v1/inventory")
+    assert response.status_code == 200
+
+    # Calling commander-restricted endpoint without credentials
+    res_convoys = client.get("/api/v1/convoys")
+    assert res_convoys.status_code == 200
 
 
 def test_unauthenticated_request_blocked(client):
