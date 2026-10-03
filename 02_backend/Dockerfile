@@ -30,10 +30,11 @@ FROM python:3.11-slim-bookworm AS runner
 RUN groupadd -g 10001 appgroup && \
     useradd -u 10001 -g appgroup -s /bin/bash -m appuser
 
-# Install only minimal runtime shared libraries (libpq for postgresql, libgeos for shapely)
+# Install only minimal runtime shared libraries (libpq for postgresql, libgeos for shapely, libgomp1 for xgboost)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq5 \
     libgeos-c1v5 \
+    libgomp1 \
     curl \
     && rm -rf /var/lib/apt/lists/*
 

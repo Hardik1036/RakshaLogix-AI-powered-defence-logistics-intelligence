@@ -54,7 +54,7 @@ class Settings(BaseSettings):
     TACTICAL_BURST_CAPACITY: int = 30
 
     # ML Artifacts Path
-    ARTIFACTS_DIR: str = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "artifacts")
+    ARTIFACTS_DIR: str = os.path.join(os.path.dirname(os.path.abspath(__file__)), "artifacts")
 
     # Defence Operational Invariants & Thresholds
     HYBRID_STOCKOUT_RISK_THRESHOLD: float = 0.20

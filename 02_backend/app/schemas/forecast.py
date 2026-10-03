@@ -27,14 +27,18 @@ class ForecastResponse(BaseModel):
     unit_id: str
     item_type: str
     horizon: str
+    forecast_horizon: Optional[str] = None
     current_stock: float
     predicted_demand: float
     lower_bound: float
     upper_bound: float
     stockout_risk: float
     days_of_supply: float
-    critical_alert_triggered: bool
-    model_version: str
+    critical_alert_triggered: bool = False
+    is_critical: Optional[bool] = False
+    anomaly_flag: Optional[bool] = False
+    top_factors: Optional[List[str]] = Field(default_factory=list)
+    model_version: str = "xgb_quantile_v2.1"
     decision_card: ExplainableDecisionCard
 
     model_config = ConfigDict(from_attributes=True)

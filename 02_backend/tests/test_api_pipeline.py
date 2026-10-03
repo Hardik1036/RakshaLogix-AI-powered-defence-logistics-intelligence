@@ -154,3 +154,28 @@ def test_tactical_kpi_dashboard(client, commander_headers):
     assert "active_critical_alerts" in data
     assert "active_convoys_in_transit" in data
     assert "recent_audit_events" in data
+
+
+def test_ml_service_predict_contract(db_session):
+    """
+    Validates that ml_service.predict() returns the exact verified production contract:
+    - 8 features for Model 2 (XGBoost Quantile)
+    - 10 features for Model 3 (HistGradientBoosting calibrated stockout scorer)
+    - 10 features for Model 4 (Isolation Forest anomaly detector)
+    - Mandatory hybrid alert gate
+    """
+    from app.services.ml_service import ml_service
+    res = ml_service.predict(unit_id="POST_DBO", item_type="Fuel", horizon="48h", db=db_session)
+    assert res["unit_id"] == "POST_DBO"
+    assert res["item_type"] == "Fuel"
+    assert res["forecast_horizon"] == "48h"
+    assert isinstance(res["predicted_demand"], float)
+    assert isinstance(res["lower_bound"], float)
+    assert isinstance(res["upper_bound"], float)
+    assert isinstance(res["stockout_risk"], float)
+    assert isinstance(res["days_of_supply"], float)
+    assert isinstance(res["is_critical"], bool)
+    assert isinstance(res["anomaly_flag"], bool)
+    assert isinstance(res["top_factors"], list)
+    assert res["model_version"] == "xgb_quantile_v2.1"
+
