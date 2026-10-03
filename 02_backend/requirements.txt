@@ -1,0 +1,35 @@
+# RakshaLogix Defence Backend - Zero Licensing Cost Production Dependencies
+# All components licensed under MIT, Apache-2.0, or BSD
+
+# Web Framework & API Server
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+pydantic>=2.8.0
+pydantic-settings>=2.4.0
+
+# Database & Spatial Engine (PostgreSQL 16 + PostGIS)
+sqlalchemy>=2.0.32
+psycopg2-binary>=2.9.9
+geoalchemy2>=0.15.2
+shapely>=2.0.6
+alembic>=1.13.2
+
+# Cryptography, Authentication & Defence OPSEC
+argon2-cffi>=23.1.0
+pyjwt>=2.9.0
+cryptography>=43.0.0
+slowapi>=0.1.9
+
+# Algorithmic Graph Routing & Multi-Factor Detour Engine
+networkx>=3.3
+
+# Machine Learning, Ingress, & Quantile Invariants
+scikit-learn>=1.5.1
+joblib>=1.4.2
+numpy>=2.0.0
+scipy>=1.13.0
+
+# Testing & Quality Assurance
+pytest>=8.3.0
+httpx>=0.27.0
+pytest-asyncio>=0.23.0

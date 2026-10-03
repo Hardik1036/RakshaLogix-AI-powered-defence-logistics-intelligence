@@ -1,0 +1,62 @@
+version: "3.9"
+
+services:
+  # ============================================================================
+  # Production Spatial Database (Zero Cost, Open Source MIT/Apache-2.0)
+  # PostgreSQL 16 + PostGIS 3.4 Alpine
+  # ============================================================================
+  db:
+    image: postgis/postgis:16-3.4-alpine
+    container_name: rakshalogix_postgis
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-raksha_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-DefSec_2026_Postgis!}
+      POSTGRES_DB: ${POSTGRES_DB:-rakshalogix_db}
+    volumes:
+      - postgis_data:/var/lib/postgresql/data
+    networks:
+      - raksha_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-raksha_admin} -d ${POSTGRES_DB:-rakshalogix_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ============================================================================
+  # RakshaLogix FastAPI Orchestration Backend (Non-Root User: appuser)
+  # ============================================================================
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rakshalogix_backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ENVIRONMENT: production
+      POSTGRES_SERVER: db
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: ${POSTGRES_USER:-raksha_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-DefSec_2026_Postgis!}
+      POSTGRES_DB: ${POSTGRES_DB:-rakshalogix_db}
+      SECRET_KEY: ${SECRET_KEY:-DEFENCE_DEF_KEY_SECRET_SECURE_9876543210_HMAC_SHA256_RAKSHALOGIX_OPSEC}
+      ALGORITHM: ${ALGORITHM:-HS256}
+      ACCESS_TOKEN_EXPIRE_MINUTES: 120
+      RATE_LIMIT_PER_MINUTE: 120
+    ports:
+      - "8000:8000"
+    networks:
+      - raksha_net
+
+volumes:
+  postgis_data:
+    name: rakshalogix_postgis_data
+
+networks:
+  raksha_net:
+    name: rakshalogix_network
+    driver: bridge
