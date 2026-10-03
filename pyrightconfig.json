@@ -1,0 +1,18 @@
+{
+  "include": [
+    "02_backend"
+  ],
+  "extraPaths": [
+    "02_backend",
+    "E:\\anaconda\\Lib\\site-packages"
+  ],
+  "executionEnvironments": [
+    {
+      "root": "02_backend",
+      "extraPaths": [
+        "02_backend",
+        "E:\\anaconda\\Lib\\site-packages"
+      ]
+    }
+  ]
+}

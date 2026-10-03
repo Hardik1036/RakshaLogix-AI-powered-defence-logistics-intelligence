@@ -1,7 +1,9 @@
 # RakshaLogix — AI-Powered Forward Defence Logistics & Sustainment Intelligence
-**Ministry of Defence | Problem Statement ID: 26251**
+
+### Ministry of Defence | Problem Statement ID: 26251
 
 ## Module Layout
+
 - [`02_backend/`](file:///e:/RakshaLogix/02_backend): Central FastAPI Orchestration & Defence-Grade Security Backbone ($0 Free Stack)
   - **Framework**: FastAPI (Async/Sync) with Pydantic v2
   - **Database**: PostgreSQL 16 + PostGIS (`postgis/postgis:16-3.4-alpine`)

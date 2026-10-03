@@ -1,0 +1,11 @@
+{
+  "python.defaultInterpreterPath": "E:\\anaconda\\python.exe",
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/02_backend",
+    "E:\\anaconda\\Lib\\site-packages"
+  ],
+  "python.autoComplete.extraPaths": [
+    "${workspaceFolder}/02_backend",
+    "E:\\anaconda\\Lib\\site-packages"
+  ]
+}
