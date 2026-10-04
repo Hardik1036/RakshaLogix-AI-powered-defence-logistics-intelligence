@@ -12,14 +12,23 @@ class LoginRequest(BaseModel):
     password: str = Field(..., min_length=6, description="Cryptographic password")
 
 
+class UserAuthProfile(BaseModel):
+    id: str
+    username: str
+    role: str
+    unit_id: Optional[str] = None
+
+    model_config = ConfigDict(from_attributes=True)
+
+
 class TokenResponse(BaseModel):
     access_token: str
-    refresh_token: str
-    token_type: str = "Bearer"
-    role: str
-    username: str
-    unit_id: Optional[str] = None
-    expires_in_minutes: int
+    token_type: str = "bearer"
+    user: UserAuthProfile
+    refresh_token: Optional[str] = None
+
+
+LoginResponse = TokenResponse
 
 
 class RefreshTokenRequest(BaseModel):
@@ -39,6 +48,6 @@ class UserRead(BaseModel):
     role: str
     unit_id: Optional[str] = None
     is_active: bool
-    created_at: datetime
+    created_at: Optional[datetime] = None
 
     model_config = ConfigDict(from_attributes=True)

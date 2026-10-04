@@ -3,6 +3,7 @@ Defence Security Dependencies - Current User, Granular RBAC, and Edge Anti-DDoS
 """
 
 import time
+from datetime import datetime, timezone
 from typing import List, Callable, Dict, Optional
 from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
@@ -81,7 +82,8 @@ def get_current_user(
             username="dev_commander",
             role="CORPS_COMMANDER",
             is_active=True,
-            unit_id="HQ_LEH"
+            unit_id="HQ_LEH",
+            created_at=datetime.now(timezone.utc),
         )
 
     if not token:

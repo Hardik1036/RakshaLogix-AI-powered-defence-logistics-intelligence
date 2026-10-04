@@ -69,31 +69,64 @@ def db_session():
     connection.close()
 
 
+# Pre-cache hashed passwords to avoid expensive Argon2 re-computation per test fixture
+_CACHED_HASHES = {
+    "test_commander": hash_password("CommanderPass123!"),
+    "test_logistics": hash_password("LogisticsPass123!"),
+    "test_edge": hash_password("EdgePass123!"),
+    "commander_alpha": hash_password("Commander@DefSec2026!"),
+    "logistics_bravo": hash_password("Logistics@DefSec2026!"),
+    "edge_charlie": hash_password("EdgeReadOnly@DefSec2026!"),
+}
+
+
 def _seed_test_data(session):
     """Seeds consistent baseline dataset for tests."""
     if session.query(User).count() == 0:
         commander = User(
             username="test_commander",
-            hashed_password=hash_password("CommanderPass123!"),
+            hashed_password=_CACHED_HASHES["test_commander"],
             role="CORPS_COMMANDER",
             unit_id="HQ_LEH",
             is_active=True,
         )
         officer = User(
             username="test_logistics",
-            hashed_password=hash_password("LogisticsPass123!"),
+            hashed_password=_CACHED_HASHES["test_logistics"],
             role="LOGISTICS_OFFICER",
             unit_id="DEPOT_KARU",
             is_active=True,
         )
         edge_user = User(
             username="test_edge",
-            hashed_password=hash_password("EdgePass123!"),
+            hashed_password=_CACHED_HASHES["test_edge"],
             role="EDGE_READ_ONLY",
             unit_id="POST_DBO",
             is_active=True,
         )
-        session.add_all([commander, officer, edge_user])
+        # Pre-seeded demo credentials for frontend handshake tests
+        demo_commander = User(
+            username="commander_alpha",
+            hashed_password=_CACHED_HASHES["commander_alpha"],
+            role="CORPS_COMMANDER",
+            unit_id="HQ_LEH",
+            is_active=True,
+        )
+        demo_logistics = User(
+            username="logistics_bravo",
+            hashed_password=_CACHED_HASHES["logistics_bravo"],
+            role="LOGISTICS_OFFICER",
+            unit_id="DEPOT_KARU",
+            is_active=True,
+        )
+        demo_edge = User(
+            username="edge_charlie",
+            hashed_password=_CACHED_HASHES["edge_charlie"],
+            role="EDGE_READ_ONLY",
+            unit_id="POST_DBO",
+            is_active=True,
+        )
+        session.add_all([commander, officer, edge_user, demo_commander, demo_logistics, demo_edge])
 
         # Units
         leh = Unit(id="HQ_LEH", name="Leh Corps HQ", type="HQ", altitude_m=3500.0, latitude=34.15, longitude=77.57)

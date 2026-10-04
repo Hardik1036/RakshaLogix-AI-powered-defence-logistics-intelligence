@@ -151,3 +151,82 @@ def test_wgs84_coordinate_boundary_tampering_prevented(client, logistics_headers
     }
     patch_res = client.patch(f"/api/v1/convoys/{convoy_id}/status", json=tamper_payload, headers=logistics_headers)
     assert patch_res.status_code == 422  # Pydantic validation rejected geometric tampering
+
+
+def test_auth_login_contract_for_demo_officers(client):
+    """
+    Verifies the exact POST /api/v1/auth/login request/response contract
+    and out-of-the-box demo credentials.
+    """
+    credentials_to_test = [
+        ("commander_alpha", "Commander@DefSec2026!", "CORPS_COMMANDER", "HQ_LEH"),
+        ("logistics_bravo", "Logistics@DefSec2026!", "LOGISTICS_OFFICER", "DEPOT_KARU"),
+        ("edge_charlie", "EdgeReadOnly@DefSec2026!", "EDGE_READ_ONLY", "POST_DBO"),
+    ]
+
+    for username, password, expected_role, expected_unit in credentials_to_test:
+        payload = {
+            "username": username,
+            "password": password
+        }
+        response = client.post("/api/v1/auth/login", json=payload)
+        assert response.status_code == 200, f"Login failed for {username}: {response.text}"
+        data = response.json()
+
+        # Contract assertion: exact keys
+        assert set(data.keys()) == {"access_token", "token_type", "user"}
+        assert data["token_type"] == "bearer"
+        assert isinstance(data["access_token"], str) and len(data["access_token"]) > 20
+
+        user = data["user"]
+        assert user["username"] == username
+        assert user["role"] == expected_role
+        assert user["unit_id"] == expected_unit
+        assert isinstance(user["id"], str) and len(user["id"]) > 0
+
+
+def test_cors_preflight_and_allowed_origins(client):
+    """Verifies CORSMiddleware responds with required headers for local dev origins."""
+    dev_origins = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ]
+
+    for origin in dev_origins:
+        # Preflight OPTIONS request
+        response = client.options(
+            "/api/v1/auth/login",
+            headers={
+                "Origin": origin,
+                "Access-Control-Request-Method": "POST",
+                "Access-Control-Request-Headers": "Content-Type",
+            }
+        )
+        assert response.status_code == 200
+        assert response.headers.get("access-control-allow-origin") == origin
+        assert response.headers.get("access-control-allow-credentials") == "true"
+
+
+def test_openapi_json_csp(client):
+    """Verifies that /openapi.json and docs endpoints allow CDN resources in CSP."""
+    for path in ["/docs", "/openapi.json"]:
+        response = client.get(path)
+        assert response.status_code == 200
+        csp = response.headers.get("content-security-policy", "")
+        assert "https://cdn.jsdelivr.net" in csp
+        assert "https://fastapi.tiangolo.com" in csp
+
+
+def test_dev_disable_auth_profile_route(client, monkeypatch):
+    """Verifies GET /api/v1/auth/me returns valid profile when DEV_DISABLE_AUTH=True."""
+    from app.config import settings
+    monkeypatch.setattr(settings, "DEV_DISABLE_AUTH", True)
+
+    response = client.get("/api/v1/auth/me")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["username"] == "dev_commander"
+    assert data["role"] == "CORPS_COMMANDER"
+

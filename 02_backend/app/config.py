@@ -38,10 +38,10 @@ class Settings(BaseSettings):
 
     # CORS & Network Boundaries
     ALLOWED_ORIGINS: List[str] = [
-        "http://localhost:3000",
         "http://localhost:5173",
-        "http://127.0.0.1:3000",
         "http://127.0.0.1:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
     ]
 
     # Database Infrastructure (PostgreSQL 16 + PostGIS)
@@ -78,9 +78,12 @@ class Settings(BaseSettings):
     ]
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=(
+            ".env",
+            os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env"),
+        ),
         env_file_encoding="utf-8",
-        case_sensitive=True,
+        case_sensitive=False,
         extra="ignore"
     )
 

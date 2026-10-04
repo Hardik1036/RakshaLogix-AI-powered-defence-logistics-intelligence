@@ -169,25 +169,35 @@ docker compose up --build -d
 ```
 The stack spins up PostgreSQL 16 + PostGIS and the hardened FastAPI backend on port 8000.
 
-### Option B: Local Development Run
+### Option B: Local Development Run (Frontend Integration)
 ```bash
 cd 02_backend
 python -m pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
+> [!TIP]
+> **Multi-Device / Local Network Binding (`0.0.0.0`):**
+> Binding to `0.0.0.0` allows frontend dev servers (React + Vite on `http://localhost:5173` or another laptop/device on the same Wi-Fi) to reach the FastAPI backend:
+> 1. Find your IPv4 address: `ipconfig` (Windows) or `ifconfig` / `ip a` (Linux/macOS) — e.g., `192.168.1.35`.
+> 2. Access points:
+>    - **Backend API:** `http://localhost:8000` (same machine) or `http://<YOUR_IP>:8000` (LAN)
+>    - **Interactive Swagger Docs:** `http://localhost:8000/docs` or `http://<YOUR_IP>:8000/docs`
+>    - **OpenAPI JSON:** `http://localhost:8000/openapi.json`
+> 3. Fast UI Prototyping: Set `DEV_DISABLE_AUTH=true` in `.env` to bypass token authentication during rapid component development.
+
 ### Pre-Seeded Personnel Credentials
-| Callsign | Password | Operational Role |
-| :--- | :--- | :--- |
-| `commander_alpha` | `Commander@DefSec2026!` | `CORPS_COMMANDER` |
-| `logistics_bravo` | `Logistics@DefSec2026!` | `LOGISTICS_OFFICER` |
-| `edge_charlie` | `EdgeReadOnly@DefSec2026!` | `EDGE_READ_ONLY` |
+| Callsign | Password | Operational Role | Unit / Station |
+| :--- | :--- | :--- | :--- |
+| `commander_alpha` | `Commander@DefSec2026!` | `CORPS_COMMANDER` | `HQ_LEH` |
+| `logistics_bravo` | `Logistics@DefSec2026!` | `LOGISTICS_OFFICER` | `DEPOT_KARU` |
+| `edge_charlie` | `EdgeReadOnly@DefSec2026!` | `EDGE_READ_ONLY` | `POST_DBO` |
 
 ---
 
 ## 7. Verification & Automated Testing
 
-Run the full pytest suite (13 passing tests):
+Run the full pytest suite (20 passing tests):
 ```bash
 python -m pytest 02_backend/tests -v
 ```

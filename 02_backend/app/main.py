@@ -35,7 +35,10 @@ class DefenceSecurityHeadersMiddleware(BaseHTTPMiddleware):
         response.headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()"
 
         # Allow Swagger CDN on docs routes, enforce strict CSP on API routes
-        if request.url.path in ["/docs", "/redoc", "/openapi.json"]:
+        if (
+            request.url.path in ["/docs", "/redoc", "/openapi.json"]
+            or request.url.path.startswith(("/docs/", "/redoc/"))
+        ):
             response.headers["Content-Security-Policy"] = (
                 "default-src 'self'; "
                 "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
@@ -53,33 +56,23 @@ def seed_tactical_data():
     """Seeds initial forward defense units, inventory, routes, and officer accounts if empty."""
     db = SessionLocal()
     try:
-        # 1. Seed Defense Personnel Accounts
-        if db.query(User).count() == 0:
-            officers = [
-                User(
-                    username="commander_alpha",
-                    hashed_password=hash_password("Commander@DefSec2026!"),
-                    role="CORPS_COMMANDER",
-                    unit_id="HQ_LEH",
+        # 1. Seed Defense Personnel Accounts (Pre-seeded demo credentials guaranteed)
+        demo_officers = [
+            ("commander_alpha", "Commander@DefSec2026!", "CORPS_COMMANDER", "HQ_LEH"),
+            ("logistics_bravo", "Logistics@DefSec2026!", "LOGISTICS_OFFICER", "DEPOT_KARU"),
+            ("edge_charlie", "EdgeReadOnly@DefSec2026!", "EDGE_READ_ONLY", "POST_DBO"),
+        ]
+        for uname, pwd, role, unit in demo_officers:
+            officer = db.query(User).filter(User.username == uname).first()
+            if not officer:
+                db.add(User(
+                    username=uname,
+                    hashed_password=hash_password(pwd),
+                    role=role,
+                    unit_id=unit,
                     is_active=True,
-                ),
-                User(
-                    username="logistics_bravo",
-                    hashed_password=hash_password("Logistics@DefSec2026!"),
-                    role="LOGISTICS_OFFICER",
-                    unit_id="DEPOT_KARU",
-                    is_active=True,
-                ),
-                User(
-                    username="edge_charlie",
-                    hashed_password=hash_password("EdgeReadOnly@DefSec2026!"),
-                    role="EDGE_READ_ONLY",
-                    unit_id="POST_DBO",
-                    is_active=True,
-                ),
-            ]
-            db.add_all(officers)
-            db.commit()
+                ))
+        db.commit()
 
         # 2. Seed Military Formations and Forward Posts
         if db.query(Unit).count() == 0:
@@ -198,14 +191,15 @@ app = FastAPI(
 # Apply Security Headers Middleware
 app.add_middleware(DefenceSecurityHeadersMiddleware)
 
-# Apply Strict CORS Policy
+# Apply Strict CORS Policy for Local Development & Multi-Device Tactical Network
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.ALLOWED_ORIGINS,
+    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1|192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+)(:\d+)?$",
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
+    allow_methods=["*"],
     allow_headers=["*"],
-    expose_headers=["Content-Type", "Authorization"],
+    expose_headers=["*"],
 )
 
 # Mount Clean REST Routers under /api/v1

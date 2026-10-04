@@ -1,5 +1,5 @@
 # Pydantic Schemas Package
-from app.schemas.auth import LoginRequest, TokenResponse, RefreshTokenRequest, UserRead, UserCreate
+from app.schemas.auth import LoginRequest, TokenResponse, LoginResponse, UserAuthProfile, RefreshTokenRequest, UserRead, UserCreate
 from app.schemas.inventory import InventoryRead, InventoryUpdate, InventoryCreate, UnitRead
 from app.schemas.forecast import ForecastRequest, ForecastResponse, ExplainableDecisionCard
 from app.schemas.routes import RouteOptimiseRequest, RouteOptimiseResponse, RouteRead
@@ -10,6 +10,8 @@ from app.schemas.alerts import AlertRead, AlertAcknowledgeRequest
 __all__ = [
     "LoginRequest",
     "TokenResponse",
+    "LoginResponse",
+    "UserAuthProfile",
     "RefreshTokenRequest",
     "UserRead",
     "UserCreate",
