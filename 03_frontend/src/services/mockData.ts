@@ -11,6 +11,12 @@ import type {
   AuditLogEntry
 } from '../types/api';
 
+export function calculateDaysRemaining(currentStock: number, dailyBurn: number, reserveBuffer = 0): number {
+  const usableStock = Math.max(0, currentStock - reserveBuffer);
+  if (dailyBurn <= 0) return 99.9;
+  return Number((usableStock / dailyBurn).toFixed(1));
+}
+
 export const mockDashboardData: DashboardResponse = {
   kpis: {
     units_critical_reserve: 4,

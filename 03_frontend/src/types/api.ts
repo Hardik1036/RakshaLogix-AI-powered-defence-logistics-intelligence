@@ -46,6 +46,8 @@ export interface InventoryRead {
   maximum_stock: number;
   updated_at?: string | null;
   days_of_supply?: number | null;
+  days_remaining?: number | null;
+  daily_burn_rate?: number | null;
   stock_status?: string | null;
 }
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { api } from '../api';
+import { api, calculateDaysRemaining } from '../api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import type { InventoryItem, InventoryDetail } from '../types/api';
@@ -213,7 +213,7 @@ export const Inventory: React.FC = () => {
                 FORWARD STOCK MATRIX
               </span>
               <span className="text-[10px] text-slate-500 font-mono hidden md:inline">
-                • Formula: Days Remaining = Current Stock / Daily Burn (Usable Stock excl. 15% Tactical Reserve)
+                • Formula: Days of Supply = Current Stock / Daily Burn Rate (Excl. 15% Reserve: (Stock - 15% Buffer) / Burn)
               </span>
             </div>
             <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400 tabular-nums">
@@ -229,7 +229,7 @@ export const Inventory: React.FC = () => {
                   <th className="py-3 px-3">Commodity</th>
                   <th className="py-3 px-3 text-right">Current Stock</th>
                   <th className="py-3 px-3 text-right">Daily Burn</th>
-                  <th className="py-3 px-3 text-center">Days Remaining</th>
+                  <th className="py-3 px-3 text-center" title="Days of Supply = Current Stock / Daily Burn Rate (1 decimal precision)">Days of Supply (Stock / Burn)</th>
                   <th className="py-3 px-3 text-right">Action</th>
                 </tr>
               </thead>
@@ -282,24 +282,29 @@ export const Inventory: React.FC = () => {
                         {item.daily_burn.toLocaleString()} {item.unit}/d
                       </td>
 
-                      {/* 5. Days Remaining (Clean Red <3d, Amber 3-7d, Green >7d pill badges) */}
+                      {/* 5. Days Remaining (Clean Red <3d, Amber 3-7d, Green >7d pill badges with math tooltip) */}
                       <td className="py-2.5 px-3 text-center">
-                        {item.runway_days < 3 ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30 tabular-nums">
-                            <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
-                            {item.runway_days.toFixed(1)}d (&lt;3d)
-                          </span>
-                        ) : item.runway_days <= 7 ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 tabular-nums">
-                            <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                            {item.runway_days.toFixed(1)}d (3–7d)
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 tabular-nums">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                            {item.runway_days.toFixed(1)}d (&gt;7d)
-                          </span>
-                        )}
+                        <div
+                          title={`${item.on_hand.toLocaleString()} ${item.unit} / ${item.daily_burn.toLocaleString()} ${item.unit}/d = ${item.runway_days.toFixed(1)} days of supply (Excl. 15% reserve: ${calculateDaysRemaining(item.on_hand, item.daily_burn, item.on_hand * 0.15)}d)`}
+                          className="inline-block cursor-help"
+                        >
+                          {item.runway_days < 3 ? (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30 tabular-nums">
+                              <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                              {item.runway_days.toFixed(1)}d (&lt;3d)
+                            </span>
+                          ) : item.runway_days <= 7 ? (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 tabular-nums">
+                              <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                              {item.runway_days.toFixed(1)}d (3–7d)
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 tabular-nums">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                              {item.runway_days.toFixed(1)}d (&gt;7d)
+                            </span>
+                          )}
+                        </div>
                       </td>
 
                       {/* 6. Action: [View Details] */}

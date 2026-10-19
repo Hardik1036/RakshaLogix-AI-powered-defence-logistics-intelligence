@@ -55,11 +55,13 @@ export function formatProbability(value: number): string {
 
 /**
  * Standardized Days of Supply / Remaining Runway Arithmetic (P1 Requirement)
- * days_remaining = Number((current_stock / daily_burn).toFixed(1))
+ * Usable Stock = Math.max(0, currentStock - reserveBuffer)
+ * days_remaining = Number((usableStock / dailyBurn).toFixed(1))
  */
-export function calculateDaysRemaining(stock: number, burn: number): number {
-  if (!burn || burn <= 0) return 99.0;
-  return Number((stock / burn).toFixed(1));
+export function calculateDaysRemaining(currentStock: number, dailyBurn: number, reserveBuffer = 0): number {
+  const usableStock = Math.max(0, currentStock - reserveBuffer);
+  if (!dailyBurn || dailyBurn <= 0) return 99.9;
+  return Number((usableStock / dailyBurn).toFixed(1));
 }
 
 /**
@@ -136,13 +138,21 @@ async function fetchWithAuth<T>(
 // -------------------------------------------------------------
 
 function mapInventoryReadToItem(inv: InventoryRead): InventoryItem {
-  const dailyBurn = Math.max(1, Math.round(inv.minimum_stock > 0 ? inv.minimum_stock / 3 : 235));
-  const days = inv.days_of_supply != null
-    ? Number(inv.days_of_supply.toFixed(1))
-    : calculateDaysRemaining(inv.quantity, dailyBurn);
-  const status = days < 3 || inv.stock_status === 'LOW' ? 'CRITICAL' : days < 7 ? 'WARNING' : 'NOMINAL';
+  const dailyBurn = inv.daily_burn_rate && inv.daily_burn_rate > 0
+    ? inv.daily_burn_rate
+    : (inv.days_of_supply && inv.days_of_supply > 0
+        ? Number((inv.quantity / inv.days_of_supply).toFixed(1))
+        : Math.max(1, Math.round(inv.minimum_stock > 0 ? inv.minimum_stock / 3 : 60)));
+
+  const days = inv.days_remaining != null
+    ? Number(inv.days_remaining.toFixed(1))
+    : (inv.days_of_supply != null
+        ? Number(inv.days_of_supply.toFixed(1))
+        : calculateDaysRemaining(inv.quantity, dailyBurn));
+
+  const status = days <= 2.0 || inv.stock_status === 'CRITICAL' ? 'CRITICAL' : days <= 5.0 || inv.stock_status === 'LOW' ? 'WARNING' : 'NOMINAL';
   const isHighAltitude = inv.unit_id.includes('DBO') || inv.unit_id.includes('SIACHEN') || inv.unit_id.includes('DISKIT');
-  const criticalFuel = inv.item_type.toLowerCase().includes('fuel') && days < 2.0;
+  const criticalFuel = inv.item_type.toLowerCase().includes('fuel') && days <= 2.0;
 
   return {
     unit_id: inv.unit_id,

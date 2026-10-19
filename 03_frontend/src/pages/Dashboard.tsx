@@ -650,7 +650,7 @@ export const Dashboard: React.FC = () => {
                 <thead>
                   <tr className="border-b border-slate-200 dark:border-slate-800 text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                     <th className="py-2 px-1">UNIT / SKU</th>
-                    <th className="py-2 px-2 text-right">RUNWAY</th>
+                    <th className="py-2 px-2 text-right" title="Days of Supply = Current Stock / Daily Burn Rate (1 decimal precision)">DAYS OF SUPPLY (STOCK / BURN)</th>
                     <th className="py-2 px-2 text-right">ON-HAND</th>
                     <th className="py-2 px-1 text-right">STATUS</th>
                   </tr>
@@ -666,7 +666,10 @@ export const Dashboard: React.FC = () => {
                           {item.sku}
                         </div>
                       </td>
-                      <td className="py-2.5 px-2 text-right font-bold tabular-nums text-rose-600 dark:text-rose-400">
+                      <td
+                        className="py-2.5 px-2 text-right font-bold tabular-nums text-rose-600 dark:text-rose-400 cursor-help"
+                        title={`${item.on_hand} on-hand / ${item.daily_burn} burn = ${item.runway_days.toFixed(1)} days of supply (Stock / Burn)`}
+                      >
                         {item.runway_days.toFixed(1)}d
                       </td>
                       <td className="py-2.5 px-2 text-right text-slate-700 dark:text-slate-300 tabular-nums">

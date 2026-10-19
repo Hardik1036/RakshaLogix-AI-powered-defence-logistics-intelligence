@@ -389,7 +389,7 @@ class MLService:
         factors = pred["top_factors"]
         model_version = pred["model_version"]
 
-        # Enforce Hybrid Critical Alert Filter with Deduplication
+        # Enforce Hybrid Critical Alert Filter with Deduplication (P1 Evaluation Fix)
         # Criteria: stockout_risk >= 0.20 AND (days_of_supply <= 2.0 OR stressed_days_of_supply_p90 <= 2.0)
         if is_critical:
             existing_alert = (
@@ -397,7 +397,7 @@ class MLService:
                 .filter(
                     Alert.unit_id == unit_id,
                     Alert.status == "ACTIVE",
-                    (Alert.type == "SUPPLY_DEFICIT") | (Alert.type == "STOCKOUT_RISK") | (Alert.type == f"STOCKOUT_{item_type.upper()}") | Alert.message.contains(item_type)
+                    (Alert.type == f"STOCKOUT_{item_type.upper()}") | Alert.message.contains(item_type),
                 )
                 .first()
             )
@@ -413,7 +413,7 @@ class MLService:
                 existing_alert.updated_at = datetime.now(timezone.utc)
             else:
                 new_alert = Alert(
-                    type="SUPPLY_DEFICIT",
+                    type=f"STOCKOUT_{item_type.upper()}",
                     severity="CRITICAL",
                     unit_id=unit_id,
                     message=alert_msg,

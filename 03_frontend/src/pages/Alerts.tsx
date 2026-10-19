@@ -66,7 +66,20 @@ export const Alerts: React.FC = () => {
     }
   };
 
-  const unackCount = alerts.filter((a) => a.status === 'UNACKNOWLEDGED').length;
+  // Deduplicate alerts by composite key (unit_id + type + message) per evaluation fix
+  const uniqueAlerts = alerts.filter((alert, index, self) =>
+    index === self.findIndex((a) => {
+      const aUnit = a.raw_alert?.unit_id || a.route_sector;
+      const alertUnit = alert.raw_alert?.unit_id || alert.route_sector;
+      const aType = a.raw_alert?.type || a.code || a.severity;
+      const alertType = alert.raw_alert?.type || alert.code || alert.severity;
+      const aMsg = a.raw_alert?.message || a.description || a.title;
+      const alertMsg = alert.raw_alert?.message || alert.description || alert.title;
+      return aUnit === alertUnit && aType === alertType && aMsg === alertMsg;
+    })
+  );
+
+  const unackCount = uniqueAlerts.filter((a) => a.status === 'UNACKNOWLEDGED').length;
 
   return (
     <div className="space-y-6">
@@ -105,12 +118,12 @@ export const Alerts: React.FC = () => {
       <div className="flex flex-col gap-4">
         {loading ? (
           <ServerLoader message="Connecting to server... (may take up to 60s on first request)" />
-        ) : alerts.length === 0 ? (
+        ) : uniqueAlerts.length === 0 ? (
           <div className="py-12 text-center text-slate-500 font-mono text-xs bg-white dark:bg-slate-900/60 rounded-md border border-slate-200 dark:border-slate-800/80">
             No active threat alerts in theater.
           </div>
         ) : (
-          alerts.map((alert) => {
+          uniqueAlerts.map((alert) => {
             const isCritical = alert.severity === 'CRITICAL';
             const isHigh = alert.severity === 'HIGH';
             const isAck = alert.status === 'ACKNOWLEDGED';

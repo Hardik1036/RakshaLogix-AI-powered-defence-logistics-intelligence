@@ -367,7 +367,7 @@ export const Forecast: React.FC = () => {
           {/* Metric 3: Days of Supply */}
           <div className="p-3.5 rounded bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 flex flex-col justify-between">
             <div className="flex items-center justify-between font-mono text-[10px] text-slate-500 uppercase font-bold">
-              <span>Days of Supply</span>
+              <span>Days of Supply (Stock / Burn)</span>
               <Calendar className="w-4 h-4 text-amber-500" />
             </div>
             <div className="my-1.5 flex items-baseline gap-2">
@@ -375,12 +375,16 @@ export const Forecast: React.FC = () => {
                 {data?.days_of_supply ?? 1.4} d
               </span>
               <span className="font-mono text-xs text-slate-500 tabular-nums">
-                (~34h runtime)
+                (~{Math.round((data?.days_of_supply ?? 1.4) * 24)}h runtime)
               </span>
             </div>
             <div className="font-mono text-[10px] text-slate-500 dark:text-slate-400 flex items-center justify-between pt-1 border-t border-slate-200 dark:border-slate-800/60">
-              <span title="320 L current stock / 235 L/d daily burn = 1.4 days gross (1.1 days usable excluding 15% tactical reserve buffer)">Arithmetic Match:</span>
-              <span className="text-amber-500 font-semibold tabular-nums">320L / 235L/d = 1.4d (1.1d usable)</span>
+              <span title="Formula: Days Remaining = Current Stock / Daily Burn Rate. (Excl. 15% Reserve: (Current Stock - 15% Buffer) / Daily Burn Rate)">
+                Formula Match:
+              </span>
+              <span className="text-amber-500 font-semibold tabular-nums">
+                {data?.current_stock ?? 320}L / 235L/d = {data?.days_of_supply ?? 1.4}d (1.1d usable)
+              </span>
             </div>
           </div>
 
