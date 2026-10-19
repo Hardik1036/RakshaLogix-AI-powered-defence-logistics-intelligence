@@ -35,7 +35,7 @@ import {
   mockAuditLogs,
 } from './services/mockData';
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'https://rakshalogix-backend.onrender.com';
+const BASE_URL = import.meta.env.VITE_API_URL || '';
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
 
 // Runtime mock state fallback so actions remain responsive if needed
