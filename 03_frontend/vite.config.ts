@@ -19,8 +19,9 @@ export default defineConfig({
     host: true,
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:8000',
+        target: 'https://rakshalogix-backend.onrender.com',
         changeOrigin: true,
+        secure: false,
       },
     },
   },
