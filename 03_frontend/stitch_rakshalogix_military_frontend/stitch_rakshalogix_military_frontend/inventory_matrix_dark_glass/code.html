@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"surface":"#0c1324","on-surface":"#dce1fb","tertiary-fixed-dim":"#b7c8e1","surface-bright":"#33394c","surface-container":"#191f31","on-primary-fixed-variant":"#004e5c","on-surface-variant":"#bcc9cd","surface-container-high":"#23293c","primary":"#4cd7f6","tertiary":"#b7c8e1","background":"#0c1324","on-secondary-fixed":"#001e2f","on-primary":"#003640","primary-fixed-dim":"#4cd7f6","surface-container-low":"#151b2d","surface-variant":"#2e3447","error-container":"#93000a","on-secondary-container":"#00344e","tertiary-fixed":"#d3e4fe","outline":"#869397","on-tertiary-fixed-variant":"#38485d","on-tertiary":"#213145","on-primary-fixed":"#001f26","on-background":"#dce1fb","inverse-primary":"#00687a","inverse-on-surface":"#2a3043","secondary-fixed-dim":"#89ceff","secondary":"#89ceff","on-secondary":"#00344d","surface-tint":"#4cd7f6","on-secondary-fixed-variant":"#004c6e","surface-container-lowest":"#070d1f","on-tertiary-container":"#2d3d52","surface-container-highest":"#2e3447","inverse-surface":"#dce1fb","error":"#ffb4ab","on-primary-container":"#00424f","outline-variant":"#3d494c","primary-fixed":"#acedff","secondary-fixed":"#c9e6ff","on-error":"#690005","on-tertiary-fixed":"#0b1c30","primary-container":"#06b6d4","surface-dim":"#0c1324","tertiary-container":"#97a8c1","on-error-container":"#ffdad6","secondary-container":"#00a2e6"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"margin-lg":"2rem","space-sm":"0.5rem","gutter":"1rem","space-xs":"0.25rem","margin-md":"1.5rem","space-xl":"2rem","space-lg":"1.5rem","space-md":"1rem","margin":"1rem","gutter-lg":"1.5rem"},"fontFamily":{"headline-xl-mobile":["Inter"],"mono-lg":["JetBrains Mono"],"headline-md":["Inter"],"body-lg":["Inter"],"mono-sm":["JetBrains Mono"],"display-lg":["Inter"],"body-md":["Inter"],"body-sm":["Inter"],"headline-sm":["Inter"],"mono-md":["JetBrains Mono"],"badge-label":["JetBrains Mono"],"headline-xl":["Inter"]},"fontSize":{"headline-xl-mobile":["22px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"mono-lg":["16px",{"lineHeight":"24px","letterSpacing":"0.02em","fontWeight":"500"}],"headline-md":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"mono-sm":["12px",{"lineHeight":"16px","letterSpacing":"0.03em","fontWeight":"500"}],"display-lg":["36px",{"lineHeight":"44px","letterSpacing":"-0.02em","fontWeight":"700"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"headline-sm":["16px",{"lineHeight":"24px","letterSpacing":"-0.005em","fontWeight":"600"}],"mono-md":["14px",{"lineHeight":"20px","letterSpacing":"0.02em","fontWeight":"500"}],"badge-label":["11px",{"lineHeight":"14px","letterSpacing":"0.05em","fontWeight":"600"}],"headline-xl":["28px",{"lineHeight":"36px","letterSpacing":"-0.015em","fontWeight":"600"}]}}}}</script></head><body class="bg-surface-container-lowest text-on-surface min-h-screen antialiased selection:bg-primary-container selection:text-on-primary"><header class="fixed top-0 left-0 right-0 z-40 h-16 bg-surface-container-lowest/80 backdrop-blur-[16px] border-b border-outline-variant/40"><div class="w-full h-16 px-gutter-lg flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-md min-w-max"><img alt="Brand logo. - Primary color: #06b6d4
+- Font: inter
+- Mode: dark
+- Roundness: rounded-lg
+" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XRfynaA5RwTeIGaPzYEzzobniBjnzBcLWwv2G7Y92dpzo_G-KTik-CKimyZRLQR_Q-amU4EW8ld7ZpjnrVsGMwGXxSlH_rmXgugcMWsuBr77pcO5uRTcDSS-y83WPsg7nLG3Y88HVipB6DnIilbcTmBr0Q6WCJ1dsMHw1q0j7Y8ajj_jQiqJXwubhi8ADb6XxN8SP1pDQnyxd3cOtXkio533IGSPagbPrgzR-8gVQYnzME0aw2RYYMlCRK"/><div class="flex flex-col"><div class="flex items-center gap-space-xs"><span class="font-headline-sm text-headline-sm tracking-wider text-on-surface uppercase">RAKSHALOGIX</span><span class="font-mono-sm text-mono-sm text-primary">// FORWARD-LOGIX-OPS</span></div><span class="font-badge-label text-badge-label text-on-surface-variant">[SECTOR-04 NORTH-WEST CORPS | DEFCON-2]</span></div></div><div class="hidden xl:flex items-center gap-space-lg"><div class="flex items-center gap-space-md px-space-md py-1 bg-surface-container-low/70 border border-outline-variant/40 rounded"><div class="flex items-center gap-space-xs font-mono-sm text-mono-sm"><span class="text-on-surface-variant">ZULU:</span><span class="text-primary font-semibold">14:22:08Z</span></div><span class="text-outline-variant">|</span><div class="flex items-center gap-space-xs font-mono-sm text-mono-sm"><span class="text-on-surface-variant">IST:</span><span class="text-on-surface font-semibold">19:52:08+05:30</span></div></div><div class="flex items-center gap-1.5 px-2.5 py-1 bg-error-container/30 border border-error/40 rounded text-error font-badge-label text-badge-label"><span class="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span>RESTRICTED // SECRET MIL-INTEL</div></div><div class="flex items-center gap-space-md min-w-max"><div class="flex items-center gap-space-sm pl-space-sm py-1 pr-space-md bg-surface-container-low/70 border border-outline-variant/40 rounded-full"><img alt="Profile" class="w-8 h-8 rounded-full object-cover border border-primary/40" src="https://lh3.googleusercontent.com/aida/AEtjO1W7UWj-Ww3wL3bT757cCea_4v9q4_Ki-6ls-mnvNEVniGQjoTEuTVq83ZwopuGRcJymoOWCcN2BlJQ3u7QhwhcIZiFj5UZCTE5jY3c5m1jsl56p8REIivXzr5Jr0MY86_0OrmQpxb0uGTHaI-JeRJ28PWGwHJKueD0JR6tXzweCgQiNV4X3ashrsn__ePROsbcd8xGsWR1m269jrE_CR0_PKei9cCHj2udmOsRKJtO1c1P2NRv8K7BYk2s9"/><div class="flex flex-col text-left"><span class="font-mono-sm text-mono-sm text-on-surface leading-none">MAJ. V. RATHORE</span><span class="font-badge-label text-badge-label text-primary-fixed-dim leading-none mt-0.5">HQ 14 CORPS LOGISTICS CHIEF</span></div><span class="w-2 h-2 rounded-full bg-primary ml-1"></span></div><div class="flex items-center p-1 bg-surface-container-high/60 border border-outline-variant/50 rounded-lg"><button class="p-1 rounded text-on-surface-variant hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[16px] leading-none block">light_mode</span></button><button class="p-1 rounded bg-primary-container text-on-primary-container shadow-sm" type="button"><span class="material-symbols-outlined text-[16px] leading-none block">dark_mode</span></button></div><button class="flex items-center gap-1 px-space-sm py-1.5 bg-surface-container/60 hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface border border-outline-variant/40 rounded font-mono-sm text-mono-sm transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">power_settings_new</span><span class="hidden md:inline">LOGOUT</span></button></div></div></header><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest/80 backdrop-blur-[16px] border-r border-outline-variant/40 z-30 pt-16 flex flex-col justify-between"><div class="px-space-sm py-space-md flex-1 overflow-y-auto"><div class="px-space-sm pb-space-sm mb-space-xs font-badge-label text-badge-label text-outline uppercase tracking-wider">Operational Units</div><nav class="flex flex-col gap-1" data-active-classes="bg-primary-container text-on-primary font-semibold shadow-sm"><a class="flex items-center justify-between px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-mono-md text-mono-md group" data-path="command-dashboard" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px] text-on-surface-variant group-hover:text-primary transition-colors">dashboard</span><span>Dashboard</span></div><span class="font-badge-label text-badge-label px-1 py-0.5 rounded bg-surface-container text-outline border border-outline-variant/30">F1</span></a><a aria-current="page" class="flex items-center justify-between px-space-sm py-2 rounded transition-colors group bg-primary-container text-on-primary font-semibold shadow-sm" data-path="inventory-matrix" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px] text-on-surface-variant group-hover:text-primary transition-colors">inventory_2</span><span>Inventory</span></div><span class="font-badge-label text-badge-label px-1 py-0.5 rounded bg-surface-container text-outline border border-outline-variant/30">F2</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-mono-md text-mono-md group" data-path="forecast-explorer" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px] text-on-surface-variant group-hover:text-primary transition-colors">trending_up</span><span>Forecast</span></div><span class="font-badge-label text-badge-label px-1 py-0.5 rounded bg-surface-container text-outline border border-outline-variant/30">F3</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-mono-md text-mono-md group" data-path="gis-tactical-map" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px] text-on-surface-variant group-hover:text-primary transition-colors">map</span><span>GIS Map</span><span class="w-2 h-2 rounded-full bg-error animate-pulse"></span></div><span class="font-badge-label text-badge-label px-1 py-0.5 rounded bg-surface-container text-outline border border-outline-variant/30">F4</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-mono-md text-mono-md group" data-path="convoys-hub" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px] text-on-surface-variant group-hover:text-primary transition-colors">local_shipping</span><span>Convoys</span></div><span class="font-badge-label text-badge-label px-1 py-0.5 rounded bg-surface-container text-outline border border-outline-variant/30">F5</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-mono-md text-mono-md group" data-path="alerts-hub" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px] text-on-surface-variant group-hover:text-primary transition-colors">notifications_active</span><span>Alerts</span><span class="font-badge-label text-badge-label px-1.5 py-0.2 rounded-full bg-error-container text-on-error-container font-semibold">7</span></div><span class="font-badge-label text-badge-label px-1 py-0.5 rounded bg-surface-container text-outline border border-outline-variant/30">F6</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-mono-md text-mono-md group" data-path="simulation-lab" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px] text-on-surface-variant group-hover:text-primary transition-colors">biotech</span><span>Simulation</span></div><span class="font-badge-label text-badge-label px-1 py-0.5 rounded bg-surface-container text-outline border border-outline-variant/30">F7</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-mono-md text-mono-md group" data-path="reports-audit-trail" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px] text-on-surface-variant group-hover:text-primary transition-colors">description</span><span>Reports</span></div><span class="font-badge-label text-badge-label px-1 py-0.5 rounded bg-surface-container text-outline border border-outline-variant/30">F8</span></a></nav></div><div class="p-space-md border-t border-outline-variant/40 bg-surface-container-low/50"><div class="flex items-center justify-between mb-1.5"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span><span class="font-badge-label text-badge-label text-on-surface uppercase">SAT-LINK ENCRYPTED</span></div><span class="font-badge-label text-badge-label text-primary">99.4%</span></div><div class="flex items-center justify-between font-mono-sm text-mono-sm text-on-surface-variant"><span>Ku-BAND PING</span><span class="font-semibold text-on-surface">14ms // LOCK</span></div><div class="w-full bg-surface-container-high h-1 rounded-full overflow-hidden mt-2"><div class="bg-primary h-full w-[94%]"></div></div></div></aside><div class="pl-64"><main class="relative w-full pt-16 min-h-screen px-gutter-lg pb-space-xl bg-surface-container-lowest"><div class="flex flex-col w-full">
+<div class="flex flex-col gap-space-lg w-full">
+<!-- Operational Notification Banner (Glass Alert) -->
+<div class="relative overflow-hidden rounded-xl bg-slate-900/65 backdrop-blur-[14px] p-space-md shadow-xl">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-error"></div>
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md pl-2">
+<div class="flex items-start md:items-center gap-space-md">
+<div class="p-2 rounded bg-error-container text-on-error-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">warning</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-mono-md text-mono-md text-error font-semibold uppercase tracking-wider">CRITICAL LOGISTICS DISPATCH REQUIRED</span>
+<span class="font-badge-label text-badge-label px-2 py-0.5 rounded bg-error text-surface-container-lowest font-bold">DEFCON-2 PROTOCOL</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+              Northern Glacial Corridor supply line experiencing sub-zero freeze alerts. FOB Charlie arctic POL-88 stock critically depresses below 36-hour reserve safety margin.
+            </p>
+</div>
+</div>
+<div class="flex items-center gap-space-sm min-w-max">
+<button class="px-space-md py-1.5 rounded bg-error text-surface-container-lowest hover:bg-error/90 font-mono-sm text-mono-sm font-semibold transition-colors flex items-center gap-1.5" onclick="focusDrawer()" type="button">
+<span class="material-symbols-outlined text-[16px]">priority_high</span>
+            INSPECT FOB CHARLIE
+          </button>
+</div>
+</div>
+</div>
+<!-- Top KPI Summary Bar (Glassmorphic Container: rgba(15, 23, 42, 0.65), blur 14px) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<!-- Metric 1: Fuel Exhaust Risk -->
+<div class="relative overflow-hidden rounded-xl bg-slate-900/65 backdrop-blur-[14px] p-space-lg shadow-xl group hover:bg-slate-900/80 transition-all">
+<div class="flex items-center justify-between mb-2">
+<span class="font-badge-label text-badge-label uppercase text-on-surface-variant tracking-wider">FUEL EXHAUST RISK</span>
+<span class="font-badge-label text-badge-label px-2 py-0.5 rounded bg-error text-surface-container-lowest font-semibold tracking-wider">HIGH ALERT</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-error font-semibold tracking-tight">04</span>
+<span class="font-mono-md text-mono-md text-on-surface-variant font-medium">POSTS < 48H</span>
+</div>
+<div class="flex items-center justify-between mt-3 pt-2 text-on-surface-variant font-mono-sm text-mono-sm">
+<span>Worst runway: 1.4 days</span>
+<span class="text-error flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[14px]">arrow_downward</span> -18.2%
+          </span>
+</div>
+</div>
+<!-- Metric 2: Avg System Runtime -->
+<div class="relative overflow-hidden rounded-xl bg-slate-900/65 backdrop-blur-[14px] p-space-lg shadow-xl group hover:bg-slate-900/80 transition-all">
+<div class="flex items-center justify-between mb-2">
+<span class="font-badge-label text-badge-label uppercase text-on-surface-variant tracking-wider">AVG SYSTEM RUNTIME</span>
+<span class="font-badge-label text-badge-label px-2 py-0.5 rounded bg-surface-container text-primary font-semibold">ALL SECTORS</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-on-surface font-semibold tracking-tight">5.4</span>
+<span class="font-mono-md text-mono-md text-on-surface-variant font-medium">DAYS AVG</span>
+</div>
+<div class="flex items-center justify-between mt-3 pt-2 text-on-surface-variant font-mono-sm text-mono-sm">
+<span>Normal target: > 12 days</span>
+<span class="text-error flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[14px]">trending_down</span> -2.1d burn
+          </span>
+</div>
+</div>
+<!-- Metric 3: High-Alt Expeditions -->
+<div class="relative overflow-hidden rounded-xl bg-slate-900/65 backdrop-blur-[14px] p-space-lg shadow-xl group hover:bg-slate-900/80 transition-all">
+<div class="flex items-center justify-between mb-2">
+<span class="font-badge-label text-badge-label uppercase text-on-surface-variant tracking-wider">HIGH-ALT EXPEDITIONS</span>
+<span class="font-badge-label text-badge-label px-2 py-0.5 rounded bg-primary-container text-on-primary font-semibold">ACTIVE</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-primary font-semibold tracking-tight">06</span>
+<span class="font-mono-md text-mono-md text-on-surface-variant font-medium">EN ROUTE</span>
+</div>
+<div class="flex items-center justify-between mt-3 pt-2 text-on-surface-variant font-mono-sm text-mono-sm">
+<span>Convoy payload: 88.5 MT</span>
+<span class="text-primary flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[14px]">local_shipping</span> 2 Heli-drops
+          </span>
+</div>
+</div>
+<!-- Metric 4: Buffer Parity -->
+<div class="relative overflow-hidden rounded-xl bg-slate-900/65 backdrop-blur-[14px] p-space-lg shadow-xl group hover:bg-slate-900/80 transition-all">
+<div class="flex items-center justify-between mb-2">
+<span class="font-badge-label text-badge-label uppercase text-on-surface-variant tracking-wider">BUFFER PARITY</span>
+<span class="font-badge-label text-badge-label px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-semibold">WAR RESERVE</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-secondary font-semibold tracking-tight">68.2</span>
+<span class="font-mono-md text-mono-md text-on-surface-variant font-medium">%</span>
+</div>
+<div class="flex items-center justify-between mt-3 pt-2 text-on-surface-variant font-mono-sm text-mono-sm">
+<span>Threshold: 85.0%</span>
+<span class="text-primary-container flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span> +3.4%
+          </span>
+</div>
+</div>
+</div>
+<!-- Filter Header & Command Search Bar (Glass Bar Container) -->
+<div class="rounded-xl bg-slate-900/65 backdrop-blur-[14px] p-space-md shadow-lg flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-space-md">
+<!-- Sector Tabs -->
+<div class="flex flex-wrap items-center gap-space-xs p-1 bg-surface-container-low rounded-lg">
+<button class="filter-tab active px-space-md py-1.5 rounded bg-primary-container text-on-primary font-mono-sm text-mono-sm font-semibold transition-all flex items-center gap-1.5 shadow-sm" id="tab-all" onclick="filterTable('all')" type="button">
+<span>All Sectors</span>
+<span class="px-1.5 py-0.2 rounded bg-surface-container-lowest/40 font-mono-sm text-mono-sm">28</span>
+</button>
+<button class="filter-tab px-space-md py-1.5 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-mono-sm text-mono-sm font-medium transition-all flex items-center gap-1.5" id="tab-alt" onclick="filterTable('high-alt')" type="button">
+<span>High-Altitude</span>
+<span class="px-1.5 py-0.2 rounded bg-surface-container text-on-surface-variant font-mono-sm text-mono-sm">11</span>
+</button>
+<button class="filter-tab px-space-md py-1.5 rounded hover:bg-surface-container text-error hover:text-on-surface font-mono-sm text-mono-sm font-medium transition-all flex items-center gap-1.5" id="tab-crit" onclick="filterTable('critical')" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span>
+<span>Critical Fuel <48h</span>
+<span class="px-1.5 py-0.2 rounded bg-error-container text-on-error-container font-mono-sm text-mono-sm">4</span>
+</button>
+</div>
+<!-- Controls Right: Search + Refresh + Export -->
+<div class="flex flex-wrap items-center gap-space-sm justify-between xl:justify-end flex-1">
+<div class="relative flex-1 max-w-md min-w-[240px]">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+<input class="w-full bg-[#020617] text-on-surface pl-9 pr-3 py-1.5 rounded font-mono-sm text-mono-sm placeholder:text-outline focus:outline-none focus:bg-surface-container-high transition-colors" id="searchInput" onkeyup="searchRows()" placeholder="Filter: POL-88 // UNIT_03" type="text"/>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="flex items-center gap-1.5 px-space-md py-1.5 rounded bg-surface-container-high hover:bg-surface-bright text-on-surface font-mono-sm text-mono-sm transition-colors" onclick="simulateLiveRefresh()" type="button">
+<span class="material-symbols-outlined text-[16px] text-primary animate-spin" id="refresh-spinner" style="display:none;">sync</span>
+<span class="w-2 h-2 rounded-full bg-primary" id="refresh-dot"></span>
+<span>Live [10s]</span>
+</button>
+<button class="flex items-center gap-1.5 px-space-md py-1.5 rounded bg-surface-container-high hover:bg-surface-bright text-on-surface font-mono-sm text-mono-sm transition-colors" onclick="exportCSV()" type="button">
+<span class="material-symbols-outlined text-[16px]">download</span>
+<span>Export CSV</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Main Workspace Split: Dense Solid Table + Tactical Inspection Glass Drawer -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg items-start">
+<!-- SOLID BACKGROUND DENSE DATA TABLE (8 or 12 Cols depending on inspection drawer) -->
+<div class="xl:col-span-8 flex flex-col gap-space-md">
+<!-- Tactical Header Info -->
+<div class="flex items-center justify-between px-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="font-headline-sm text-headline-sm text-on-surface tracking-wide">FORWARD MATRIX ASSET LEDGER</span>
+<span class="font-badge-label text-badge-label px-2 py-0.5 rounded bg-surface-container text-on-surface-variant uppercase">SYNCHRONIZED REAL-TIME</span>
+</div>
+<span class="font-mono-sm text-mono-sm text-on-surface-variant">Showing 6 High-Stress Sectors</span>
+</div>
+<!-- Solid Dark Background Container (#090e18) for ultra-high legibility -->
+<div class="bg-[#090e18] rounded-xl overflow-hidden shadow-2xl">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse" id="matrixTable">
+<thead>
+<tr class="bg-[#0e1626] text-on-surface-variant font-mono-sm text-mono-sm uppercase tracking-wider">
+<th class="py-2.5 px-4 font-semibold">Forward Unit / Location</th>
+<th class="py-2.5 px-4 font-semibold">Commodity / Class</th>
+<th class="py-2.5 px-4 font-semibold text-right">Current Stock</th>
+<th class="py-2.5 px-4 font-semibold text-right">Safety Buffer</th>
+<th class="py-2.5 px-4 font-semibold text-right">Daily Burn</th>
+<th class="py-2.5 px-4 font-semibold text-center">Runway (Days)</th>
+<th class="py-2.5 px-4 font-semibold text-right">Action</th>
+</tr>
+</thead>
+<tbody class="font-mono-sm text-mono-sm divide-y-0" id="matrixTbody">
+<!-- Row 1: FOB Charlie (Critical Selected) -->
+<tr class="table-row bg-primary/10 hover:bg-primary/15 transition-colors cursor-pointer" data-category="critical high-alt" data-unit="FOB Charlie" onclick="selectRow('FOB Charlie')">
+<td class="py-2.5 px-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
+<div>
+<div class="font-semibold text-on-surface">FOB Charlie</div>
+<div class="text-[11px] text-outline">LOC: 34.521° N, 76.118° E // SECT-04</div>
+</div>
+</div>
+</td>
+<td class="py-2.5 px-4 text-on-surface">
+<div class="font-medium text-primary">Diesel High-Speed Arctic POL-88</div>
+<div class="text-[11px] text-outline">CLASS-III BULK LIQUID</div>
+</td>
+<td class="py-2.5 px-4 text-right font-semibold text-error">1,750 L</td>
+<td class="py-2.5 px-4 text-right text-on-surface-variant">3,500 L</td>
+<td class="py-2.5 px-4 text-right text-on-surface">1,250 L/d</td>
+<td class="py-2.5 px-4 text-center">
+<span class="inline-block px-2.5 py-0.5 rounded bg-error text-surface-container-lowest font-bold text-[11px] tracking-wide shadow-sm">
+                      1.4 d [CRITICAL]
+                    </span>
+</td>
+<td class="py-2.5 px-4 text-right">
+<button class="px-2.5 py-1 rounded bg-error text-surface-container-lowest hover:bg-error/90 font-semibold text-[11px] uppercase transition-colors tracking-wide" onclick="event.stopPropagation(); triggerEmergency('FOB Charlie', 'POL-88 Arctic Diesel')" type="button">
+                      Replenish
+                    </button>
+</td>
+</tr>
+<!-- Row 2: Siachen Base (Critical) -->
+<tr class="table-row hover:bg-surface-container transition-colors cursor-pointer" data-category="critical high-alt" data-unit="Siachen Base" onclick="selectRow('Siachen Base')">
+<td class="py-2.5 px-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<div>
+<div class="font-semibold text-on-surface">Siachen Base</div>
+<div class="text-[11px] text-outline">LOC: 35.421° N, 77.109° E // GLACIER</div>
+</div>
+</div>
+</td>
+<td class="py-2.5 px-4 text-on-surface">
+<div class="font-medium text-on-surface">Combat Rations 48h Type-A</div>
+<div class="text-[11px] text-outline">CLASS-I HIGH CALORIE</div>
+</td>
+<td class="py-2.5 px-4 text-right font-semibold text-error">310 Pkts</td>
+<td class="py-2.5 px-4 text-right text-on-surface-variant">600 Pkts</td>
+<td class="py-2.5 px-4 text-right text-on-surface">180 P/d</td>
+<td class="py-2.5 px-4 text-center">
+<span class="inline-block px-2.5 py-0.5 rounded bg-error text-surface-container-lowest font-bold text-[11px] tracking-wide shadow-sm">
+                      2.1 d [CRITICAL]
+                    </span>
+</td>
+<td class="py-2.5 px-4 text-right">
+<button class="px-2.5 py-1 rounded bg-surface-container hover:bg-error hover:text-surface-container-lowest text-on-surface-variant font-semibold text-[11px] uppercase transition-colors" onclick="event.stopPropagation(); triggerEmergency('Siachen Base', 'Rations Type-A')" type="button">
+                      Replenish
+                    </button>
+</td>
+</tr>
+<!-- Row 3: Dras Outpost (Warning) -->
+<tr class="table-row hover:bg-surface-container transition-colors cursor-pointer" data-category="high-alt" data-unit="Dras Outpost" onclick="selectRow('Dras Outpost')">
+<td class="py-2.5 px-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span>
+<div>
+<div class="font-semibold text-on-surface">Dras Outpost</div>
+<div class="text-[11px] text-outline">LOC: 34.428° N, 75.761° E // PASS-02</div>
+</div>
+</div>
+</td>
+<td class="py-2.5 px-4 text-on-surface">
+<div class="font-medium text-on-surface">5.56x45mm NATO Ammo</div>
+<div class="text-[11px] text-outline">CLASS-V MUNITIONS</div>
+</td>
+<td class="py-2.5 px-4 text-right font-semibold text-amber-400">42,000 Rnds</td>
+<td class="py-2.5 px-4 text-right text-on-surface-variant">25,000 Rnds</td>
+<td class="py-2.5 px-4 text-right text-on-surface">1,200 R/d</td>
+<td class="py-2.5 px-4 text-center">
+<span class="inline-block px-2.5 py-0.5 rounded bg-amber-500 text-surface-container-lowest font-bold text-[11px] tracking-wide shadow-sm">
+                      4.2 d [WARNING]
+                    </span>
+</td>
+<td class="py-2.5 px-4 text-right">
+<button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-bright text-on-surface-variant hover:text-on-surface font-semibold text-[11px] uppercase transition-colors" onclick="event.stopPropagation(); inspectUnit('Dras Outpost')" type="button">
+                      Details
+                    </button>
+</td>
+</tr>
+<!-- Row 4: FOB Bravo (Warning) -->
+<tr class="table-row hover:bg-surface-container transition-colors cursor-pointer" data-category="warning" data-unit="FOB Bravo" onclick="selectRow('FOB Bravo')">
+<td class="py-2.5 px-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span>
+<div>
+<div class="font-semibold text-on-surface">FOB Bravo</div>
+<div class="text-[11px] text-outline">LOC: 34.152° N, 77.577° E // VALLEY</div>
+</div>
+</div>
+</td>
+<td class="py-2.5 px-4 text-on-surface">
+<div class="font-medium text-on-surface">Liquid Medical Oxygen</div>
+<div class="text-[11px] text-outline">CLASS-VIII MEDICAL LIFE SUPPORT</div>
+</td>
+<td class="py-2.5 px-4 text-right font-semibold text-amber-400">18 Cyl</td>
+<td class="py-2.5 px-4 text-right text-on-surface-variant">20 Cyl</td>
+<td class="py-2.5 px-4 text-right text-on-surface">6 Cyl/d</td>
+<td class="py-2.5 px-4 text-center">
+<span class="inline-block px-2.5 py-0.5 rounded bg-amber-500 text-surface-container-lowest font-bold text-[11px] tracking-wide shadow-sm">
+                      5.8 d [WARNING]
+                    </span>
+</td>
+<td class="py-2.5 px-4 text-right">
+<button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-bright text-on-surface-variant hover:text-on-surface font-semibold text-[11px] uppercase transition-colors" onclick="event.stopPropagation(); inspectUnit('FOB Bravo')" type="button">
+                      Details
+                    </button>
+</td>
+</tr>
+<!-- Row 5: Kargil Fwd (Nominal) -->
+<tr class="table-row hover:bg-surface-container transition-colors cursor-pointer" data-category="nominal high-alt" data-unit="Kargil Fwd" onclick="selectRow('Kargil Fwd')">
+<td class="py-2.5 px-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<div>
+<div class="font-semibold text-on-surface">Kargil Fwd</div>
+<div class="text-[11px] text-outline">LOC: 34.553° N, 76.134° E // RIDGE</div>
+</div>
+</div>
+</td>
+<td class="py-2.5 px-4 text-on-surface">
+<div class="font-medium text-on-surface">Heavy Fuel / ATF Aviation</div>
+<div class="text-[11px] text-outline">CLASS-III AVIATION TURBINE</div>
+</td>
+<td class="py-2.5 px-4 text-right font-semibold text-emerald-400">14,500 L</td>
+<td class="py-2.5 px-4 text-right text-on-surface-variant">8,000 L</td>
+<td class="py-2.5 px-4 text-right text-on-surface">920 L/d</td>
+<td class="py-2.5 px-4 text-center">
+<span class="inline-block px-2.5 py-0.5 rounded bg-emerald-600 text-surface-container-lowest font-bold text-[11px] tracking-wide shadow-sm">
+                      14.5 d [NOMINAL]
+                    </span>
+</td>
+<td class="py-2.5 px-4 text-right">
+<button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-bright text-on-surface-variant hover:text-on-surface font-semibold text-[11px] uppercase transition-colors" onclick="event.stopPropagation(); inspectUnit('Kargil Fwd')" type="button">
+                      Details
+                    </button>
+</td>
+</tr>
+<!-- Row 6: FOB Zulu (Secure) -->
+<tr class="table-row hover:bg-surface-container transition-colors cursor-pointer" data-category="nominal" data-unit="FOB Zulu" onclick="selectRow('FOB Zulu')">
+<td class="py-2.5 px-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<div>
+<div class="font-semibold text-on-surface">FOB Zulu</div>
+<div class="text-[11px] text-outline">LOC: 33.910° N, 75.120° E // DEPOT-9</div>
+</div>
+</div>
+</td>
+<td class="py-2.5 px-4 text-on-surface">
+<div class="font-medium text-on-surface">Cold Weather Gear Gen-3</div>
+<div class="text-[11px] text-outline">CLASS-II SPECIALIZED APPAREL</div>
+</td>
+<td class="py-2.5 px-4 text-right font-semibold text-emerald-400">140 Sets</td>
+<td class="py-2.5 px-4 text-right text-on-surface-variant">100 Sets</td>
+<td class="py-2.5 px-4 text-right text-on-surface">15 S/d</td>
+<td class="py-2.5 px-4 text-center">
+<span class="inline-block px-2.5 py-0.5 rounded bg-emerald-600 text-surface-container-lowest font-bold text-[11px] tracking-wide shadow-sm">
+                      22.0 d [SECURE]
+                    </span>
+</td>
+<td class="py-2.5 px-4 text-right">
+<button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-bright text-on-surface-variant hover:text-on-surface font-semibold text-[11px] uppercase transition-colors" onclick="event.stopPropagation(); inspectUnit('FOB Zulu')" type="button">
+                      Details
+                    </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer Status Ledger -->
+<div class="bg-[#0b1220] px-4 py-2.5 flex flex-wrap items-center justify-between text-on-surface-variant font-mono-sm text-mono-sm gap-2">
+<div class="flex items-center gap-3">
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-error"></span> 2 Critical (<3d)</span>
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span> 2 Warning (3-7d)</span>
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> 2 Nominal (>7d)</span>
+</div>
+<div class="flex items-center gap-1 text-[11px] text-outline">
+<span class="material-symbols-outlined text-[14px]">lock</span>
+              TELEMETRY HASH: 0x9FA2...B41 // VALIDATED
+            </div>
+</div>
+</div>
+<!-- Lower Visual Strip: Fuel Burn Delta Heatline -->
+<div class="rounded-xl bg-[#090e18] p-space-md shadow-lg flex flex-col md:flex-row items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<div class="p-2.5 rounded bg-surface-container-high text-primary">
+<span class="material-symbols-outlined text-[24px]">thermostat</span>
+</div>
+<div>
+<span class="font-headline-sm text-headline-sm text-on-surface">Sub-Zero Thermal Drag Impact Factor</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Ambient temperatures below -25°C trigger automated diesel auxiliary heater cycles, accelerating static burn rate by +44.2%.
+              </p>
+</div>
+</div>
+<div class="flex items-center gap-4 min-w-max">
+<div class="text-right">
+<div class="font-mono-sm text-mono-sm text-outline">AGGREGATE BURN</div>
+<div class="font-mono-lg text-mono-lg text-primary font-semibold">2,385 L / HOUR</div>
+</div>
+<div class="h-8 w-px bg-surface-container-highest"></div>
+<div class="text-right">
+<div class="font-mono-sm text-mono-sm text-outline">WEATHER RISK</div>
+<div class="font-mono-lg text-mono-lg text-error font-semibold">LEVEL-4 BLIZZARD</div>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT SIDE-DRAWER: TACTICAL INSPECTION & BURN HISTORY (Glass Panel: rgba(15, 23, 42, 0.72), blur 16px) -->
+<div class="xl:col-span-4 rounded-xl bg-slate-900/72 backdrop-blur-[16px] shadow-2xl p-space-lg flex flex-col gap-space-lg transition-all" id="tacticalDrawer">
+<!-- Drawer Header -->
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-error animate-ping"></span>
+<span class="font-headline-sm text-headline-sm text-on-surface uppercase tracking-wide">FOB CHARLIE // INSPECTION</span>
+</div>
+<span class="font-badge-label text-badge-label text-error font-bold mt-0.5">PRIORITY-1 LOGISTICS TARGET</span>
+</div>
+<button class="p-1 rounded bg-surface-container hover:bg-surface-bright text-on-surface-variant transition-colors" onclick="focusDrawer()" title="Lock View" type="button">
+<span class="material-symbols-outlined text-[18px]">open_in_full</span>
+</button>
+</div>
+<!-- Geographic & Environmental Telemetry Pills -->
+<div class="grid grid-cols-2 gap-space-sm">
+<div class="p-space-sm rounded bg-surface-container/60">
+<span class="font-badge-label text-badge-label text-outline block">ELEVATION</span>
+<div class="flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[16px] text-primary">landscape</span>
+<span class="font-mono-md text-mono-md text-on-surface font-semibold">14,200 FT</span>
+</div>
+<span class="text-[10px] text-on-surface-variant font-mono-sm">Severe Hypoxia Tier-3</span>
+</div>
+<div class="p-space-sm rounded bg-surface-container/60">
+<span class="font-badge-label text-badge-label text-outline block">TEMPERATURE</span>
+<div class="flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[16px] text-secondary">ac_unit</span>
+<span class="font-mono-md text-mono-md text-secondary font-semibold">-28°C SUB-ZERO</span>
+</div>
+<span class="text-[10px] text-error font-mono-sm">Diesel Gelling Threat</span>
+</div>
+</div>
+<!-- Burn Acceleration Bar Chart (7 Days with +108.3% spike) -->
+<div class="flex flex-col gap-2 p-space-md rounded bg-[#070d1f] shadow-inner">
+<div class="flex items-center justify-between">
+<span class="font-badge-label text-badge-label text-on-surface-variant uppercase">7-DAY BURN ACCELERATION (POL-88)</span>
+<span class="font-badge-label text-badge-label px-1.5 py-0.2 rounded bg-error text-surface-container-lowest font-bold">+108.3% SPIKE</span>
+</div>
+<!-- Inline SVG Visual Bar Chart -->
+<div class="w-full h-32 flex items-end justify-between gap-2 pt-4 px-1">
+<!-- Day 1: D-6 -->
+<div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
+<span class="text-[9px] font-mono-sm text-outline">600L</span>
+<div class="w-full bg-primary/40 rounded-t h-[35%] transition-all hover:bg-primary"></div>
+<span class="text-[10px] font-mono-sm text-outline">D-6</span>
+</div>
+<!-- Day 2: D-5 -->
+<div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
+<span class="text-[9px] font-mono-sm text-outline">620L</span>
+<div class="w-full bg-primary/40 rounded-t h-[38%] transition-all hover:bg-primary"></div>
+<span class="text-[10px] font-mono-sm text-outline">D-5</span>
+</div>
+<!-- Day 3: D-4 -->
+<div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
+<span class="text-[9px] font-mono-sm text-outline">650L</span>
+<div class="w-full bg-primary/50 rounded-t h-[42%] transition-all hover:bg-primary"></div>
+<span class="text-[10px] font-mono-sm text-outline">D-4</span>
+</div>
+<!-- Day 4: D-3 -->
+<div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
+<span class="text-[9px] font-mono-sm text-outline">780L</span>
+<div class="w-full bg-secondary rounded-t h-[52%] transition-all hover:bg-secondary"></div>
+<span class="text-[10px] font-mono-sm text-outline">D-3</span>
+</div>
+<!-- Day 5: D-2 -->
+<div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
+<span class="text-[9px] font-mono-sm text-outline">910L</span>
+<div class="w-full bg-amber-500 rounded-t h-[66%] transition-all hover:bg-amber-400"></div>
+<span class="text-[10px] font-mono-sm text-outline">D-2</span>
+</div>
+<!-- Day 6: D-1 -->
+<div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
+<span class="text-[9px] font-mono-sm text-outline">1,120L</span>
+<div class="w-full bg-error/80 rounded-t h-[82%] transition-all hover:bg-error"></div>
+<span class="text-[10px] font-mono-sm text-outline">D-1</span>
+</div>
+<!-- Day 7: TODAY -->
+<div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
+<span class="text-[9px] font-mono-sm text-error font-bold">1,250L</span>
+<div class="w-full bg-error rounded-t h-[98%] shadow-[0_0_12px_rgba(255,180,171,0.5)]"></div>
+<span class="text-[10px] font-mono-sm text-error font-bold">TODAY</span>
+</div>
+</div>
+<div class="text-[11px] font-mono-sm text-outline text-center mt-1">
+            CAUSE: Perimeter generator #2 ran continuous defrost mode post-storm.
+          </div>
+</div>
+<!-- Rapid Logistics Appraisal -->
+<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-badge-label text-badge-label text-outline uppercase tracking-wider">RAPID LOGISTICS APPRAISAL</span>
+<span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
+</div>
+<div class="flex flex-col">
+<span class="font-mono-sm text-mono-sm text-on-surface-variant">Time to Dry Tanks:</span>
+<span class="font-mono-lg text-mono-lg text-error font-bold tracking-tight">33 HOURS 36 MIN</span>
+</div>
+<div class="h-px bg-surface-container-highest my-1"></div>
+<div class="flex items-center justify-between font-mono-sm text-mono-sm">
+<span class="text-on-surface-variant">Nearest Convoy:</span>
+<span class="text-primary font-semibold">CONVOY-L14 (84 km away)</span>
+</div>
+<div class="flex items-center justify-between font-mono-sm text-mono-sm">
+<span class="text-on-surface-variant">Route Status:</span>
+<span class="text-amber-400 font-semibold">Pass Zojila: Snow Chain Req.</span>
+</div>
+<div class="flex items-center justify-between font-mono-sm text-mono-sm">
+<span class="text-on-surface-variant">Est. Overland ETA:</span>
+<span class="text-on-surface font-semibold">14h 20m (Passable)</span>
+</div>
+</div>
+<!-- Tactical Action Buttons -->
+<div class="flex flex-col gap-space-sm pt-2">
+<!-- Primary Action Button: Solid Cyan fill, rounded-md, high contrast text -->
+<button class="w-full py-3 px-space-md rounded-lg bg-primary-container hover:bg-primary text-on-primary-container hover:text-surface-container-lowest font-mono-md text-mono-md font-bold tracking-wider uppercase transition-all shadow-lg flex items-center justify-center gap-2" onclick="triggerEmergency('FOB Charlie', 'POL-88 Arctic Fuel')" type="button">
+<span class="material-symbols-outlined text-[20px]">rocket_launch</span>
+            Initiate Emergency Replenishment
+          </button>
+<!-- Secondary Action Buttons -->
+<div class="grid grid-cols-2 gap-space-sm">
+<button class="py-2 px-space-sm rounded-lg bg-surface-container hover:bg-surface-bright text-on-surface font-mono-sm text-mono-sm font-medium transition-colors flex items-center justify-center gap-1.5" onclick="rerouteConvoy('CONVOY-14', 'FOB Charlie')" type="button">
+<span class="material-symbols-outlined text-[16px] text-primary">alt_route</span>
+              Reroute Convoy 14
+            </button>
+<button class="py-2 px-space-sm rounded-lg bg-surface-container hover:bg-surface-bright text-on-surface font-mono-sm text-mono-sm font-medium transition-colors flex items-center justify-center gap-1.5" onclick="authorizeHeliDrop('FOB Charlie')" type="button">
+<span class="material-symbols-outlined text-[16px] text-secondary">flight_takeoff</span>
+              Authorize Heli-Drop
+            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Interactive Logic Script -->
+<script>
+    function filterTable(category) {
+      const tabs = document.querySelectorAll('.filter-tab');
+      tabs.forEach(t => {
+        t.classList.remove('bg-primary-container', 'text-on-primary', 'font-semibold', 'shadow-sm');
+        t.classList.add('text-on-surface-variant');
+      });
+
+      const currentTab = event.currentTarget;
+      currentTab.classList.remove('text-on-surface-variant');
+      currentTab.classList.add('bg-primary-container', 'text-on-primary', 'font-semibold', 'shadow-sm');
+
+      const rows = document.querySelectorAll('#matrixTbody tr');
+      rows.forEach(row => {
+        if (category === 'all') {
+          row.style.display = '';
+        } else if (category === 'high-alt') {
+          if (row.getAttribute('data-category').includes('high-alt')) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        } else if (category === 'critical') {
+          if (row.getAttribute('data-category').includes('critical')) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        }
+      });
+    }
+
+    function searchRows() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const rows = document.querySelectorAll('#matrixTbody tr');
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        if (text.includes(query)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    function selectRow(unitName) {
+      const rows = document.querySelectorAll('#matrixTbody tr');
+      rows.forEach(r => r.classList.remove('bg-primary/10', 'bg-primary/15'));
+      const activeRow = event.currentTarget;
+      activeRow.classList.add('bg-primary/10');
+
+      // Update side drawer title
+      const title = document.querySelector('#tacticalDrawer .text-headline-sm');
+      if (title) {
+        title.innerText = unitName.toUpperCase() + ' // INSPECTION';
+      }
+    }
+
+    function triggerEmergency(unit, item) {
+      alert('[TACTICAL DISPATCH AUTHORIZED]\n\nEmergency dispatch signal broadcast for: ' + unit + '\nPayload: ' + item + '\nChannel: SAT-KU-DEFENSE-ALPHA');
+    }
+
+    function rerouteConvoy(convoyId, targetUnit) {
+      alert('[CONVOY ROUTE MODIFIED]\n\n' + convoyId + ' has received tactical order to divert to ' + targetUnit + ' with high priority escort.');
+    }
+
+    function authorizeHeliDrop(unit) {
+      alert('[HELI-DROP AUTHORIZED]\n\nTask Force Cheetah: 2x Mi-17 V5 sorties scheduled from Leh airbase for zero-hour airdrop to ' + unit + '.');
+    }
+
+    function inspectUnit(unitName) {
+      const title = document.querySelector('#tacticalDrawer .text-headline-sm');
+      if (title) {
+        title.innerText = unitName.toUpperCase() + ' // INSPECTION';
+      }
+      document.getElementById('tacticalDrawer').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function focusDrawer() {
+      const drawer = document.getElementById('tacticalDrawer');
+      drawer.classList.add('ring-2', 'ring-primary');
+      setTimeout(() => drawer.classList.remove('ring-2', 'ring-primary'), 1200);
+      drawer.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function simulateLiveRefresh() {
+      const spinner = document.getElementById('refresh-spinner');
+      const dot = document.getElementById('refresh-dot');
+      spinner.style.display = 'inline-block';
+      dot.style.display = 'none';
+      setTimeout(() => {
+        spinner.style.display = 'none';
+        dot.style.display = 'inline-block';
+      }, 800);
+    }
+
+    function exportCSV() {
+      const rows = [
+        ["Forward Unit", "Commodity", "Current Stock", "Safety Buffer", "Daily Burn", "Runway"],
+        ["FOB Charlie", "Diesel High-Speed Arctic POL-88", "1,750 L", "3,500 L", "1,250 L/d", "1.4 d"],
+        ["Siachen Base", "Combat Rations 48h Type-A", "310 Pkts", "600 Pkts", "180 P/d", "2.1 d"],
+        ["Dras Outpost", "5.56x45mm NATO Ammo", "42,000 Rnds", "25,000 Rnds", "1,200 R/d", "4.2 d"],
+        ["FOB Bravo", "Liquid Medical Oxygen", "18 Cyl", "20 Cyl", "6 Cyl/d", "5.8 d"],
+        ["Kargil Fwd", "Heavy Fuel / ATF Aviation", "14,500 L", "8,000 L", "920 L/d", "14.5 d"],
+        ["FOB Zulu", "Cold Weather Gear Gen-3", "140 Sets", "100 Sets", "15 S/d", "22.0 d"]
+      ];
+      let csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "RakshaLogix_Matrix_Export.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+</div></main></div></body></html>

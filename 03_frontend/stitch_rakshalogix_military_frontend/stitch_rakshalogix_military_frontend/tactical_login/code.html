@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_blank" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-secondary":"#003824","surface-container-low":"#181b25","on-secondary-fixed":"#002113","primary-fixed-dim":"#4cd7f6","surface-container-highest":"#31353f","on-primary-container":"#00424f","on-tertiary":"#472a00","on-tertiary-fixed-variant":"#653e00","surface-variant":"#31353f","surface-container":"#1c1f29","inverse-surface":"#dfe2ef","inverse-on-surface":"#2c303a","on-secondary-fixed-variant":"#005236","surface-container-high":"#262a34","tertiary-fixed-dim":"#ffb95f","tertiary":"#ffb95f","background":"#0f131c","inverse-primary":"#00687a","on-surface":"#dfe2ef","secondary-container":"#00a572","on-primary":"#003640","on-error":"#690005","primary-fixed":"#acedff","primary-container":"#06b6d4","on-primary-fixed-variant":"#004e5c","error":"#ffb4ab","surface-container-lowest":"#0a0e17","on-surface-variant":"#bcc9cd","on-secondary-container":"#00311f","tertiary-container":"#e79400","on-primary-fixed":"#001f26","secondary":"#4edea3","surface-dim":"#0f131c","surface-tint":"#4cd7f6","error-container":"#93000a","secondary-fixed":"#6ffbbe","surface-bright":"#353943","primary":"#4cd7f6","on-tertiary-fixed":"#2a1700","outline":"#869397","on-tertiary-container":"#563400","surface":"#0f131c","on-error-container":"#ffdad6","outline-variant":"#3d494c","secondary-fixed-dim":"#4edea3","on-background":"#dfe2ef","tertiary-fixed":"#ffddb8"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"space-xs":"0.25rem","space-xl":"1.5rem","space-lg":"1rem","margin":"1rem","gutter":"0.75rem","space-md":"0.75rem","space-sm":"0.5rem"},fontFamily:{"headline-md":["Inter"],"telemetry-display":["JetBrains Mono"],"body-sm":["Inter"],"body-md":["Inter"],"label-lg":["JetBrains Mono"],"headline-xl":["Inter"],"headline-sm":["Inter"],"headline-lg":["Inter"],"label-sm":["JetBrains Mono"],"label-md":["JetBrains Mono"],"telemetry-metric":["JetBrains Mono"],"body-lg":["Inter"]},fontSize:{"headline-md":["16px",{lineHeight:"24px",letterSpacing:"0em",fontWeight:"600"}],"telemetry-display":["28px",{lineHeight:"32px",letterSpacing:"-0.03em",fontWeight:"700"}],"body-sm":["12px",{lineHeight:"16px",letterSpacing:"0em",fontWeight:"400"}],"body-md":["13px",{lineHeight:"18px",letterSpacing:"0em",fontWeight:"400"}],"label-lg":["13px",{lineHeight:"16px",letterSpacing:"0.05em",fontWeight:"600"}],"headline-xl":["24px",{lineHeight:"32px",letterSpacing:"-0.02em",fontWeight:"700"}],"headline-sm":["14px",{lineHeight:"20px",letterSpacing:"0.01em",fontWeight:"600"}],"headline-lg":["20px",{lineHeight:"28px",letterSpacing:"-0.01em",fontWeight:"700"}],"label-sm":["10px",{lineHeight:"12px",letterSpacing:"0.1em",fontWeight:"500"}],"label-md":["11px",{lineHeight:"14px",letterSpacing:"0.08em",fontWeight:"500"}],"telemetry-metric":["18px",{lineHeight:"22px",letterSpacing:"0em",fontWeight:"700"}],"body-lg":["14px",{lineHeight:"20px",letterSpacing:"0em",fontWeight:"400"}]}}}}</script></head><body class="bg-surface-container-lowest font-body-md text-on-surface antialiased select-none"><main class="relative min-h-screen flex items-center justify-center p-space-lg"><div class="flex flex-col w-full items-center justify-center relative overflow-hidden py-space-xl">
+<!-- Subtle Tactical Radar/Grid Background Ambience -->
+<div class="absolute inset-0 pointer-events-none opacity-20 flex items-center justify-center">
+<svg class="w-full h-full max-w-4xl" fill="none" viewbox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+<circle class="text-primary-container" cx="400" cy="400" r="380" stroke="currentColor" stroke-dasharray="4 8" stroke-width="1"></circle>
+<circle class="text-primary" cx="400" cy="400" r="280" stroke="currentColor" stroke-opacity="0.3" stroke-width="1"></circle>
+<circle class="text-primary" cx="400" cy="400" r="160" stroke="currentColor" stroke-opacity="0.2" stroke-width="1"></circle>
+<line class="text-outline-variant" stroke="currentColor" stroke-dasharray="2 4" stroke-width="1" x1="400" x2="400" y1="20" y2="780"></line>
+<line class="text-outline-variant" stroke="currentColor" stroke-dasharray="2 4" stroke-width="1" x1="20" x2="780" y1="400" y2="400"></line>
+<path class="text-primary" d="M 400 400 L 680 200" stroke="currentColor" stroke-opacity="0.4" stroke-width="1.5"></path>
+</svg>
+</div>
+<!-- Primary Tactical Login Shell -->
+<div class="relative w-full max-w-xl mx-auto z-10 flex flex-col">
+<!-- Telemetry Header Status Bar -->
+<div class="bg-surface-container-lowest px-space-md py-space-xs flex items-center justify-between shadow-md mb-[-1px]">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-secondary tracking-widest uppercase">SAT-LINK ENCRYPTED // NODE: HQ-14-LEH</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-tertiary font-bold tracking-wider px-space-xs bg-on-tertiary-container/40">DEFCON-2 ACTIVE</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">MGRS: 43S_XP_1829</span>
+</div>
+</div>
+<!-- Main Authentication Terminal Card -->
+<div class="relative bg-surface-container-low p-space-xl shadow-2xl flex flex-col gap-space-lg">
+<!-- Precision Tactical Crosshairs (Corner Brackets) -->
+<span class="absolute top-2 left-2 font-label-md text-label-md text-primary select-none opacity-80">+</span>
+<span class="absolute top-2 right-2 font-label-md text-label-md text-primary select-none opacity-80">+</span>
+<span class="absolute bottom-2 left-2 font-label-md text-label-md text-primary select-none opacity-80">+</span>
+<span class="absolute bottom-2 right-2 font-label-md text-label-md text-primary select-none opacity-80">+</span>
+<!-- Military Branding & Header -->
+<div class="flex flex-col gap-space-xs pt-space-xs">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 bg-primary-container text-on-primary-container flex items-center justify-center font-bold">
+<span class="material-symbols-outlined text-headline-sm" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-primary tracking-wider uppercase font-bold">RAKSHALOGIX // FORWARD-LOGIX-OPS</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant tracking-normal">LOGISTICAL READINESS COMMAND &amp; TELEMETRY</span>
+</div>
+</div>
+<span class="bg-surface-container-highest px-space-xs py-0.5 text-on-surface-variant font-label-sm text-label-sm">GATEWAY 04</span>
+</div>
+<div class="bg-surface-container-lowest px-space-md py-space-xs mt-space-xs flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface uppercase tracking-wide">SECTOR-04 NORTH-WEST CORPS // SECURE ACCESS GATEWAY</span>
+<span class="font-label-sm text-label-sm text-primary">MIL-STD 810G</span>
+</div>
+</div>
+<!-- Authentication Form -->
+<form class="flex flex-col gap-space-md" id="tactical-login-form" onsubmit="event.preventDefault(); triggerAuth();">
+<!-- Officer Service Number / Username -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex justify-between items-center">
+<label class="font-label-md text-label-md text-on-surface uppercase flex items-center gap-space-xs" for="officer-id">
+<span class="material-symbols-outlined text-sm text-primary">badge</span>
+              OFFICER SERVICE NO. / USERNAME
+            </label>
+<span class="font-label-sm text-label-sm text-outline">REQ: 8-DIGIT / UID</span>
+</div>
+<div class="relative flex items-center bg-surface-container-lowest focus-within:bg-surface-container">
+<span class="pl-space-md font-label-md text-label-md text-outline select-none">MGRS:</span>
+<input class="w-full bg-transparent px-space-sm py-space-sm font-label-lg text-label-lg text-on-surface placeholder:text-outline-variant focus:outline-none" id="officer-id" placeholder="e.g. IC-74921X / MAJ_RATHORE" required="" type="text"/>
+</div>
+</div>
+<!-- Cryptographic Access Key / Password -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex justify-between items-center">
+<label class="font-label-md text-label-md text-on-surface uppercase flex items-center gap-space-xs" for="auth-token">
+<span class="material-symbols-outlined text-sm text-primary">key</span>
+              CRYPTOGRAPHIC ACCESS KEY / PASSWORD
+            </label>
+<span class="font-label-sm text-label-sm text-outline">HSM-ENCRYPTED</span>
+</div>
+<div class="relative flex items-center bg-surface-container-lowest focus-within:bg-surface-container">
+<span class="pl-space-md font-label-md text-label-md text-outline select-none">KEY:</span>
+<input class="w-full bg-transparent px-space-sm py-space-sm font-label-lg text-label-lg text-on-surface placeholder:text-outline-variant focus:outline-none tracking-widest" id="auth-token" placeholder="••••••••••••••••••••" required="" type="password"/>
+<button class="pr-space-md text-on-surface-variant hover:text-primary transition-colors focus:outline-none" onclick="toggleKeyVisibility()" title="Toggle Mask" type="button">
+<span class="material-symbols-outlined text-base" id="eye-icon">visibility</span>
+</button>
+</div>
+</div>
+<!-- Primary Action Trigger [Login] -->
+<button class="w-full mt-space-sm bg-primary-container text-on-primary-container font-label-lg text-label-lg py-space-md px-space-lg uppercase font-bold tracking-wider flex items-center justify-center gap-space-sm hover:brightness-110 active:scale-[0.99] transition duration-75 shadow-md" id="btn-login" type="submit">
+<span class="material-symbols-outlined text-headline-sm" style="font-variation-settings: 'FILL' 1;">shield</span>
+<span>AUTHENTICATE &amp; ENTER SYSTEM</span>
+<span class="material-symbols-outlined text-headline-sm">arrow_forward</span>
+</button>
+</form>
+<!-- Quick-Fill Tactical Role Selector -->
+<div class="flex flex-col gap-space-xs pt-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">TACTICAL PRESET OVERRIDES // ZERO-LATENCY DISPATCH</span>
+<span class="font-label-sm text-label-sm text-outline">SELECT ROLE</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-xs">
+<!-- Commander Preset -->
+<button class="bg-surface-container-lowest hover:bg-surface-container px-space-sm py-space-sm flex flex-col text-left transition group active:bg-surface-container-high" onclick="applyRole('COMMANDER')" type="button">
+<div class="flex items-center justify-between w-full mb-0.5">
+<span class="font-label-sm text-label-sm text-primary font-bold uppercase group-hover:text-primary-fixed">Commander</span>
+<span class="font-label-sm text-label-sm text-tertiary">CMD</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Sector HQ // Full Auth</span>
+</button>
+<!-- Logistics Officer Preset -->
+<button class="bg-surface-container-lowest hover:bg-surface-container px-space-sm py-space-sm flex flex-col text-left transition group active:bg-surface-container-high" onclick="applyRole('LOGISTICS')" type="button">
+<div class="flex items-center justify-between w-full mb-0.5">
+<span class="font-label-sm text-label-sm text-secondary font-bold uppercase group-hover:text-secondary-fixed">Logistics Officer</span>
+<span class="font-label-sm text-label-sm text-secondary">HQ-14</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Maj. V. Rathore // Chief</span>
+</button>
+<!-- Read-Only Preset -->
+<button class="bg-surface-container-lowest hover:bg-surface-container px-space-sm py-space-sm flex flex-col text-left transition group active:bg-surface-container-high" onclick="applyRole('AUDITOR')" type="button">
+<div class="flex items-center justify-between w-full mb-0.5">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-bold uppercase group-hover:text-on-surface">Read-Only</span>
+<span class="font-label-sm text-label-sm text-outline">AUDIT</span>
+</div>
+<span class="font-body-sm text-body-sm text-outline truncate">Observer // Telemetry</span>
+</button>
+</div>
+</div>
+<!-- Security Notice & Monospace Cryptographic Hash -->
+<div class="bg-surface-container-lowest p-space-sm flex flex-col gap-space-xs mt-space-xs">
+<div class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-error text-body-lg flex-shrink-0">warning</span>
+<p class="font-body-sm text-body-sm text-error leading-tight">
+            RESTRICTED GOVERNMENT SYSTEM. UNAUTHORIZED ACCESS IS MONITORED AND PROSECUTED UNDER MILITARY SECRECY ACT.
+          </p>
+</div>
+<div class="flex items-center justify-between pt-space-xs text-outline-variant font-label-sm text-label-sm">
+<span id="session-hash">SHA-256 SESSION: 4F92-7E1A-B831-DC88</span>
+<span class="text-secondary font-mono flex items-center gap-1">
+<span class="w-1.5 h-1.5 bg-secondary inline-block"></span>
+            SYS_ONLINE
+          </span>
+</div>
+</div>
+</div>
+<!-- Footnote Operational Directives -->
+<div class="flex items-center justify-between px-space-md py-space-xs text-outline font-label-sm text-label-sm">
+<span>NODE ADDR: 192.0.2.144 // TOC-SECTOR-NW</span>
+<span>RAKSHALOGIX SYSTEM V4.18.2</span>
+</div>
+</div>
+<!-- Client-side Logic for Quick-fills and Security UI -->
+<script>
+    function applyRole(roleType) {
+      const officerInput = document.getElementById('officer-id');
+      const passInput = document.getElementById('auth-token');
+      const hashDisplay = document.getElementById('session-hash');
+
+      if (roleType === 'COMMANDER') {
+        officerInput.value = 'IC-10294M / BRIG_SINGH';
+        passInput.value = 'ALPHA_OMEGA_SEC_994';
+        hashDisplay.innerText = 'SHA-256 SESSION: CC91-38BF-098A-E412';
+      } else if (roleType === 'LOGISTICS') {
+        officerInput.value = 'IC-74921X / MAJ_RATHORE';
+        passInput.value = 'ORDNANCE_DISPATCH_LEH_24';
+        hashDisplay.innerText = 'SHA-256 SESSION: 4F92-7E1A-B831-DC88';
+      } else if (roleType === 'AUDITOR') {
+        officerInput.value = 'AUD-90218B / OBSERVER_CORPS';
+        passInput.value = 'READ_ONLY_TOKEN_PUBLIC_KEY';
+        hashDisplay.innerText = 'SHA-256 SESSION: 110A-F54C-8891-23AA';
+      }
+    }
+
+    function toggleKeyVisibility() {
+      const passInput = document.getElementById('auth-token');
+      const eyeIcon = document.getElementById('eye-icon');
+      if (passInput.type === 'password') {
+        passInput.type = 'text';
+        eyeIcon.innerText = 'visibility_off';
+      } else {
+        passInput.type = 'password';
+        eyeIcon.innerText = 'visibility';
+      }
+    }
+
+    function triggerAuth() {
+      const btn = document.getElementById('btn-login');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<span class="material-symbols-outlined text-headline-sm animate-spin">refresh</span><span>VERIFYING CRYPTOGRAPHIC TOKEN...</span>';
+      btn.classList.add('opacity-80', 'pointer-events-none');
+
+      setTimeout(() => {
+        btn.innerHTML = '<span class="material-symbols-outlined text-headline-sm">check_circle</span><span>ACCESS GRANTED // INITIALIZING TOC...</span>';
+        btn.classList.remove('bg-primary-container', 'text-on-primary-container');
+        btn.classList.add('bg-secondary-container', 'text-on-secondary');
+      }, 1200);
+    }
+  </script>
+</div></main></body></html>

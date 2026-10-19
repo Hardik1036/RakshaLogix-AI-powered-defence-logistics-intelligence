@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-secondary":"#003824","surface-container-low":"#181b25","on-secondary-fixed":"#002113","primary-fixed-dim":"#4cd7f6","surface-container-highest":"#31353f","on-primary-container":"#00424f","on-tertiary":"#472a00","on-tertiary-fixed-variant":"#653e00","surface-variant":"#31353f","surface-container":"#1c1f29","inverse-surface":"#dfe2ef","inverse-on-surface":"#2c303a","on-secondary-fixed-variant":"#005236","surface-container-high":"#262a34","tertiary-fixed-dim":"#ffb95f","tertiary":"#ffb95f","background":"#0f131c","inverse-primary":"#00687a","on-surface":"#dfe2ef","secondary-container":"#00a572","on-primary":"#003640","on-error":"#690005","primary-fixed":"#acedff","primary-container":"#06b6d4","on-primary-fixed-variant":"#004e5c","error":"#ffb4ab","surface-container-lowest":"#0a0e17","on-surface-variant":"#bcc9cd","on-secondary-container":"#00311f","tertiary-container":"#e79400","on-primary-fixed":"#001f26","secondary":"#4edea3","surface-dim":"#0f131c","surface-tint":"#4cd7f6","error-container":"#93000a","secondary-fixed":"#6ffbbe","surface-bright":"#353943","primary":"#4cd7f6","on-tertiary-fixed":"#2a1700","outline":"#869397","on-tertiary-container":"#563400","surface":"#0f131c","on-error-container":"#ffdad6","outline-variant":"#3d494c","secondary-fixed-dim":"#4edea3","on-background":"#dfe2ef","tertiary-fixed":"#ffddb8"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"space-xs":"0.25rem","space-xl":"1.5rem","space-lg":"1rem","margin":"1rem","gutter":"0.75rem","space-md":"0.75rem","space-sm":"0.5rem"},fontFamily:{"headline-md":["Inter"],"telemetry-display":["JetBrains Mono"],"body-sm":["Inter"],"body-md":["Inter"],"label-lg":["JetBrains Mono"],"headline-xl":["Inter"],"headline-sm":["Inter"],"headline-lg":["Inter"],"label-sm":["JetBrains Mono"],"label-md":["JetBrains Mono"],"telemetry-metric":["JetBrains Mono"],"body-lg":["Inter"]},fontSize:{"headline-md":["16px",{lineHeight:"24px",letterSpacing:"0em",fontWeight:"600"}],"telemetry-display":["28px",{lineHeight:"32px",letterSpacing:"-0.03em",fontWeight:"700"}],"body-sm":["12px",{lineHeight:"16px",letterSpacing:"0em",fontWeight:"400"}],"body-md":["13px",{lineHeight:"18px",letterSpacing:"0em",fontWeight:"400"}],"label-lg":["13px",{lineHeight:"16px",letterSpacing:"0.05em",fontWeight:"600"}],"headline-xl":["24px",{lineHeight:"32px",letterSpacing:"-0.02em",fontWeight:"700"}],"headline-sm":["14px",{lineHeight:"20px",letterSpacing:"0.01em",fontWeight:"600"}],"headline-lg":["20px",{lineHeight:"28px",letterSpacing:"-0.01em",fontWeight:"700"}],"label-sm":["10px",{lineHeight:"12px",letterSpacing:"0.1em",fontWeight:"500"}],"label-md":["11px",{lineHeight:"14px",letterSpacing:"0.08em",fontWeight:"500"}],"telemetry-metric":["18px",{lineHeight:"22px",letterSpacing:"0em",fontWeight:"700"}],"body-lg":["14px",{lineHeight:"20px",letterSpacing:"0em",fontWeight:"400"}]}}}}</script></head><body class="bg-surface-container-lowest font-body-md text-on-surface antialiased select-none"><header class="fixed top-0 left-0 right-0 h-14 z-50 bg-surface-container-low border-b border-outline-variant flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-sm"><div class="w-7 h-7 bg-surface-container flex items-center justify-center border border-outline-variant"><span class="material-symbols-outlined text-primary text-[18px]">shield</span></div><span class="font-label-lg text-label-lg tracking-wider text-on-surface uppercase">RAKSHALOGIX <span class="text-outline-variant">//</span> <span class="text-primary">FORWARD-LOGIX-OPS</span></span></div><div class="h-4 w-px bg-outline-variant"></div><div class="px-space-sm py-0.5 bg-surface-container-lowest border border-outline-variant text-primary font-label-sm text-label-sm">[SECTOR-04 NORTH-WEST CORPS | DEFCON-2]</div><div class="px-space-sm py-0.5 bg-surface-container border border-outline-variant text-on-surface-variant font-label-sm text-label-sm flex items-center gap-space-xs"><span class="material-symbols-outlined text-secondary text-[12px]">schedule</span><span>ZULU: 04:42:19Z</span><span class="text-outline">|</span><span>IST: 10:12:19</span></div></div><div class="flex items-center gap-space-md"><div class="px-space-sm py-0.5 bg-error-container/20 border border-error text-error font-label-sm text-label-sm tracking-wider uppercase">RESTRICTED // SECRET MIL-INTEL</div><div class="px-space-sm py-0.5 bg-surface-container-lowest border border-outline-variant text-on-surface font-label-sm text-label-sm uppercase">[MAJ. V. RATHORE - HQ 14 CORPS LOGISTICS CHIEF]</div><div class="relative flex items-center gap-space-xs"><img alt="Profile" class="w-8 h-8 rounded-full object-cover border border-outline-variant" src="https://lh3.googleusercontent.com/aida/AEtjO1WHq8_oTmArBB-10gj1a_9EJa1eqL4RRUwomry2Sz1XEhoEpdRc45xOnlOg9kblmzxN9pITw6hV3ON8oiEafms3lM4FSaK2p8mKicdXqrKStbOqXsaU6Sdgx87Hw1MpVI0fDaXlN8JfN0h-70iiJUmSDGmOxAM2SR73Nhd7lKSIS02Frf6NIs0HVNTivT3ExmL4F1NSkZq5xqAmhYUnnoIe4mQXJLTO59b4p2WRMCwO-ttqx05o2IhB7mAl"/><span class="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-secondary border border-surface-container-lowest"></span></div><button class="px-space-md py-1 bg-surface-container border border-error/80 hover:bg-error-container/30 text-error font-label-sm text-label-sm tracking-wider uppercase transition-colors flex items-center gap-space-xs"><span class="material-symbols-outlined text-[14px]">power_settings_new</span><span>LOGOUT</span></button></div></header><aside class="fixed left-0 top-14 bottom-0 w-64 bg-surface-container-low border-r border-outline-variant z-40 flex flex-col justify-between"><div class="flex flex-col"><div class="px-space-md py-space-sm bg-surface-container border-b border-outline-variant flex items-center justify-between"><span class="font-label-sm text-label-sm text-outline uppercase tracking-widest">TACTICAL CONSOLE NAV</span><span class="font-label-sm text-label-sm text-secondary font-bold">SYS-ONLINE</span></div><nav class="flex flex-col py-space-xs" data-active-classes="bg-surface-container-high text-primary border-l-2 border-primary font-bold"><a class="flex items-center justify-between px-space-md py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface text-label-md font-label-md transition-colors" data-path="dashboard" href="#"><span class="tracking-wider uppercase">Dashboard</span><span class="text-[10px] text-outline font-label-sm">[F1]</span></a><a class="flex items-center justify-between px-space-md py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface text-label-md font-label-md transition-colors" data-path="inventory" href="#"><span class="tracking-wider uppercase">Inventory</span><span class="px-1.5 py-0.2 bg-error-container text-error text-[10px] font-label-sm border border-error">3</span></a><a class="flex items-center justify-between px-space-md py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface text-label-md font-label-md transition-colors" data-path="forecast" href="#"><span class="tracking-wider uppercase">Forecast</span><span class="text-[10px] text-outline font-label-sm">[F3]</span></a><a class="flex items-center justify-between px-space-md py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface text-label-md font-label-md transition-colors" data-path="gis-map" href="#"><span class="tracking-wider uppercase">GIS Map</span><span class="px-1.5 py-0.2 bg-tertiary-container/30 text-tertiary text-[10px] font-label-sm border border-tertiary">ALERT</span></a><a class="flex items-center justify-between px-space-md py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface text-label-md font-label-md transition-colors" data-path="convoys" href="#"><span class="tracking-wider uppercase">Convoys</span><span class="px-1.5 py-0.2 bg-surface-container-highest text-on-surface-variant text-[10px] font-label-sm border border-outline-variant">14</span></a><a class="flex items-center justify-between px-space-md py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface text-label-md font-label-md transition-colors" data-path="alerts" href="#"><span class="tracking-wider uppercase">Alerts</span><span class="px-1.5 py-0.2 bg-error-container text-error text-[10px] font-label-sm border border-error animate-pulse">7</span></a><a aria-current="page" class="flex items-center justify-between px-space-md py-2 transition-colors bg-surface-container-high text-primary border-l-2 border-primary font-bold" data-path="simulation" href="#"><span class="tracking-wider uppercase">Simulation</span><span class="text-[10px] text-outline font-label-sm">[F7]</span></a><a class="flex items-center justify-between px-space-md py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface text-label-md font-label-md transition-colors" data-path="reports" href="#"><span class="tracking-wider uppercase">Reports</span><span class="text-[10px] text-outline font-label-sm">[F8]</span></a></nav></div><div class="p-space-sm bg-surface-container border-t border-outline-variant space-y-space-xs"><div class="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant"><span>ENCRYPTED LINK</span><label class="relative inline-flex items-center cursor-pointer"><input checked="" class="sr-only peer" type="checkbox"/><div class="w-7 h-3.5 bg-surface-container-highest border border-outline peer-checked:bg-secondary-container peer-checked:border-secondary"></div></label></div><div class="p-1.5 bg-surface-container-lowest border border-outline-variant font-label-sm text-[9px] text-secondary leading-tight"><div class="flex items-center gap-1"><span class="w-1.5 h-1.5 bg-secondary inline-block"></span><span>SAT-LINK ACTIVE: 99.8% UPTIME</span></div><div class="text-outline mt-0.5">LATENCY: 24ms | FREQ: KU-BAND 14.2G</div></div></div></aside><div class="pl-64"><main class="relative pt-14 bg-surface-container-lowest min-h-screen"><div class="flex flex-col w-full">
+<div class="p-space-lg flex flex-col gap-space-lg">
+<!-- Breadcrumb & Mode Status Banner -->
+<div class="flex flex-wrap items-center justify-between gap-space-md bg-surface-container-low px-space-md py-space-sm border-l-2 border-primary">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-widest">TACTICAL WORKBENCH //</span>
+<span class="font-label-md text-label-md text-primary font-bold tracking-wider uppercase">SIMULATION LAB [HIGH-ALTITUDE POL-88 RESUPPLY]</span>
+<span class="px-space-xs py-0.5 bg-tertiary-container/20 text-tertiary font-label-sm text-label-sm border border-tertiary/40 uppercase">LIVE BUFFER ACCELERATOR</span>
+</div>
+<div class="flex items-center gap-space-md font-label-sm text-label-sm text-on-surface-variant">
+<span>ENGINE: <span class="text-on-surface font-bold">MONTE-CARLO STOCHASTIC-V4</span></span>
+<span class="text-outline">|</span>
+<span>SEED: <span class="text-secondary font-mono">0x9F41C</span></span>
+<span class="text-outline">|</span>
+<span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-secondary inline-block"></span> READY</span>
+</div>
+</div>
+<!-- Main Two-Column Tactical Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- LEFT COLUMN: Tactical Parameter Tuning Panel (4 Cols on 12-col) -->
+<section class="lg:col-span-4 flex flex-col bg-surface-container border border-outline-variant shadow-lg">
+<!-- Panel Header -->
+<div class="px-space-md py-space-sm bg-surface-container-lowest border-b border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">tune</span>
+<h2 class="font-label-md text-label-md text-on-surface font-bold tracking-wider uppercase">SCENARIO GENERATOR &amp; STRESS-TEST ENGINE [ALGO-SIM-V4]</h2>
+</div>
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">CONFIG-01</span>
+</div>
+<div class="p-space-md flex flex-col gap-space-lg">
+<!-- Control 1: Demand Multiplier Slider -->
+<div class="flex flex-col gap-space-xs bg-surface-container-lowest p-space-md border border-outline-variant">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-on-surface uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-tertiary text-[14px]">local_fire_department</span>
+                DEMAND MULTIPLIER
+              </label>
+<div class="flex items-center gap-1">
+<span class="font-telemetry-metric text-telemetry-metric text-tertiary" id="demand-val">2.2x</span>
+<span class="font-label-sm text-label-sm text-outline">[SURGE]</span>
+</div>
+</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant flex items-center justify-between">
+<span>ACTIVE THRESHOLD:</span>
+<span class="text-tertiary font-bold">COMBAT SURGE / SUB-ZERO EMERGENCY</span>
+</div>
+<!-- Range Slider -->
+<div class="mt-space-xs relative">
+<input class="w-full h-1.5 bg-surface-container-highest appearance-none cursor-pointer accent-primary focus:outline-none" id="demand-range" max="3.0" min="1.0" step="0.1" type="range" value="2.2"/>
+<!-- Ticks -->
+<div class="flex justify-between font-label-sm text-[9px] text-outline mt-1 font-mono">
+<span>1.0x</span>
+<span>1.5x</span>
+<span>2.0x</span>
+<span class="text-tertiary font-bold">2.5x</span>
+<span>3.0x</span>
+</div>
+</div>
+<div class="font-body-sm text-body-sm text-outline mt-1 leading-tight">
+              Forces auxiliary heating fuel consumption (+140%) and forward armor readiness burn rates.
+            </div>
+</div>
+<!-- Control 2: Snowfall Accumulation Slider -->
+<div class="flex flex-col gap-space-xs bg-surface-container-lowest p-space-md border border-outline-variant">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-on-surface uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-[14px]">ac_unit</span>
+                SNOWFALL ACCUMULATION
+              </label>
+<div class="flex items-center gap-1">
+<span class="font-telemetry-metric text-telemetry-metric text-error" id="snow-val">65</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">mm/hr</span>
+</div>
+</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant flex items-center justify-between">
+<span>METEOROLOGICAL SEVERITY:</span>
+<span class="text-error font-bold tracking-wider">BLIZZARD STAGE 3</span>
+</div>
+<!-- Severity Gauge Bar -->
+<div class="w-full bg-surface-container-high h-2 relative border border-outline-variant overflow-hidden">
+<div class="h-full bg-secondary w-1/3 float-left"></div>
+<div class="h-full bg-tertiary w-1/3 float-left"></div>
+<div class="h-full bg-error w-1/3 float-left"></div>
+<!-- Marker Pointer -->
+<div class="absolute top-0 bottom-0 w-1 bg-on-surface shadow" id="snow-gauge-pin" style="left: 65%;"></div>
+</div>
+<!-- Slider Control -->
+<div class="mt-space-xs">
+<input class="w-full h-1.5 bg-surface-container-highest appearance-none cursor-pointer accent-error focus:outline-none" id="snow-range" max="100" min="0" step="1" type="range" value="65"/>
+<div class="flex justify-between font-label-sm text-[9px] text-outline mt-1 font-mono">
+<span>0 mm/h</span>
+<span>25</span>
+<span>50</span>
+<span class="text-error font-bold">75</span>
+<span>100 mm/h</span>
+</div>
+</div>
+<div class="font-body-sm text-body-sm text-outline mt-1 leading-tight">
+              Route pass closure likelihood escalates exponentially above 40 mm/hr. Convoy speed drops by 78%.
+            </div>
+</div>
+<!-- Control 3: Pass Cutoff Tactical Toggle/Radio Selector -->
+<div class="flex flex-col gap-space-xs bg-surface-container-lowest p-space-md border border-outline-variant">
+<span class="font-label-md text-label-md text-on-surface uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-outline text-[14px]">alt_route</span>
+              MOUNTAIN PASS ARTERIAL CORRIDORS
+            </span>
+<div class="font-body-sm text-body-sm text-outline mb-1">
+              Select primary logistical choke point override status:
+            </div>
+<div class="grid grid-cols-1 gap-space-xs">
+<!-- Pass Echo Radio -->
+<label class="flex items-center justify-between p-space-sm bg-surface-container border border-outline-variant cursor-pointer hover:border-outline transition-colors">
+<div class="flex items-center gap-space-sm">
+<input class="accent-primary w-3.5 h-3.5 cursor-pointer" name="pass_cutoff" type="radio" value="echo"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface uppercase font-bold">PASS ECHO (NH-1D BYPASS)</span>
+<span class="font-label-sm text-[9px] text-outline">ELEV: 11,578 FT // SINGLE-LANE GRIT</span>
+</div>
+</div>
+<span class="px-space-xs py-0.5 bg-secondary-container/20 border border-secondary text-secondary font-label-sm text-[10px] uppercase font-bold">OPEN / HIGH RISK</span>
+</label>
+<!-- Zojila Pass Radio (Checked by requirement) -->
+<label class="flex items-center justify-between p-space-sm bg-surface-container-high border-2 border-error cursor-pointer">
+<div class="flex items-center gap-space-sm">
+<input checked="" class="accent-error w-3.5 h-3.5 cursor-pointer" name="pass_cutoff" type="radio" value="zojila"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-error font-bold uppercase">ZOJILA PASS (AXIS-ALPHA)</span>
+<span class="font-label-sm text-[9px] text-outline">ELEV: 11,575 FT // HEAVY AVALANCHE ZONE</span>
+</div>
+</div>
+<span class="px-space-xs py-0.5 bg-error-container border border-error text-error font-label-sm text-[10px] uppercase font-bold">CUTOFF / CLOSED</span>
+</label>
+</div>
+</div>
+<!-- Scenario Parameter Summary Grid -->
+<div class="grid grid-cols-2 gap-space-xs bg-surface-container-high p-space-sm border border-outline-variant font-label-sm text-label-sm">
+<div>
+<span class="text-outline uppercase block">Sim Target:</span>
+<span class="text-on-surface font-bold">POL-88 (ARCTIC DIESEL)</span>
+</div>
+<div>
+<span class="text-outline uppercase block">Projection Horizon:</span>
+<span class="text-primary font-bold">48 HOURS [T+0 TO T+48]</span>
+</div>
+<div>
+<span class="text-outline uppercase block">Active Fleet:</span>
+<span class="text-on-surface">14 HEAVY CONVOYS</span>
+</div>
+<div>
+<span class="text-outline uppercase block">Terrain Friction:</span>
+<span class="text-error font-bold">+82% ROAD SLIPPAGE</span>
+</div>
+</div>
+<!-- STRICT ACTION BUTTONS (NO EXTRAS) -->
+<div class="flex items-center gap-space-sm pt-space-xs">
+<!-- Reset Scenario (Secondary Action Trigger) -->
+<button class="flex-1 px-space-md py-2 bg-surface-container text-on-surface-variant border border-outline-variant hover:border-primary hover:text-on-surface font-label-md text-label-md uppercase tracking-wider transition-colors flex items-center justify-center gap-1" id="btn-reset">
+<span class="material-symbols-outlined text-[15px]">restart_alt</span>
+              RESET SCENARIO
+            </button>
+<!-- Run Simulation (Primary Tactical Trigger) -->
+<button class="flex-1 px-space-md py-2 bg-primary-container hover:bg-primary text-surface-container-lowest font-label-md text-label-md font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-1 shadow-md" id="btn-run">
+<span class="material-symbols-outlined text-[16px]">play_arrow</span>
+              RUN SIMULATION
+            </button>
+</div>
+</div>
+</section>
+<!-- RIGHT COLUMN: Before vs After Impact Analysis & Dual Trajectory Graph (8 Cols on 12-col) -->
+<section class="lg:col-span-8 flex flex-col gap-space-lg">
+<!-- Impact Metric Comparison Cards: Baseline vs Simulated -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Card 1: BASELINE SCENARIO (Current Reality) -->
+<div class="bg-surface-container border border-outline-variant flex flex-col justify-between">
+<div>
+<!-- Card Header Strip -->
+<div class="px-space-md py-space-xs bg-surface-container-lowest border-b border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-outline text-[16px]">timeline</span>
+<span class="font-label-md text-label-md text-outline uppercase font-bold">BASELINE SCENARIO</span>
+</div>
+<span class="px-space-xs py-0.5 bg-surface-container-highest border border-outline-variant text-on-surface-variant font-label-sm text-label-sm uppercase">CURRENT REALITY</span>
+</div>
+<!-- Main Payload -->
+<div class="p-space-md flex flex-col gap-space-sm">
+<!-- Tag -->
+<div class="flex items-center justify-between">
+<span class="px-space-xs py-0.5 bg-tertiary-container/20 border border-tertiary text-tertiary font-label-sm text-label-sm font-bold uppercase">
+                    1 OUTPOST AT RISK
+                  </span>
+<span class="font-label-sm text-label-sm text-outline">STRESS LVL: LOW</span>
+</div>
+<!-- Primary Unit Impact -->
+<div class="bg-surface-container-lowest p-space-sm border border-outline-variant">
+<div class="font-label-sm text-label-sm text-outline uppercase">IMPACTED NODE</div>
+<div class="font-telemetry-metric text-telemetry-metric text-on-surface font-bold">FOB Charlie: Stockout in 34h</div>
+<div class="font-body-sm text-body-sm text-outline mt-0.5">MGRS: 43S ED 8824 1042 // SECTOR BRAVO</div>
+</div>
+<!-- Telemetry Row Data -->
+<div class="space-y-space-xs pt-space-xs font-label-sm text-label-sm">
+<div class="flex justify-between border-b border-outline-variant/40 pb-1">
+<span class="text-outline uppercase">Supply Depletion Rate:</span>
+<span class="text-on-surface font-mono font-bold">Normal 620 L/d</span>
+</div>
+<div class="flex justify-between border-b border-outline-variant/40 pb-1">
+<span class="text-outline uppercase">Pass Status:</span>
+<span class="text-secondary font-mono font-bold">Open (marginal)</span>
+</div>
+<div class="flex justify-between border-b border-outline-variant/40 pb-1">
+<span class="text-outline uppercase">Stranded Convoys:</span>
+<span class="text-on-surface font-mono">0 UNITS (CLEAR)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card Bottom Total Metric -->
+<div class="p-space-md bg-surface-container-lowest border-t border-outline-variant flex items-center justify-between">
+<span class="font-label-md text-label-md text-outline uppercase">TOTAL DEFICIT</span>
+<span class="font-telemetry-metric text-telemetry-metric text-tertiary font-mono font-bold">-3,850 L</span>
+</div>
+</div>
+<!-- Card 2: SIMULATED SCENARIO (Surge 2.2x + Zojila Cutoff) -->
+<div class="bg-surface-container border-2 border-error shadow-xl flex flex-col justify-between relative overflow-hidden">
+<!-- Critical Corner Accent Accent Strip -->
+<div class="absolute top-0 right-0 w-24 h-1 bg-error"></div>
+<div>
+<!-- Card Header Strip -->
+<div class="px-space-md py-space-xs bg-error-container/30 border-b border-error flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-error text-[16px]">warning</span>
+<span class="font-label-md text-label-md text-error uppercase font-bold">SIMULATED SCENARIO</span>
+</div>
+<span class="font-label-sm text-label-sm text-error font-mono font-bold">[SURGE 2.2X + ZOJILA CUTOFF]</span>
+</div>
+<!-- Main Payload -->
+<div class="p-space-md flex flex-col gap-space-sm">
+<!-- Tag -->
+<div class="flex items-center justify-between">
+<span class="px-space-xs py-0.5 bg-error-container border border-error text-error font-label-sm text-label-sm font-bold uppercase tracking-wider animate-pulse">
+                    4 OUTPOSTS AT CRITICAL RISK
+                  </span>
+<span class="font-label-sm text-label-sm text-error font-bold">DEFCON-2 SURGE</span>
+</div>
+<!-- Impacted Outposts Sub-Grid -->
+<div class="bg-surface-container-lowest p-space-sm border border-error/50 flex flex-col gap-1">
+<div class="font-label-sm text-label-sm text-error uppercase font-bold flex items-center gap-1">
+<span class="w-1.5 h-1.5 bg-error inline-block"></span> CRITICAL RESERVES DEPLETED:
+                  </div>
+<div class="grid grid-cols-2 gap-x-2 gap-y-1 font-label-sm text-label-sm">
+<div class="text-error font-bold flex items-center justify-between bg-error-container/20 px-1.5 py-0.5 border border-error/30">
+<span>FOB Charlie</span>
+<span class="font-mono text-on-surface">14h to dry</span>
+</div>
+<div class="text-error font-bold flex items-center justify-between bg-error-container/20 px-1.5 py-0.5 border border-error/30">
+<span>Galwan Post</span>
+<span class="font-mono text-on-surface">22h to dry</span>
+</div>
+<div class="text-tertiary font-bold flex items-center justify-between bg-surface-container px-1.5 py-0.5 border border-outline-variant">
+<span>Dras Outpost</span>
+<span class="font-mono text-on-surface">48h to dry</span>
+</div>
+<div class="text-tertiary font-bold flex items-center justify-between bg-surface-container px-1.5 py-0.5 border border-outline-variant">
+<span>Siachen Base</span>
+<span class="font-mono text-on-surface">54h to dry</span>
+</div>
+</div>
+</div>
+<!-- Telemetry Row Data -->
+<div class="space-y-space-xs pt-space-xs font-label-sm text-label-sm">
+<div class="flex justify-between border-b border-outline-variant/40 pb-1">
+<span class="text-outline uppercase">Projected Fleet Exhaustion:</span>
+<span class="text-error font-mono font-bold">6 convoys stranded / delayed</span>
+</div>
+<div class="flex justify-between border-b border-outline-variant/40 pb-1">
+<span class="text-outline uppercase">Zojila Bypass Reroute:</span>
+<span class="text-tertiary font-mono">+186 km (+19.4 hrs Transit)</span>
+</div>
+<div class="flex justify-between border-b border-outline-variant/40 pb-1">
+<span class="text-outline uppercase">Freeze Point Risk:</span>
+<span class="text-error font-mono font-bold">-38°C (GEL THREAT HIGH)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card Bottom Total Metric -->
+<div class="p-space-md bg-error-container/20 border-t border-error flex items-center justify-between">
+<div>
+<span class="font-label-md text-label-md text-error uppercase font-bold block">IMMEDIATE DEFICIT SURGE</span>
+<span class="font-label-sm text-[9px] text-outline uppercase">AGGREGATE POL-88 CAPACITY HOLE</span>
+</div>
+<span class="font-telemetry-metric text-telemetry-metric text-error font-mono font-bold tracking-tight">-18,400 L POL-88</span>
+</div>
+</div>
+</div>
+<!-- Side-by-Side Dual Trajectory Depletion Graph Panel -->
+<div class="bg-surface-container border border-outline-variant flex flex-col">
+<!-- Graph Header Strip -->
+<div class="px-space-md py-space-sm bg-surface-container-lowest border-b border-outline-variant flex flex-wrap items-center justify-between gap-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[18px]">show_chart</span>
+<h3 class="font-label-md text-label-md text-on-surface font-bold uppercase tracking-wider">
+                48H MULTI-OUTPOST STOCK DEPLETION TRAJECTORY (BASELINE VS SIMULATED)
+              </h3>
+</div>
+<!-- Telemetry Indicator -->
+<div class="flex items-center gap-space-md font-label-sm text-label-sm">
+<span class="text-outline">UNIT: <span class="text-on-surface font-mono font-bold">KILO-LITRES (kL)</span></span>
+<span class="px-space-xs py-0.5 bg-surface-container border border-outline-variant text-primary font-mono font-bold">DELTA: -14.55 kL</span>
+</div>
+</div>
+<!-- Canvas / SVG Visualization Container -->
+<div class="p-space-md bg-surface-container-lowest relative">
+<!-- SVG Plot Area -->
+<div class="w-full h-72 relative">
+<svg class="w-full h-full text-on-surface overflow-visible" preserveaspectratio="none" viewbox="0 0 800 280">
+<!-- Background Gridlines -->
+<defs>
+<pattern height="35" id="tactical-grid" patternunits="userSpaceOnUse" width="80">
+<line stroke="#1c1f29" stroke-width="1" x1="0" x2="80" y1="0" y2="0"></line>
+<line stroke="#1c1f29" stroke-width="1" x1="0" x2="0" y1="0" y2="35"></line>
+</pattern>
+<!-- Shaded Critical Risk Window Area Pattern -->
+<lineargradient id="critical-gradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#ffb4ab" stop-opacity="0.25"></stop>
+<stop offset="100%" stop-color="#93000a" stop-opacity="0.05"></stop>
+</lineargradient>
+</defs>
+<!-- Grid Canvas fill -->
+<rect fill="url(#tactical-grid)" height="240" width="800"></rect>
+<!-- Shaded Critical Risk Window (T+14h to T+48h below safe threshold) -->
+<!-- x=233 is approx T+14h, width=567 to 800 -->
+<rect fill="url(#critical-gradient)" height="80" width="567" x="233" y="160"></rect>
+<text class="font-label-sm text-[10px] fill-error font-mono font-bold uppercase tracking-wider" x="245" y="180">CRITICAL RISK EMERGENCY WINDOW [STOCK &lt; 20%]</text>
+<!-- Zojila Pass Closure Event Line at T+6h (x=100) -->
+<line stroke="#ffb95f" stroke-dasharray="3 3" stroke-width="1.5" x1="100" x2="100" y1="0" y2="240"></line>
+<rect fill="#1c1f29" height="18" stroke="#3d494c" width="130" x="105" y="12"></rect>
+<text class="font-label-sm text-[9px] fill-tertiary font-mono font-bold uppercase" x="110" y="25">T+6h: ZOJILA PASS CLOSED</text>
+<!-- Critical Safety Buffer Threshold Line at Y=160 (20kL buffer) -->
+<line stroke="#ffb4ab" stroke-dasharray="4 4" stroke-opacity="0.8" stroke-width="1" x1="0" x2="800" y1="160" y2="160"></line>
+<text class="font-label-sm text-[9px] fill-error font-mono uppercase" text-anchor="end" x="790" y="154">CRITICAL MINIMUM RESERVE BUFFER (10.0 kL)</text>
+<!-- Baseline Trajectory Line: Solid Cyan curve declining steadily towards safety threshold -->
+<!-- Start (0, 30) -> (200, 60) -> (400, 95) -> (600, 135) -> (800, 165) -->
+<path d="M 0 35 C 200 65, 400 100, 600 135 L 800 168" fill="none" stroke="#4cd7f6" stroke-width="2.5"></path>
+<!-- Baseline Data Node Pins -->
+<circle cx="0" cy="35" fill="#003640" r="3.5" stroke="#4cd7f6" stroke-width="2"></circle>
+<circle cx="200" cy="67" fill="#003640" r="3" stroke="#4cd7f6" stroke-width="1.5"></circle>
+<circle cx="400" cy="102" fill="#003640" r="3" stroke="#4cd7f6" stroke-width="1.5"></circle>
+<circle cx="600" cy="135" fill="#003640" r="3" stroke="#4cd7f6" stroke-width="1.5"></circle>
+<circle cx="800" cy="168" fill="#003640" r="4" stroke="#4cd7f6" stroke-width="2"></circle>
+<text class="font-label-sm text-[10px] fill-primary font-mono font-bold" text-anchor="end" x="790" y="185">9.2 kL (MARGINAL)</text>
+<!-- Simulated Trajectory Line: Steep Dashed Red curve plummeting through emergency buffer at T+14h (x=233) -->
+<!-- Start (0, 35) -> rapid decline steep curve -> (100, 80) -> (233, 160) -> (400, 215) -> (800, 238) -->
+<path d="M 0 35 Q 120 70, 233 160 T 500 225 L 800 238" fill="none" stroke="#ffb4ab" stroke-dasharray="6 4" stroke-width="2.5"></path>
+<!-- Simulation Data Node Pins -->
+<circle cx="0" cy="35" fill="#690005" r="3.5" stroke="#ffb4ab" stroke-width="2"></circle>
+<circle cx="100" cy="72" fill="#690005" r="3" stroke="#ffb4ab" stroke-width="1.5"></circle>
+<!-- Intersection at T+14h -->
+<circle cx="233" cy="160" fill="#ffb4ab" r="5" stroke="#93000a" stroke-width="2"></circle>
+<rect fill="#262a34" height="22" stroke="#ffb4ab" width="138" x="242" y="132"></rect>
+<text class="font-label-sm text-[9px] fill-error font-mono font-bold uppercase" x="247" y="147">T+14h: FOB CHARLIE DRYOUT</text>
+<!-- Depleted Terminal Node T+48h -->
+<circle cx="800" cy="238" fill="#ffb4ab" r="4.5" stroke="#690005" stroke-width="2"></circle>
+<text class="font-label-sm text-[10px] fill-error font-mono font-bold" text-anchor="end" x="790" y="232">0.8 kL (TOTAL DEPLETION)</text>
+<!-- Y-Axis Ticks & Units -->
+<text class="font-label-sm text-[9px] fill-outline font-mono" x="5" y="38">50 kL</text>
+<text class="font-label-sm text-[9px] fill-outline font-mono" x="5" y="98">35 kL</text>
+<text class="font-label-sm text-[9px] fill-outline font-mono" x="5" y="158">20 kL</text>
+<text class="font-label-sm text-[9px] fill-outline font-mono" x="5" y="218">5 kL</text>
+<!-- X-Axis Line -->
+<line stroke="#3d494c" stroke-width="1.5" x1="0" x2="800" y1="240" y2="240"></line>
+<!-- X-Axis Time Markers -->
+<text class="font-label-sm text-[10px] fill-outline font-mono font-bold" x="5" y="258">T+0 (NOW)</text>
+<text class="font-label-sm text-[10px] fill-outline font-mono font-bold" text-anchor="middle" x="200" y="258">T+12h</text>
+<text class="font-label-sm text-[10px] fill-outline font-mono font-bold" text-anchor="middle" x="400" y="258">T+24h</text>
+<text class="font-label-sm text-[10px] fill-outline font-mono font-bold" text-anchor="middle" x="600" y="258">T+36h</text>
+<text class="font-label-sm text-[10px] fill-outline font-mono font-bold" text-anchor="end" x="770" y="258">T+48h (LIMIT)</text>
+</svg>
+</div>
+<!-- Graph Legend Bar -->
+<div class="mt-space-md pt-space-xs border-t border-outline-variant flex flex-wrap items-center justify-between gap-space-md bg-surface-container p-space-sm">
+<div class="flex items-center gap-space-lg">
+<!-- Baseline Legend Item -->
+<div class="flex items-center gap-space-xs">
+<span class="w-4 h-0.5 bg-primary inline-block"></span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold uppercase">BASELINE:</span>
+<span class="font-label-sm text-label-sm text-outline">1 Outpost At Risk [Charlie]</span>
+</div>
+<!-- Simulated Legend Item -->
+<div class="flex items-center gap-space-xs">
+<span class="w-4 h-0.5 border-t-2 border-dashed border-error inline-block"></span>
+<span class="font-label-sm text-label-sm text-error font-bold uppercase">SIMULATED:</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">4 Outposts [Charlie, Galwan, Dras, Siachen]</span>
+</div>
+</div>
+<!-- Risk Severity Metric Tag -->
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm">
+<span class="text-outline uppercase">COLLAPSE TRAJECTORY:</span>
+<span class="text-error font-bold uppercase tracking-wider bg-error-container/30 px-space-xs py-0.5 border border-error">EXPONENTIAL CAS-LEVEL 4</span>
+</div>
+</div>
+</div>
+<!-- Outpost Depletion Matrix Bar Below Chart -->
+<div class="grid grid-cols-2 md:grid-cols-4 divide-x divide-outline-variant bg-surface-container-high border-t border-outline-variant">
+<div class="p-space-sm flex flex-col">
+<span class="font-label-sm text-[10px] text-outline uppercase font-mono">FOB CHARLIE (SEC-04)</span>
+<div class="flex items-baseline justify-between mt-1">
+<span class="font-telemetry-metric text-telemetry-metric text-error">14h</span>
+<span class="font-label-sm text-error bg-error-container/20 px-1 border border-error/50">DRY</span>
+</div>
+<span class="font-label-sm text-[9px] text-outline mt-0.5">EST. RUNOUT: 18:42 ZULU</span>
+</div>
+<div class="p-space-sm flex flex-col">
+<span class="font-label-sm text-[10px] text-outline uppercase font-mono">GALWAN POST (SECTOR-01)</span>
+<div class="flex items-baseline justify-between mt-1">
+<span class="font-telemetry-metric text-telemetry-metric text-error">22h</span>
+<span class="font-label-sm text-error bg-error-container/20 px-1 border border-error/50">DRY</span>
+</div>
+<span class="font-label-sm text-[9px] text-outline mt-0.5">EST. RUNOUT: 02:42 ZULU</span>
+</div>
+<div class="p-space-sm flex flex-col">
+<span class="font-label-sm text-[10px] text-outline uppercase font-mono">DRAS OUTPOST (SECTOR-04)</span>
+<div class="flex items-baseline justify-between mt-1">
+<span class="font-telemetry-metric text-telemetry-metric text-tertiary">48h</span>
+<span class="font-label-sm text-tertiary bg-tertiary-container/20 px-1 border border-tertiary/50">WARN</span>
+</div>
+<span class="font-label-sm text-[9px] text-outline mt-0.5">EST. RUNOUT: 04:42 ZULU (T+2)</span>
+</div>
+<div class="p-space-sm flex flex-col">
+<span class="font-label-sm text-[10px] text-outline uppercase font-mono">SIACHEN BASE (NORTH-SEC)</span>
+<div class="flex items-baseline justify-between mt-1">
+<span class="font-telemetry-metric text-telemetry-metric text-tertiary">54h</span>
+<span class="font-label-sm text-tertiary bg-tertiary-container/20 px-1 border border-tertiary/50">WARN</span>
+</div>
+<span class="font-label-sm text-[9px] text-outline mt-0.5">AIR DROP REQ AT T+36h</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+<!-- Interactive Logic for Sliders and Control Tuning -->
+<script>
+    (function initSimulationWorkbench() {
+      const demandSlider = document.getElementById('demand-range');
+      const demandVal = document.getElementById('demand-val');
+      const snowSlider = document.getElementById('snow-range');
+      const snowVal = document.getElementById('snow-val');
+      const snowGaugePin = document.getElementById('snow-gauge-pin');
+      const btnReset = document.getElementById('btn-reset');
+      const btnRun = document.getElementById('btn-run');
+
+      if (demandSlider && demandVal) {
+        demandSlider.addEventListener('input', (e) => {
+          demandVal.textContent = parseFloat(e.target.value).toFixed(1) + 'x';
+        });
+      }
+
+      if (snowSlider && snowVal && snowGaugePin) {
+        snowSlider.addEventListener('input', (e) => {
+          const val = parseInt(e.target.value, 10);
+          snowVal.textContent = val;
+          snowGaugePin.style.left = val + '%';
+        });
+      }
+
+      if (btnReset) {
+        btnReset.addEventListener('click', () => {
+          if (demandSlider && demandVal) {
+            demandSlider.value = 1.0;
+            demandVal.textContent = '1.0x';
+          }
+          if (snowSlider && snowVal && snowGaugePin) {
+            snowSlider.value = 15;
+            snowVal.textContent = '15';
+            snowGaugePin.style.left = '15%';
+          }
+          const echoRadio = document.querySelector('input[name="pass_cutoff"][value="echo"]');
+          if (echoRadio) echoRadio.checked = true;
+        });
+      }
+
+      if (btnRun) {
+        btnRun.addEventListener('click', () => {
+          const originalText = btnRun.innerHTML;
+          btnRun.innerHTML = '<span class="material-symbols-outlined text-[16px] animate-spin">refresh</span> COMPUTING...';
+          btnRun.classList.add('opacity-80');
+          setTimeout(() => {
+            btnRun.innerHTML = originalText;
+            btnRun.classList.remove('opacity-80');
+          }, 600);
+        });
+      }
+    })();
+  </script>
+</div></main></div></body></html>

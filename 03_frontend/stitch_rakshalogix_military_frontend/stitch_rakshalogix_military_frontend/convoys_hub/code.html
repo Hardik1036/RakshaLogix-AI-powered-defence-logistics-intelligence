@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-secondary":"#003824","surface-container-low":"#181b25","on-secondary-fixed":"#002113","primary-fixed-dim":"#4cd7f6","surface-container-highest":"#31353f","on-primary-container":"#00424f","on-tertiary":"#472a00","on-tertiary-fixed-variant":"#653e00","surface-variant":"#31353f","surface-container":"#1c1f29","inverse-surface":"#dfe2ef","inverse-on-surface":"#2c303a","on-secondary-fixed-variant":"#005236","surface-container-high":"#262a34","tertiary-fixed-dim":"#ffb95f","tertiary":"#ffb95f","background":"#0f131c","inverse-primary":"#00687a","on-surface":"#dfe2ef","secondary-container":"#00a572","on-primary":"#003640","on-error":"#690005","primary-fixed":"#acedff","primary-container":"#06b6d4","on-primary-fixed-variant":"#004e5c","error":"#ffb4ab","surface-container-lowest":"#0a0e17","on-surface-variant":"#bcc9cd","on-secondary-container":"#00311f","tertiary-container":"#e79400","on-primary-fixed":"#001f26","secondary":"#4edea3","surface-dim":"#0f131c","surface-tint":"#4cd7f6","error-container":"#93000a","secondary-fixed":"#6ffbbe","surface-bright":"#353943","primary":"#4cd7f6","on-tertiary-fixed":"#2a1700","outline":"#869397","on-tertiary-container":"#563400","surface":"#0f131c","on-error-container":"#ffdad6","outline-variant":"#3d494c","secondary-fixed-dim":"#4edea3","on-background":"#dfe2ef","tertiary-fixed":"#ffddb8"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"space-xs":"0.25rem","space-xl":"1.5rem","space-lg":"1rem","margin":"1rem","gutter":"0.75rem","space-md":"0.75rem","space-sm":"0.5rem"},fontFamily:{"headline-md":["Inter"],"telemetry-display":["JetBrains Mono"],"body-sm":["Inter"],"body-md":["Inter"],"label-lg":["JetBrains Mono"],"headline-xl":["Inter"],"headline-sm":["Inter"],"headline-lg":["Inter"],"label-sm":["JetBrains Mono"],"label-md":["JetBrains Mono"],"telemetry-metric":["JetBrains Mono"],"body-lg":["Inter"]},fontSize:{"headline-md":["16px",{lineHeight:"24px",letterSpacing:"0em",fontWeight:"600"}],"telemetry-display":["28px",{lineHeight:"32px",letterSpacing:"-0.03em",fontWeight:"700"}],"body-sm":["12px",{lineHeight:"16px",letterSpacing:"0em",fontWeight:"400"}],"body-md":["13px",{lineHeight:"18px",letterSpacing:"0em",fontWeight:"400"}],"label-lg":["13px",{lineHeight:"16px",letterSpacing:"0.05em",fontWeight:"600"}],"headline-xl":["24px",{lineHeight:"32px",letterSpacing:"-0.02em",fontWeight:"700"}],"headline-sm":["14px",{lineHeight:"20px",letterSpacing:"0.01em",fontWeight:"600"}],"headline-lg":["20px",{lineHeight:"28px",letterSpacing:"-0.01em",fontWeight:"700"}],"label-sm":["10px",{lineHeight:"12px",letterSpacing:"0.1em",fontWeight:"500"}],"label-md":["11px",{lineHeight:"14px",letterSpacing:"0.08em",fontWeight:"500"}],"telemetry-metric":["18px",{lineHeight:"22px",letterSpacing:"0em",fontWeight:"700"}],"body-lg":["14px",{lineHeight:"20px",letterSpacing:"0em",fontWeight:"400"}]}}}}</script></head><body class="bg-surface-container-lowest font-body-md text-on-surface antialiased select-none"><header class="fixed top-0 left-0 right-0 h-14 z-50 bg-surface-container-low border-b border-outline-variant flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-sm"><div class="w-7 h-7 bg-surface-container flex items-center justify-center border border-outline-variant"><span class="material-symbols-outlined text-primary text-[18px]">shield</span></div><span class="font-label-lg text-label-lg tracking-wider text-on-surface uppercase">RAKSHALOGIX <span class="text-outline-variant">//</span> <span class="text-primary">FORWARD-LOGIX-OPS</span></span></div><div class="h-4 w-px bg-outline-variant"></div><div class="px-space-sm py-0.5 bg-surface-container-lowest border border-outline-variant text-primary font-label-sm text-label-sm">[SECTOR-04 NORTH-WEST CORPS | DEFCON-2]</div><div class="px-space-sm py-0.5 bg-surface-container border border-outline-variant text-on-surface-variant font-label-sm text-label-sm flex items-center gap-space-xs"><span class="material-symbols-outlined text-secondary text-[12px]">schedule</span><span>ZULU: 04:42:19Z</span><span class="text-outline">|</span><span>IST: 10:12:19</span></div></div><div class="flex items-center gap-space-md"><div class="px-space-sm py-0.5 bg-error-container/20 border border-error text-error font-label-sm text-label-sm tracking-wider uppercase">RESTRICTED // SECRET MIL-INTEL</div><div class="px-space-sm py-0.5 bg-surface-container-lowest border border-outline-variant text-on-surface font-label-sm text-label-sm uppercase">[MAJ. V. RATHORE - HQ 14 CORPS LOGISTICS CHIEF]</div><div class="relative flex items-center gap-space-xs"><img alt="Profile" class="w-8 h-8 rounded-full object-cover border border-outline-variant" src="https://lh3.googleusercontent.com/aida/AEtjO1WHq8_oTmArBB-10gj1a_9EJa1eqL4RRUwomry2Sz1XEhoEpdRc45xOnlOg9kblmzxN9pITw6hV3ON8oiEafms3lM4FSaK2p8mKicdXqrKStbOqXsaU6Sdgx87Hw1MpVI0fDaXlN8JfN0h-70iiJUmSDGmOxAM2SR73Nhd7lKSIS02Frf6NIs0HVNTivT3ExmL4F1NSkZq5xqAmhYUnnoIe4mQXJLTO59b4p2WRMCwO-ttqx05o2IhB7mAl"/><span class="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-secondary border border-surface-container-lowest"></span></div><button class="px-space-md py-1 bg-surface-container border border-error/80 hover:bg-error-container/30 text-error font-label-sm text-label-sm tracking-wider uppercase transition-colors flex items-center gap-space-xs"><span class="material-symbols-outlined text-[14px]">power_settings_new</span><span>LOGOUT</span></button></div></header><aside class="fixed left-0 top-14 bottom-0 w-64 bg-surface-container-low border-r border-outline-variant z-40 flex flex-col justify-between"><div class="flex flex-col"><div class="px-space-md py-space-sm bg-surface-container border-b border-outline-variant flex items-center justify-between"><span class="font-label-sm text-label-sm text-outline uppercase tracking-widest">TACTICAL CONSOLE NAV</span><span class="font-label-sm text-label-sm text-secondary font-bold">SYS-ONLINE</span></div><nav class="flex flex-col py-space-xs" data-active-classes="bg-surface-container-high text-primary border-l-2 border-primary font-bold"><a class="flex items-center justify-between px-space-md py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface text-label-md font-label-md transition-colors" data-path="dashboard" href="#"><span class="tracking-wider uppercase">Dashboard</span><span class="text-[10px] text-outline font-label-sm">[F1]</span></a><a class="flex items-center justify-between px-space-md py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface text-label-md font-label-md transition-colors" data-path="inventory" href="#"><span class="tracking-wider uppercase">Inventory</span><span class="px-1.5 py-0.2 bg-error-container text-error text-[10px] font-label-sm border border-error">3</span></a><a class="flex items-center justify-between px-space-md py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface text-label-md font-label-md transition-colors" data-path="forecast" href="#"><span class="tracking-wider uppercase">Forecast</span><span class="text-[10px] text-outline font-label-sm">[F3]</span></a><a class="flex items-center justify-between px-space-md py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface text-label-md font-label-md transition-colors" data-path="gis-map" href="#"><span class="tracking-wider uppercase">GIS Map</span><span class="px-1.5 py-0.2 bg-tertiary-container/30 text-tertiary text-[10px] font-label-sm border border-tertiary">ALERT</span></a><a aria-current="page" class="flex items-center justify-between px-space-md py-2 transition-colors bg-surface-container-high text-primary border-l-2 border-primary font-bold" data-path="convoys" href="#"><span class="tracking-wider uppercase">Convoys</span><span class="px-1.5 py-0.2 bg-surface-container-highest text-on-surface-variant text-[10px] font-label-sm border border-outline-variant">14</span></a><a class="flex items-center justify-between px-space-md py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface text-label-md font-label-md transition-colors" data-path="alerts" href="#"><span class="tracking-wider uppercase">Alerts</span><span class="px-1.5 py-0.2 bg-error-container text-error text-[10px] font-label-sm border border-error animate-pulse">7</span></a><a class="flex items-center justify-between px-space-md py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface text-label-md font-label-md transition-colors" data-path="simulation" href="#"><span class="tracking-wider uppercase">Simulation</span><span class="text-[10px] text-outline font-label-sm">[F7]</span></a><a class="flex items-center justify-between px-space-md py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface text-label-md font-label-md transition-colors" data-path="reports" href="#"><span class="tracking-wider uppercase">Reports</span><span class="text-[10px] text-outline font-label-sm">[F8]</span></a></nav></div><div class="p-space-sm bg-surface-container border-t border-outline-variant space-y-space-xs"><div class="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant"><span>ENCRYPTED LINK</span><label class="relative inline-flex items-center cursor-pointer"><input checked="" class="sr-only peer" type="checkbox"/><div class="w-7 h-3.5 bg-surface-container-highest border border-outline peer-checked:bg-secondary-container peer-checked:border-secondary"></div></label></div><div class="p-1.5 bg-surface-container-lowest border border-outline-variant font-label-sm text-[9px] text-secondary leading-tight"><div class="flex items-center gap-1"><span class="w-1.5 h-1.5 bg-secondary inline-block"></span><span>SAT-LINK ACTIVE: 99.8% UPTIME</span></div><div class="text-outline mt-0.5">LATENCY: 24ms | FREQ: KU-BAND 14.2G</div></div></div></aside><div class="pl-64"><main class="relative pt-14 bg-surface-container-lowest min-h-screen"><div class="flex flex-col w-full text-on-surface">
+<div class="flex flex-col gap-space-md p-space-md bg-surface-container-lowest">
+<!-- Action Bar & Command Header -->
+<section class="flex flex-col xl:flex-row xl:items-center justify-between gap-space-md bg-surface-container-low p-space-md border border-outline-variant shadow-sm">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 bg-primary"></span>
+<span class="font-label-sm text-label-sm text-outline tracking-widest uppercase">TACTICAL LOGISTICS DIVISION // HQ 14 CORPS</span>
+</div>
+<h1 class="font-headline-md text-headline-md text-on-surface tracking-wide uppercase">
+          TACTICAL CONVOY DISPATCH &amp; IN-TRANSIT TELEMETRY <span class="text-primary">[SECTOR-04]</span>
+</h1>
+</div>
+<!-- Quick Metrics Strip -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<div class="flex items-center gap-space-xs px-space-md py-1 bg-surface-container border border-outline-variant">
+<span class="material-symbols-outlined text-[16px] text-primary">local_shipping</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-[9px] text-outline uppercase tracking-wider">ACTIVE CONVOYS</span>
+<span class="font-telemetry-metric text-headline-sm text-primary leading-none">14 UNITS</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs px-space-md py-1 bg-tertiary-container/10 border border-tertiary">
+<span class="material-symbols-outlined text-[16px] text-tertiary">alt_route</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-[9px] text-tertiary uppercase tracking-wider">REROUTED BYPASS</span>
+<span class="font-telemetry-metric text-headline-sm text-tertiary leading-none">02 STREAMS</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs px-space-md py-1 bg-secondary-container/10 border border-secondary">
+<span class="material-symbols-outlined text-[16px] text-secondary">verified_user</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-[9px] text-secondary uppercase tracking-wider">CARGO INTEGRITY</span>
+<span class="font-telemetry-metric text-headline-sm text-secondary leading-none">94.2%</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs px-space-md py-1 bg-surface-container border border-outline-variant">
+<span class="material-symbols-outlined text-[16px] text-outline">timer</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-[9px] text-outline uppercase tracking-wider">AVERAGE DELAY</span>
+<span class="font-telemetry-metric text-headline-sm text-on-surface leading-none">+42m</span>
+</div>
+</div>
+<!-- Create Convoy Trigger Button -->
+<button class="h-9 px-space-md bg-primary-container hover:bg-primary-fixed text-on-primary font-label-lg text-label-md uppercase tracking-wider flex items-center gap-space-xs border border-primary transition-colors cursor-pointer select-none" id="open-dispatch-btn">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>Create Convoy</span>
+</button>
+</div>
+</section>
+<!-- Main Tactical Workspace: Grid + Overlay Layout -->
+<div class="relative grid grid-cols-1 2xl:grid-cols-12 gap-space-md">
+<!-- Primary Telemetry & Data Table (Left / Dominant Column) -->
+<div class="2xl:col-span-8 flex flex-col gap-space-md" id="table-container">
+<!-- Live Terrain & Convoy Corridor Preview -->
+<div class="relative bg-surface-container-low border border-outline-variant p-space-md overflow-hidden">
+<div class="flex items-center justify-between pb-space-xs border-b border-outline-variant mb-space-sm">
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm text-primary uppercase">
+<span class="w-1.5 h-1.5 bg-primary"></span>
+<span>GRID TRANSIT CORRIDOR: NH-1D MIL-SECTOR ALPHA</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary tracking-widest uppercase">SAT-FEED: LIVE LOCK</span>
+</div>
+<div class="relative h-44 bg-surface-container-lowest border border-outline-variant overflow-hidden flex items-center justify-center">
+<!-- Satellite Map Overlay Mockup -->
+<div class="absolute inset-0 opacity-40 bg-cover bg-center" data-location="Zoji La Pass, Kargil" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuASR57EPz62HO7F8ftuwQsodO_cmZpFQrnOx2tdVGyCraEheoNSeGjj_nJrYg--AOavOVJxaZRRp_tiiq4SRd3QaP44ngG8e3boQ7ET7ZAuVhSpeln6F-90YlbSjddsKLWfvDdhBviz0D2xo791uEhkxaNEkSAQYKTJm4695KDXtW7CiBK5LN5ZvLyAtECuY1F9SPZOTKocYFcAesF3H8Iu6v3eK02zmO4fqYNhMj-C_1QkZPapXcxrvQ')"></div>
+<!-- Tactical Grid Vectors & Waypoints SVG -->
+<svg class="absolute inset-0 w-full h-full text-primary/40 pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<pattern height="40" id="grid-pattern" patternunits="userSpaceOnUse" width="40">
+<path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" stroke-dasharray="2,2" stroke-width="0.5"></path>
+</pattern>
+</defs>
+<rect fill="url(#grid-pattern)" height="100%" width="100%"></rect>
+<!-- Convoy routes -->
+<path d="M 50 120 Q 220 40 420 80 T 780 60" fill="none" stroke="#4edea3" stroke-dasharray="4,4" stroke-width="2"></path>
+<path d="M 280 85 L 360 140 L 520 130" fill="none" stroke="#ffb95f" stroke-dasharray="2,3" stroke-width="2"></path>
+<!-- Waypoints -->
+<circle cx="50" cy="120" fill="#4cd7f6" r="4"></circle>
+<circle cx="420" cy="80" fill="#4edea3" r="4"></circle>
+<circle cx="780" cy="60" fill="#4cd7f6" r="5"></circle>
+<circle cx="360" cy="140" fill="#ffb95f" r="4"></circle>
+</svg>
+<!-- Dynamic Tactical Markers Overlay -->
+<div class="absolute left-10 top-20 bg-surface-container-lowest/90 border border-primary px-space-xs py-0.5 font-label-sm text-[9px] text-primary">
+              [DEPOT_01] LEH CENTRAL
+            </div>
+<div class="absolute left-1/2 top-8 -translate-x-1/2 bg-surface-container-lowest/90 border border-secondary px-space-xs py-0.5 font-label-sm text-[9px] text-secondary">
+              CVY-ECHO-04 // ELEV 11,578 FT
+            </div>
+<div class="absolute left-[38%] bottom-6 bg-surface-container-lowest/90 border border-tertiary px-space-xs py-0.5 font-label-sm text-[9px] text-tertiary flex items-center gap-1">
+<span class="material-symbols-outlined text-[11px]">warning</span>
+<span>CVY-DELTA-02 // BYPASS ROUTE [AVALANCHE LOCK]</span>
+</div>
+<div class="absolute right-12 top-6 bg-surface-container-lowest/90 border border-outline px-space-xs py-0.5 font-label-sm text-[9px] text-on-surface">
+              [UNIT_03] FOB CHARLIE
+            </div>
+</div>
+</div>
+<!-- High-Density Telemetry Table -->
+<div class="bg-surface-container-low border border-outline-variant flex flex-col">
+<div class="px-space-md py-space-sm bg-surface-container border-b border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-lg text-label-md text-on-surface uppercase tracking-wider">ACTIVE DISPATCH MANIFEST</span>
+<span class="px-1.5 py-0.5 bg-surface-container-highest text-primary font-label-sm text-[10px] border border-outline-variant">TOTAL: 06 VISIBLE</span>
+</div>
+<div class="flex items-center gap-space-md font-label-sm text-label-sm text-outline">
+<span>ENCRYPTED MGRS STREAM</span>
+<span class="inline-block w-1.5 h-1.5 bg-secondary"></span>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-lowest border-b border-outline-variant font-label-md text-label-sm text-outline uppercase tracking-wider h-8">
+<th class="px-space-md py-1 border-r border-outline-variant font-medium">Convoy ID</th>
+<th class="px-space-md py-1 border-r border-outline-variant font-medium">Origin Depot</th>
+<th class="px-space-md py-1 border-r border-outline-variant font-medium">Destination</th>
+<th class="px-space-md py-1 border-r border-outline-variant font-medium">Vehicle Count</th>
+<th class="px-space-md py-1 border-r border-outline-variant font-medium">Cargo Manifest</th>
+<th class="px-space-md py-1 border-r border-outline-variant font-medium">ETA Countdown</th>
+<th class="px-space-md py-1 font-medium text-center">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant font-body-sm text-body-sm text-on-surface">
+<!-- Row 1: IN_TRANSIT -->
+<tr class="hover:bg-surface-container/60 transition-colors bg-surface-container-low">
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-lg text-label-md text-primary">
+                    CVY-ECHO-04
+                  </td>
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-sm text-label-sm text-on-surface-variant">
+                    Leh Central Hub <span class="text-outline">[DEPOT_01]</span>
+</td>
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-sm text-label-sm text-on-surface font-medium">
+                    FOB Charlie <span class="text-outline">[UNIT_03]</span>
+</td>
+<td class="px-space-md py-2.5 border-r border-outline-variant text-on-surface-variant">
+                    4x Heavy Tankers
+                  </td>
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-sm text-label-sm text-primary-fixed">
+                    POL-88 Arctic Diesel (20,000 L)
+                  </td>
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-sm text-label-sm">
+<span class="text-secondary font-bold">T-04:22:15</span>
+<span class="ml-1 text-[9px] text-secondary/80">[ON-SCHEDULE]</span>
+</td>
+<td class="px-space-md py-2.5 text-center">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 bg-secondary-container/20 border border-secondary text-secondary font-label-sm text-label-sm uppercase font-bold">
+<span class="w-1.5 h-1.5 bg-secondary"></span>
+                      IN_TRANSIT
+                    </span>
+</td>
+</tr>
+<!-- Row 2: REROUTED -->
+<tr class="hover:bg-surface-container/60 transition-colors bg-tertiary-container/5">
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-lg text-label-md text-tertiary">
+                    CVY-DELTA-02
+                  </td>
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-sm text-label-sm text-on-surface-variant">
+                    Srinagar Base <span class="text-outline">[LOG_HQ]</span>
+</td>
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-sm text-label-sm text-on-surface font-medium">
+                    Dras Sector <span class="text-outline">[UNIT_04]</span>
+</td>
+<td class="px-space-md py-2.5 border-r border-outline-variant text-on-surface-variant">
+                    6x 4x4 ALS Trucks
+                  </td>
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-sm text-label-sm text-on-surface">
+                    5.56mm Ball Ordnance (45k Rnds)
+                  </td>
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-sm text-label-sm">
+<span class="text-tertiary font-bold">T-01:14:02</span>
+<span class="ml-1 text-[9px] text-tertiary">[CRITICAL REROUTE +4h]</span>
+</td>
+<td class="px-space-md py-2.5 text-center">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 bg-tertiary-container/20 border border-tertiary text-tertiary font-label-sm text-label-sm uppercase font-bold">
+<span class="material-symbols-outlined text-[12px]">warning</span>
+                      REROUTED
+                    </span>
+</td>
+</tr>
+<!-- Row 3: IN_TRANSIT -->
+<tr class="hover:bg-surface-container/60 transition-colors bg-surface-container-low">
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-lg text-label-md text-primary">
+                    CVY-BRAVO-09
+                  </td>
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-sm text-label-sm text-on-surface-variant">
+                    Kargil Fwd Depot <span class="text-outline">[DEPOT_02]</span>
+</td>
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-sm text-label-sm text-on-surface font-medium">
+                    Siachen Base <span class="text-outline">[UNIT_09]</span>
+</td>
+<td class="px-space-md py-2.5 border-r border-outline-variant text-on-surface-variant">
+                    2x Armored Tatra 8x8
+                  </td>
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-sm text-label-sm text-on-surface">
+                    Extreme Cold Rations (1,200 Pkts)
+                  </td>
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-sm text-label-sm">
+<span class="text-secondary font-bold">T-08:45:00</span>
+<span class="ml-1 text-[9px] text-secondary/80">[ON-SCHEDULE]</span>
+</td>
+<td class="px-space-md py-2.5 text-center">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 bg-secondary-container/20 border border-secondary text-secondary font-label-sm text-label-sm uppercase font-bold">
+<span class="w-1.5 h-1.5 bg-secondary"></span>
+                      IN_TRANSIT
+                    </span>
+</td>
+</tr>
+<!-- Row 4: IN_TRANSIT -->
+<tr class="hover:bg-surface-container/60 transition-colors bg-surface-container-low">
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-lg text-label-md text-primary">
+                    CVY-KILO-01
+                  </td>
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-sm text-label-sm text-on-surface-variant">
+                    Leh Central Hub <span class="text-outline">[DEPOT_01]</span>
+</td>
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-sm text-label-sm text-on-surface font-medium">
+                    FOB Alpha <span class="text-outline">[UNIT_01]</span>
+</td>
+<td class="px-space-md py-2.5 border-r border-outline-variant text-on-surface-variant">
+                    3x Light Stallion
+                  </td>
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-sm text-label-sm text-primary-fixed">
+                    Liquid Medical O2 (18 Cyl)
+                  </td>
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-sm text-label-sm">
+<span class="text-on-surface-variant font-bold">T-02:10:30</span>
+<span class="ml-1 text-[9px] text-outline">[SLOW TRACK]</span>
+</td>
+<td class="px-space-md py-2.5 text-center">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 bg-secondary-container/20 border border-secondary text-secondary font-label-sm text-label-sm uppercase font-bold">
+<span class="w-1.5 h-1.5 bg-secondary"></span>
+                      IN_TRANSIT
+                    </span>
+</td>
+</tr>
+<!-- Row 5: REROUTED -->
+<tr class="hover:bg-surface-container/60 transition-colors bg-tertiary-container/5">
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-lg text-label-md text-tertiary">
+                    CVY-ROMEO-07
+                  </td>
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-sm text-label-sm text-on-surface-variant">
+                    Kargil Fwd Depot <span class="text-outline">[DEPOT_02]</span>
+</td>
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-sm text-label-sm text-on-surface font-medium">
+                    FOB Charlie <span class="text-outline">[UNIT_03]</span>
+</td>
+<td class="px-space-md py-2.5 border-r border-outline-variant text-on-surface-variant">
+                    4x Heavy Tankers
+                  </td>
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-sm text-label-sm text-primary-fixed">
+                    POL-88 Arctic Diesel (20,000 L)
+                  </td>
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-sm text-label-sm">
+<span class="text-tertiary font-bold">T-03:40:11</span>
+<span class="ml-1 text-[9px] text-tertiary">[BYPASS PASS-2]</span>
+</td>
+<td class="px-space-md py-2.5 text-center">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 bg-tertiary-container/20 border border-tertiary text-tertiary font-label-sm text-label-sm uppercase font-bold">
+<span class="material-symbols-outlined text-[12px]">warning</span>
+                      REROUTED
+                    </span>
+</td>
+</tr>
+<!-- Row 6: IN_TRANSIT -->
+<tr class="hover:bg-surface-container/60 transition-colors bg-surface-container-low">
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-lg text-label-md text-primary">
+                    CVY-ZULU-03
+                  </td>
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-sm text-label-sm text-on-surface-variant">
+                    Srinagar Base <span class="text-outline">[LOG_HQ]</span>
+</td>
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-sm text-label-sm text-on-surface font-medium">
+                    Siachen Base <span class="text-outline">[UNIT_09]</span>
+</td>
+<td class="px-space-md py-2.5 border-r border-outline-variant text-on-surface-variant">
+                    6x 4x4 ALS Trucks
+                  </td>
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-sm text-label-sm text-on-surface">
+                    5.56mm Ball Ordnance (45k Rnds)
+                  </td>
+<td class="px-space-md py-2.5 border-r border-outline-variant font-label-sm text-label-sm">
+<span class="text-secondary font-bold">T-06:12:00</span>
+<span class="ml-1 text-[9px] text-secondary/80">[ON-SCHEDULE]</span>
+</td>
+<td class="px-space-md py-2.5 text-center">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 bg-secondary-container/20 border border-secondary text-secondary font-label-sm text-label-sm uppercase font-bold">
+<span class="w-1.5 h-1.5 bg-secondary"></span>
+                      IN_TRANSIT
+                    </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Tactical Status Bar -->
+<div class="px-space-md py-1.5 bg-surface-container-lowest border-t border-outline-variant flex items-center justify-between text-outline font-label-sm text-[10px]">
+<div class="flex items-center gap-space-md">
+<span>STREAM: ENCRYPTED-RSA-4096</span>
+<span>GPS LOCK: CONSTEL-GLONASS/GAGAN</span>
+<span>BURST COMM: ACTIVE</span>
+</div>
+<div>
+              PAGE 01 / 03 // 14 RECORD ENTRIES LOADED
+            </div>
+</div>
+</div>
+</div>
+<!-- Right Column: Dispatch Modal Panel (Embedded / Visible Active Overlay) -->
+<div class="2xl:col-span-4 flex flex-col bg-surface-container border-2 border-primary shadow-xl h-fit" id="dispatch-dialog-panel">
+<!-- Modal / Panel Header -->
+<div class="px-space-md py-2.5 bg-surface-container-high border-b border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="w-2.5 h-2.5 bg-primary"></span>
+<span class="font-label-lg text-label-md text-on-surface uppercase tracking-wide">
+              TACTICAL DISPATCH AUTHORIZATION // FLIGHT/GROUND MANIFEST
+            </span>
+</div>
+<button class="text-outline hover:text-error transition-colors p-0.5 cursor-pointer" id="cancel-dispatch-x" title="Cancel Dispatch">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<!-- Security Banner -->
+<div class="bg-error-container/20 border-b border-error px-space-md py-1 flex items-center justify-between font-label-sm text-[10px] text-error">
+<span class="font-bold">ORDNANCE/FUEL ESCORT REGULATION // LEVEL-2 DIRECTIVE</span>
+<span>AUTH: LOG-MAJ-VR-09</span>
+</div>
+<!-- Form Body -->
+<form class="p-space-md flex flex-col gap-space-md" id="dispatch-form" onsubmit="event.preventDefault();">
+<!-- Origin Depot -->
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-outline uppercase flex items-center justify-between">
+<span>01. ORIGIN DEPOT</span>
+<span class="text-primary font-mono text-[9px]">[L-DEP-SEC]</span>
+</label>
+<div class="relative bg-surface-container-lowest border border-outline-variant focus-within:border-primary flex items-center px-space-sm h-8">
+<span class="font-label-sm text-[10px] text-outline mr-2">DEPOT:</span>
+<select class="w-full bg-transparent text-on-surface font-label-sm text-label-sm outline-none cursor-pointer">
+<option selected="" value="kargil">Kargil Forward Depot [UNIT_02]</option>
+<option value="leh">Leh Central Hub [DEPOT_01]</option>
+<option value="srinagar">Srinagar Base [LOG_HQ]</option>
+</select>
+</div>
+</div>
+<!-- Target Destination -->
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-outline uppercase flex items-center justify-between">
+<span>02. TARGET DESTINATION</span>
+<span class="text-primary font-mono text-[9px]">[FOB-SECTOR]</span>
+</label>
+<div class="relative bg-surface-container-lowest border border-outline-variant focus-within:border-primary flex items-center px-space-sm h-8">
+<span class="font-label-sm text-[10px] text-outline mr-2">DEST:</span>
+<select class="w-full bg-transparent text-on-surface font-label-sm text-label-sm outline-none cursor-pointer">
+<option selected="" value="fob_charlie">FOB Charlie [UNIT_03]</option>
+<option value="dras">Dras Sector [UNIT_04]</option>
+<option value="siachen">Siachen Base [UNIT_09]</option>
+<option value="fob_alpha">FOB Alpha [UNIT_01]</option>
+</select>
+</div>
+</div>
+<!-- Vehicles -->
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-outline uppercase flex items-center justify-between">
+<span>03. VEHICLE ASSETS</span>
+<span class="text-secondary font-mono text-[9px]">[FLEET ALLOCATED]</span>
+</label>
+<div class="relative bg-surface-container-lowest border border-outline-variant focus-within:border-primary flex items-center px-space-sm h-8">
+<span class="font-label-sm text-[10px] text-outline mr-2">TYPE:</span>
+<input class="w-full bg-transparent text-on-surface font-label-sm text-label-sm outline-none" readonly="" type="text" value="4x 5kL High-Altitude All-Wheel Tankers"/>
+</div>
+</div>
+<!-- Cargo Type & Quantity Group -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-sm">
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-outline uppercase">04. CARGO CLASS</label>
+<div class="bg-surface-container-lowest border border-outline-variant px-space-sm h-8 flex items-center">
+<input class="w-full bg-transparent text-primary font-label-sm text-[11px] outline-none" readonly="" type="text" value="Class-III POL-88 Arctic Diesel"/>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-outline uppercase">05. MANIFEST QUANTITY</label>
+<div class="bg-surface-container-lowest border border-outline-variant px-space-sm h-8 flex items-center">
+<input class="w-full bg-transparent text-on-surface font-label-sm text-[11px] font-bold outline-none" readonly="" type="text" value="20,000 Litres"/>
+</div>
+</div>
+</div>
+<!-- Escort Strength Selector -->
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-outline uppercase flex items-center justify-between">
+<span>06. ESCORT STRENGTH &amp; TACTICAL COVER</span>
+<span class="text-outline font-mono text-[9px]">[SELECT ACTIVE COVER]</span>
+</label>
+<div class="grid grid-cols-2 gap-space-xs">
+<label class="relative flex items-center p-2 bg-surface-container-lowest border border-primary cursor-pointer select-none">
+<input checked="" class="sr-only peer" name="escort_type" type="radio" value="bmp"/>
+<span class="w-2 h-2 mr-2 bg-primary inline-block"></span>
+<span class="font-label-sm text-[10px] text-on-surface peer-checked:text-primary uppercase leading-tight font-medium">2x QRF Armored MP (BMP-2)</span>
+</label>
+<label class="relative flex items-center p-2 bg-surface-container-lowest border border-outline-variant hover:border-outline cursor-pointer select-none">
+<input class="sr-only peer" name="escort_type" type="radio" value="air"/>
+<span class="w-2 h-2 mr-2 bg-outline inline-block"></span>
+<span class="font-label-sm text-[10px] text-on-surface-variant peer-checked:text-primary uppercase leading-tight font-medium">Air Cover Standby</span>
+</label>
+</div>
+</div>
+<!-- Priority Level -->
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-outline uppercase">07. PRIORITY LEVEL</label>
+<div class="p-space-xs px-space-sm bg-error-container/10 border border-error flex items-center justify-between">
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm text-error font-bold tracking-wider">
+<span class="material-symbols-outlined text-[16px]">priority_high</span>
+<span>DEFCON-2 CRITICAL REPLENISHMENT</span>
+</div>
+<span class="text-[9px] font-label-sm text-outline uppercase">[NON-CANCELLABLE]</span>
+</div>
+</div>
+<!-- Telemetry Digest Summary Box -->
+<div class="bg-surface-container-lowest p-space-sm border border-outline-variant flex flex-col gap-1">
+<div class="flex items-center justify-between font-label-sm text-[10px] text-outline">
+<span>PROJECTED TRANSIT TIME:</span>
+<span class="text-on-surface font-bold">04H 20M</span>
+</div>
+<div class="flex items-center justify-between font-label-sm text-[10px] text-outline">
+<span>MAX ROLLING SPEED:</span>
+<span class="text-on-surface font-bold">35 KM/H (CONVOY GOVERNOR)</span>
+</div>
+<div class="flex items-center justify-between font-label-sm text-[10px] text-outline">
+<span>INTERDICTION THREAT VECTOR:</span>
+<span class="text-tertiary font-bold">MODERATE [SECTOR 4B]</span>
+</div>
+</div>
+<!-- Modal Action Triggers: strictly Confirm Dispatch and Cancel -->
+<div class="pt-space-xs border-t border-outline-variant flex items-center justify-end gap-space-sm">
+<button class="h-9 px-space-md bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md uppercase tracking-wider border border-outline-variant transition-colors cursor-pointer" id="cancel-dispatch-btn" type="button">
+              Cancel
+            </button>
+<button class="h-9 px-space-lg bg-secondary-container hover:bg-secondary-fixed text-on-secondary font-label-md text-label-md uppercase tracking-wider font-bold border border-secondary flex items-center gap-space-xs transition-colors cursor-pointer shadow-sm" id="confirm-dispatch-btn" type="button">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span>Confirm Dispatch</span>
+</button>
+</div>
+</form>
+<!-- Authorization Stamp Footer -->
+<div class="bg-surface-container-lowest px-space-md py-1.5 border-t border-outline-variant flex items-center justify-between font-label-sm text-[9px] text-outline">
+<span>SEC-KEY: D5A-992-KARGIL-LOG</span>
+<span class="text-secondary font-bold">MIL-SPEC-2044 AUTHORIZED</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Micro-Interactions Script for Triggering Dispatch Modal State -->
+<script>
+    (function initConvoyDispatchActions() {
+      const openBtn = document.getElementById('open-dispatch-btn');
+      const cancelBtn = document.getElementById('cancel-dispatch-btn');
+      const cancelX = document.getElementById('cancel-dispatch-x');
+      const confirmBtn = document.getElementById('confirm-dispatch-btn');
+      const panel = document.getElementById('dispatch-dialog-panel');
+      const tableContainer = document.getElementById('table-container');
+
+      function hidePanel() {
+        if (!panel) return;
+        panel.classList.add('hidden');
+        if (tableContainer) {
+          tableContainer.classList.remove('2xl:col-span-8');
+          tableContainer.classList.add('2xl:col-span-12');
+        }
+      }
+
+      function showPanel() {
+        if (!panel) return;
+        panel.classList.remove('hidden');
+        if (tableContainer) {
+          tableContainer.classList.remove('2xl:col-span-12');
+          tableContainer.classList.add('2xl:col-span-8');
+        }
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      if (openBtn) {
+        openBtn.addEventListener('click', showPanel);
+      }
+      if (cancelBtn) {
+        cancelBtn.addEventListener('click', hidePanel);
+      }
+      if (cancelX) {
+        cancelX.addEventListener('click', hidePanel);
+      }
+      if (confirmBtn) {
+        confirmBtn.addEventListener('click', () => {
+          confirmBtn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">refresh</span><span>DISPATCHING...</span>';
+          setTimeout(() => {
+            confirmBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check_circle</span><span>MANIFEST AUTHORIZED</span>';
+            setTimeout(() => {
+              hidePanel();
+              confirmBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">verified</span><span>Confirm Dispatch</span>';
+            }, 1200);
+          }, 800);
+        });
+      }
+    })();
+  </script>
+</div></main></div></body></html>
