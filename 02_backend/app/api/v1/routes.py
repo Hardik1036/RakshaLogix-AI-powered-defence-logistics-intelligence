@@ -3,7 +3,7 @@ Tactical Routing Router
 Multi-factor corridor optimization with primary and fallback mountain bypasses.
 """
 
-from typing import List
+from typing import List, Optional, Union, Dict, Any
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
 
@@ -14,8 +14,13 @@ from app.schemas.routes import (
     RouteOptimiseRequest,
     RouteOptimiseResponse,
     RouteRead,
+    TacticalMapLayersResponse,
 )
-from app.services.route_service import route_service
+from app.services.route_service import (
+    route_service,
+    TACTICAL_ROAD_CORRIDORS,
+    ROUTE_ALIASES,
+)
 from app.security.dependencies import (
     get_current_user,
     require_role,
@@ -63,13 +68,40 @@ def optimize_tactical_route(
     return result
 
 
-@router.get("", response_model=List[RouteRead])
+@router.get("", response_model=Union[TacticalMapLayersResponse, List[RouteRead]])
 def list_tactical_routes(
+    raw: bool = False,
+    format: Optional[str] = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Returns all registered mountain passes and arterial supply roads."""
-    return db.query(Route).all()
+    """
+    Returns complete tactical map state (8 FOBs, multi-point road corridors, active blizzard hazards, convoys)
+    needed by GisMap.tsx and Dashboard.tsx.
+    If raw=True or format='list', returns database routes.
+    """
+    if raw or format == "list":
+        return db.query(Route).all()
+    return route_service.get_tactical_map_state(db=db)
+
+
+@router.get("/layers", response_model=TacticalMapLayersResponse)
+def get_tactical_layers(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Returns complete tactical map state (8 units, road corridors, weather hazards, active convoys)."""
+    return route_service.get_tactical_map_state(db=db)
+
+
+@router.get("/weather/{location}")
+def get_route_weather(
+    location: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Returns tactical weather telemetry for a unit or mountain pass."""
+    return route_service.get_weather_telemetry(location=location, db=db)
 
 
 @router.get("/{route_id}/fallback", response_model=RouteOptimiseResponse)
@@ -79,16 +111,15 @@ def get_route_fallback(
     current_user: User = Depends(get_current_user),
 ):
     """Retrieves secondary valley bypass corridor for a specific route."""
-    route = db.query(Route).filter(Route.id == route_id).first()
-    if not route:
+    clean_id = route_id.strip().upper()
+    resolved_id = ROUTE_ALIASES.get(clean_id, clean_id)
+    in_tactical = resolved_id in TACTICAL_ROAD_CORRIDORS
+    in_db = db.query(Route).filter(Route.id == route_id).first() is not None
+
+    if not in_tactical and not in_db:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Route '{route_id}' not found")
 
-    return route_service.optimize_route(
-        db=db,
-        origin_id=route.origin_id,
-        dest_id=route.dest_id,
-        avoid_blocked_passes=True,
-    )
+    return route_service.get_route_fallback(route_id=route_id, db=db)
 
 
 @router.patch("/{route_id}/status")

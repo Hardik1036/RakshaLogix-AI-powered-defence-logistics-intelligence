@@ -188,11 +188,17 @@ class MLService:
         p10 = max(0.0, p50 * 0.80)
         p90 = max(p50, p50 * 1.25)
 
-        days_of_supply = float(current_stock / (p90 + 1e-5))
+        daily_burn = float(features["rolling_mean_7d"]) if features.get("rolling_mean_7d") and features["rolling_mean_7d"] > 0 else (daily_p50 if daily_p50 > 0 else 60.0)
+        days_of_supply = round(current_stock / max(daily_burn, 1e-5), 1)
+        p90_daily = max(0.1, p90 / h_mult)
+        stressed_days_of_supply_p90 = round(current_stock / max(p90_daily, 1e-5), 1)
+
         runway_ratio = current_stock / (p90 + 1e-5)
         stockout_prob = min(0.95, max(0.05, 1.0 - (runway_ratio * 0.45))) if runway_ratio <= 2.0 else max(0.02, 0.15 / runway_ratio)
 
-        is_critical = (stockout_prob >= settings.HYBRID_STOCKOUT_RISK_THRESHOLD) and (days_of_supply <= settings.HYBRID_DAYS_OF_SUPPLY_THRESHOLD)
+        is_critical = (stockout_prob >= settings.HYBRID_STOCKOUT_RISK_THRESHOLD) and (
+            stressed_days_of_supply_p90 <= settings.HYBRID_DAYS_OF_SUPPLY_THRESHOLD or days_of_supply <= settings.HYBRID_DAYS_OF_SUPPLY_THRESHOLD
+        )
 
         return {
             "p10": p10,
@@ -200,6 +206,8 @@ class MLService:
             "p90": p90,
             "stockout_prob": stockout_prob,
             "days_of_supply": days_of_supply,
+            "stressed_days_of_supply_p90": stressed_days_of_supply_p90,
+            "daily_burn": daily_burn,
             "is_critical": is_critical,
             "is_anomaly": False,
             "model_version": "wma_baseline_v1.0",
@@ -223,7 +231,12 @@ class MLService:
             "lower_bound": round(float(p10), 1),
             "upper_bound": round(float(p90), 1),
             "stockout_risk": round(float(stockout_prob), 3),
+            "stockout_risk_pct": round(float(stockout_prob) * 100.0, 1),
             "days_of_supply": round(float(days_of_supply), 1),
+            "days_remaining": round(float(days_of_supply), 1),
+            "stressed_days_of_supply_p90": round(float(stressed_days_of_supply_p90), 1),
+            "minimum_stock": round(float(minimum_stock), 1),
+            "daily_burn_rate": round(float(daily_burn), 1),
             "is_critical": bool(is_critical),
             "anomaly_flag": bool(is_anomaly),
             "top_factors": factors,
@@ -232,9 +245,10 @@ class MLService:
         """
         features = self.construct_features(db, unit_id, item_type)
 
-        # Opening stock
+        # Opening stock & minimum stock buffer
         inv = db.query(Inventory).filter(Inventory.unit_id == unit_id, Inventory.item_type == item_type).first()
         current_stock = float(inv.quantity) if inv else 1000.0
+        minimum_stock = float(inv.minimum_stock) if inv and inv.minimum_stock is not None else 500.0
 
         # Horizon scaling factor: models predict 1-day demand
         h_mult = 1.0 if horizon == "24h" else (7.0 if horizon == "7d" else 2.0)
@@ -261,9 +275,17 @@ class MLService:
                 anomaly_pred = int(self.anomaly_forest.predict(df_m4)[0])
                 is_anomaly = (anomaly_pred == -1)
 
+                # Standardized days-remaining and stressed P90 runway
+                daily_burn = float(features["rolling_mean_7d"]) if features.get("rolling_mean_7d") and features["rolling_mean_7d"] > 0 else 60.0
+                days_of_supply = round(current_stock / max(daily_burn, 1e-5), 1)
+                days_remaining = days_of_supply
+                p90_daily = max(0.1, raw_p90)
+                stressed_days_of_supply_p90 = round(current_stock / max(p90_daily, 1e-5), 1)
+
                 # Mandatory Hybrid Alert Gate
-                days_of_supply = float(current_stock / (p90 + 1e-5))
-                is_critical = (stockout_prob >= settings.HYBRID_STOCKOUT_RISK_THRESHOLD) and (days_of_supply <= settings.HYBRID_DAYS_OF_SUPPLY_THRESHOLD)
+                is_critical = (stockout_prob >= settings.HYBRID_STOCKOUT_RISK_THRESHOLD) and (
+                    stressed_days_of_supply_p90 <= settings.HYBRID_DAYS_OF_SUPPLY_THRESHOLD or days_of_supply <= settings.HYBRID_DAYS_OF_SUPPLY_THRESHOLD
+                )
                 model_version = "xgb_quantile_v2.1"
 
             except Exception as e:
@@ -272,6 +294,9 @@ class MLService:
                 p10, p50, p90 = fb["p10"], fb["p50"], fb["p90"]
                 stockout_prob = fb["stockout_prob"]
                 days_of_supply = fb["days_of_supply"]
+                days_remaining = days_of_supply
+                stressed_days_of_supply_p90 = fb["stressed_days_of_supply_p90"]
+                daily_burn = fb["daily_burn"]
                 is_critical = fb["is_critical"]
                 is_anomaly = fb["is_anomaly"]
                 model_version = fb["model_version"]
@@ -280,9 +305,15 @@ class MLService:
             p10, p50, p90 = fb["p10"], fb["p50"], fb["p90"]
             stockout_prob = fb["stockout_prob"]
             days_of_supply = fb["days_of_supply"]
+            days_remaining = days_of_supply
+            stressed_days_of_supply_p90 = fb["stressed_days_of_supply_p90"]
+            daily_burn = fb["daily_burn"]
             is_critical = fb["is_critical"]
             is_anomaly = fb["is_anomaly"]
             model_version = fb["model_version"]
+
+        # Canonical rounding
+        stockout_prob = round(float(stockout_prob), 3)
 
         # 2. Derive Top Factor Attribution Strings
         factors: List[str] = []
@@ -306,7 +337,7 @@ class MLService:
             factors.append(f"Arterial access route '{route.name}' is {route.status}")
 
         if not factors:
-            factors.append(f"Normal tactical consumption rate ({features['rolling_mean_7d']:.1f} units/day)")
+            factors.append(f"Normal tactical consumption rate ({daily_burn:.1f} units/day)")
 
         return {
             "unit_id": unit_id,
@@ -316,7 +347,12 @@ class MLService:
             "lower_bound": round(float(p10), 1),
             "upper_bound": round(float(p90), 1),
             "stockout_risk": round(float(stockout_prob), 3),
+            "stockout_risk_pct": round(float(stockout_prob) * 100.0, 1),
             "days_of_supply": round(float(days_of_supply), 1),
+            "days_remaining": round(float(days_remaining), 1),
+            "stressed_days_of_supply_p90": round(float(stressed_days_of_supply_p90), 1),
+            "minimum_stock": round(float(minimum_stock), 1),
+            "daily_burn_rate": round(float(daily_burn), 1),
             "is_critical": bool(is_critical),
             "anomaly_flag": bool(is_anomaly),
             "top_factors": factors,
@@ -333,46 +369,59 @@ class MLService:
     ) -> ForecastResponse:
         """
         Executes end-to-end tactical demand forecasting, persists Forecast record,
-        creates CRITICAL alert if hybrid gate is met, and returns ForecastResponse.
+        creates or updates deduplicated CRITICAL alert if hybrid gate is met, and returns ForecastResponse.
         """
         pred = self.predict(unit_id=unit_id, item_type=item_type, horizon=horizon, db=db)
 
         current_stock = pred["current_stock"]
+        minimum_stock = pred["minimum_stock"]
+        daily_burn_rate = pred["daily_burn_rate"]
         predicted_demand = pred["predicted_demand"]
         lower_bound = pred["lower_bound"]
         upper_bound = pred["upper_bound"]
         stockout_risk = pred["stockout_risk"]
+        stockout_risk_pct = pred["stockout_risk_pct"]
         days_of_supply = pred["days_of_supply"]
+        days_remaining = pred["days_remaining"]
+        stressed_days_of_supply_p90 = pred["stressed_days_of_supply_p90"]
         is_critical = pred["is_critical"]
         anomaly_flag = pred["anomaly_flag"]
         factors = pred["top_factors"]
         model_version = pred["model_version"]
 
-        # Enforce Hybrid Critical Alert Filter
-        # Criteria: stockout_risk >= 0.20 AND days_of_supply <= 2.0 days
+        # Enforce Hybrid Critical Alert Filter with Deduplication
+        # Criteria: stockout_risk >= 0.20 AND (days_of_supply <= 2.0 OR stressed_days_of_supply_p90 <= 2.0)
         if is_critical:
             existing_alert = (
                 db.query(Alert)
                 .filter(
                     Alert.unit_id == unit_id,
-                    Alert.severity == "CRITICAL",
                     Alert.status == "ACTIVE",
-                    Alert.message.contains(item_type)
+                    (Alert.type == "SUPPLY_DEFICIT") | (Alert.type == "STOCKOUT_RISK") | (Alert.type == f"STOCKOUT_{item_type.upper()}") | Alert.message.contains(item_type)
                 )
                 .first()
             )
-            if not existing_alert:
+            alert_msg = (
+                f"CRITICAL SUPPLY WARNING: {item_type} runway critically low at {days_of_supply:.1f} days "
+                f"(Stock: {current_stock:.0f}, P90 Demand: {upper_bound:.0f}). "
+                f"Stockout risk: {stockout_risk * 100:.1f}%."
+            )
+            if existing_alert:
+                existing_alert.severity = "CRITICAL"
+                existing_alert.message = alert_msg
+                existing_alert.stockout_risk = stockout_risk
+                existing_alert.updated_at = datetime.now(timezone.utc)
+            else:
                 new_alert = Alert(
                     type="SUPPLY_DEFICIT",
                     severity="CRITICAL",
                     unit_id=unit_id,
-                    message=(
-                        f"CRITICAL SUPPLY WARNING: {item_type} runway critically low at {days_of_supply:.1f} days "
-                        f"(Stock: {current_stock:.0f}, P90 Demand: {upper_bound:.0f}). "
-                        f"Stockout risk: {stockout_risk * 100:.1f}%."
-                    ),
+                    message=alert_msg,
                     status="ACTIVE",
-                    created_at=datetime.now(timezone.utc)
+                    created_at=datetime.now(timezone.utc),
+                    updated_at=datetime.now(timezone.utc),
+                    acknowledged=False,
+                    stockout_risk=stockout_risk,
                 )
                 db.add(new_alert)
 
@@ -426,11 +475,16 @@ class MLService:
             horizon=horizon,
             forecast_horizon=horizon,
             current_stock=round(current_stock, 1),
+            minimum_stock=round(minimum_stock, 1),
+            daily_burn_rate=round(daily_burn_rate, 1),
             predicted_demand=predicted_demand,
             lower_bound=lower_bound,
             upper_bound=upper_bound,
             stockout_risk=stockout_risk,
+            stockout_risk_pct=stockout_risk_pct,
             days_of_supply=days_of_supply,
+            days_remaining=days_remaining,
+            stressed_days_of_supply_p90=stressed_days_of_supply_p90,
             critical_alert_triggered=is_critical,
             is_critical=is_critical,
             anomaly_flag=anomaly_flag,

@@ -40,10 +40,12 @@ def get_alerts(
 
 
 @router.patch("/{alert_id}/ack", response_model=AlertRead)
+@router.post("/{alert_id}/acknowledge", response_model=AlertRead)
+@router.post("/{alert_id}/ack", response_model=AlertRead)
 def acknowledge_alert(
     alert_id: str,
-    payload: AlertAcknowledgeRequest,
     request: Request,
+    payload: Optional[AlertAcknowledgeRequest] = None,
     db: Session = Depends(get_db),
     officer: User = Depends(require_role(["CORPS_COMMANDER", "COMMANDER", "LOGISTICS_OFFICER"])),
 ):
@@ -57,12 +59,15 @@ def acknowledge_alert(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Alert '{alert_id}' not found")
 
     alert.status = "ACKNOWLEDGED"
+    alert.acknowledged = True
     alert.acknowledged_by = officer.username
     alert.acknowledged_at = datetime.now(timezone.utc)
+    alert.updated_at = datetime.now(timezone.utc)
     db.commit()
     db.refresh(alert)
 
     client_ip = request.client.host if request.client else "unknown"
+    notes = payload.notes if payload else None
     log_audit_event(
         db=db,
         user_id=officer.username,
@@ -72,9 +77,10 @@ def acknowledge_alert(
         metadata={
             "alert_id": alert_id,
             "severity": alert.severity,
-            "notes": payload.notes,
+            "notes": notes,
         },
-        request_payload=payload.model_dump(),
+        request_payload=payload.model_dump() if payload else {},
     )
 
     return alert
+

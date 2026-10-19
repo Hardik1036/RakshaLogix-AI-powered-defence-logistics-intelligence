@@ -4,7 +4,7 @@ Mitigates geometric tampering with WGS84 boundary enforcement (-180 to 180, -90 
 """
 
 from typing import List, Optional, Dict, Any
-from pydantic import BaseModel, Field, field_validator, ConfigDict
+from pydantic import BaseModel, Field, field_validator, model_validator, ConfigDict
 
 
 class Coordinate(BaseModel):
@@ -49,11 +49,25 @@ class GeoJSONFeature(BaseModel):
 
 
 class RouteOptimiseRequest(BaseModel):
-    origin_id: str = Field(..., description="Origin unit ID (e.g. DEPOT_LEH)")
-    dest_id: str = Field(..., description="Destination unit ID (e.g. FOB_DAULAT)")
+    origin_id: str = Field(..., description="Origin unit ID (e.g. UNIT_02, HQ_LEH)")
+    dest_id: Optional[str] = Field(None, description="Destination unit ID (e.g. UNIT_03, POST_DBO)")
+    destination_id: Optional[str] = Field(None, description="Alias for dest_id")
     vehicle_type: Optional[str] = "ALS_HEAVY_TRUCK"
     avoid_blocked_passes: bool = True
+    avoid_hazards: Optional[bool] = Field(None, description="Alias for avoid_blocked_passes")
     snowfall_threshold_mm: float = 20.0
+
+    model_config = ConfigDict(extra="ignore")
+
+    @model_validator(mode="after")
+    def resolve_aliases(self) -> "RouteOptimiseRequest":
+        if not self.dest_id and self.destination_id:
+            self.dest_id = self.destination_id
+        if self.avoid_hazards is not None:
+            self.avoid_blocked_passes = bool(self.avoid_hazards)
+        if not self.dest_id:
+            raise ValueError("dest_id or destination_id is required")
+        return self
 
 
 class RouteSegment(BaseModel):
@@ -74,6 +88,8 @@ class RouteOptimiseResponse(BaseModel):
     dest_id: str
     primary_corridor: GeoJSONFeature
     fallback_corridor: Optional[GeoJSONFeature] = None
+    recommended_route: Optional[Dict[str, Any]] = None
+    alternative_route: Optional[Dict[str, Any]] = None
     primary_distance_km: float
     primary_estimated_hours: float
     primary_edge_cost: float
@@ -81,6 +97,9 @@ class RouteOptimiseResponse(BaseModel):
     fallback_estimated_hours: Optional[float] = None
     fallback_edge_cost: Optional[float] = None
     hazards_detected: List[str] = []
+    wgs84_bounds_verified: bool = True
+
+    model_config = ConfigDict(extra="ignore")
 
 
 class RouteRead(BaseModel):
@@ -93,5 +112,37 @@ class RouteRead(BaseModel):
     status: str
     pass_altitude_m: float
     is_snow_blocked: bool
+    snowfall_mm: Optional[float] = 0.0
+    estimated_time_hours: Optional[float] = None
+    coordinates: Optional[List[List[float]]] = None
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True, extra="ignore")
+
+
+class WeatherHazardZone(BaseModel):
+    id: str
+    name: str
+    type: str
+    severity: str
+    center: List[float]  # [lat, lng]
+    radius_m: float
+    temperature_c: float
+    snowfall_mm: float
+    wind_speed_kmh: float
+    visibility_km: float
+    pass_closure_risk: str
+    affected_units: List[str]
+    affected_routes: List[str]
+
+
+class TacticalMapLayersResponse(BaseModel):
+    units: List[Dict[str, Any]]
+    routes: List[Dict[str, Any]]
+    weather_hazards: List[Dict[str, Any]]
+    convoys: List[Dict[str, Any]] = Field(default_factory=list)
+    status: str = "OPERATIONAL"
+    sector: str = "14 Corps Forward Area of Operational Responsibility"
+    timestamp: str
+
+    model_config = ConfigDict(extra="ignore")
+

@@ -127,6 +127,28 @@ def get_current_user(
     return user
 
 
+def get_optional_user(
+    token: Optional[str] = Depends(oauth2_scheme),
+    db: Session = Depends(get_db)
+) -> Optional[User]:
+    """Returns authenticated user if token is valid, or dev_commander if dev mode, or None."""
+    if settings.DEV_DISABLE_AUTH:
+        return User(
+            id="00000000-0000-0000-0000-000000000001",
+            username="dev_commander",
+            role="CORPS_COMMANDER",
+            is_active=True,
+            unit_id="HQ_LEH",
+            created_at=datetime.now(timezone.utc),
+        )
+    if not token:
+        return None
+    try:
+        return get_current_user(token=token, db=db)
+    except Exception:
+        return None
+
+
 def require_role(allowed_roles: List[str]) -> Callable[[User], User]:
     """
     Granular RBAC Dependency Factory.

@@ -29,11 +29,16 @@ class ForecastResponse(BaseModel):
     horizon: str
     forecast_horizon: Optional[str] = None
     current_stock: float
+    minimum_stock: Optional[float] = 500.0
+    daily_burn_rate: Optional[float] = None
     predicted_demand: float
     lower_bound: float
     upper_bound: float
     stockout_risk: float
+    stockout_risk_pct: float
     days_of_supply: float
+    days_remaining: Optional[float] = None
+    stressed_days_of_supply_p90: Optional[float] = None
     critical_alert_triggered: bool = False
     is_critical: Optional[bool] = False
     anomaly_flag: Optional[bool] = False
@@ -42,3 +47,4 @@ class ForecastResponse(BaseModel):
     decision_card: ExplainableDecisionCard
 
     model_config = ConfigDict(from_attributes=True)
+

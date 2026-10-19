@@ -28,6 +28,8 @@ class InventoryRead(BaseModel):
     maximum_stock: float
     updated_at: Optional[datetime] = None
     days_of_supply: Optional[float] = None
+    days_remaining: Optional[float] = None
+    daily_burn_rate: Optional[float] = None
     stock_status: Optional[str] = None  # NORMAL, LOW, CRITICAL, SURPLUS
 
     model_config = ConfigDict(from_attributes=True)

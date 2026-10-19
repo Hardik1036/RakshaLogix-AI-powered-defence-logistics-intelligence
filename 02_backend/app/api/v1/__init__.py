@@ -8,6 +8,9 @@ from app.api.v1.convoys import router as convoys_router
 from app.api.v1.alerts import router as alerts_router
 from app.api.v1.simulation import router as simulation_router
 from app.api.v1.kpi import router as kpi_router
+from app.api.v1.reports import router as reports_router
+from app.api.v1.weather import router as weather_router
+from app.api.v1.gis import router as gis_router
 
 api_router = APIRouter()
 
@@ -19,3 +22,7 @@ api_router.include_router(convoys_router, prefix="/convoys", tags=["Officer Conv
 api_router.include_router(alerts_router, prefix="/alerts", tags=["Command Alerts"])
 api_router.include_router(simulation_router, prefix="/simulation", tags=["War-Gaming Sandbox"])
 api_router.include_router(kpi_router, prefix="/kpi", tags=["Tactical KPIs"])
+api_router.include_router(reports_router, prefix="/reports", tags=["Operational Reports & Analytics"])
+api_router.include_router(weather_router, prefix="/weather", tags=["Himalayan Weather Telemetry"])
+api_router.include_router(gis_router, prefix="/gis", tags=["Geospatial GIS Layers"])
+

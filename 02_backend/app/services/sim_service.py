@@ -167,6 +167,47 @@ class SimService:
             if simulated_stockouts >= baseline_stockouts
             else 0.0
         )
+        new_critical_stockouts = max(0, simulated_stockouts - baseline_stockouts)
+
+        # 7-day depletion curve projections across all active sector units
+        baseline_depletion_curve: List[float] = []
+        simulated_depletion_curve: List[float] = []
+        for d in range(1, 8):
+            b_day_total = sum(
+                max(0.0, start_stock - (daily_burn_map[u_id].get(item, 80.0) * d))
+                for u_id in units_sandbox
+                for item, start_stock in inventory_sandbox.get(u_id, {}).items()
+            )
+            s_day_total = sum(
+                max(0.0, start_stock - (daily_burn_map[u_id].get(item, 80.0) * multiplier * d))
+                for u_id in units_sandbox
+                for item, start_stock in inventory_sandbox.get(u_id, {}).items()
+            )
+            baseline_depletion_curve.append(round(b_day_total, 1))
+            simulated_depletion_curve.append(round(s_day_total, 1))
+
+        # Dynamic canonical stockout risk probability [0.0, 1.0]
+        raw_risk = 0.15 + (new_critical_stockouts * 0.12) + (max(0.0, multiplier - 1.0) * 0.10) + (blocked_count * 0.08) + (max(0.0, scenario.snowfall_delta) / 500.0)
+        simulated_stockout_risk = round(min(0.985, max(0.05, raw_risk)), 3)
+        simulated_stockout_risk_pct = round(simulated_stockout_risk * 100.0, 1)
+
+        # Dynamic command recommendation proportionally tailored to simulated stressors
+        if new_critical_stockouts >= 2 or multiplier >= 2.5 or blocked_count >= 2:
+            recommended_action = (
+                f"CRITICAL ACTION REQUIRED: Demand surge ({multiplier:.1f}x) and {blocked_count} pass blockade(s) "
+                f"induce {new_critical_stockouts} emergency forward stockout(s). Immediate resupply mobilization from "
+                f"{recommended_depot} via amber secondary bypass corridors and pre-staging of POL tankers mandatory."
+            )
+        elif new_critical_stockouts == 1 or multiplier >= 1.5 or blocked_count == 1:
+            recommended_action = (
+                f"ELEVATED VIGILANCE: Operational tempo increase ({multiplier:.1f}x) produces 1 forward stockout risk. "
+                f"Pre-position 50% buffer reserves at {recommended_depot} and monitor high-altitude passes."
+            )
+        else:
+            recommended_action = (
+                f"STABLE POSTURE: Sustainment envelope remains resilient. "
+                f"Forward posts possess adequate stock buffers for the {days}-day planning horizon."
+            )
 
         isolated_units = [
             u_id for u_id in units_sandbox
@@ -176,7 +217,11 @@ class SimService:
         response_summary = {
             "baseline_stockouts": baseline_stockouts,
             "simulated_stockouts": simulated_stockouts,
+            "new_critical_stockouts": new_critical_stockouts,
             "avg_convoy_delay_hours": simulated_delay,
+            "simulated_stockout_risk": simulated_stockout_risk,
+            "simulated_stockout_risk_pct": simulated_stockout_risk_pct,
+            "recommended_action": recommended_action,
             "recommended_prestage_depot": recommended_depot,
             "isolated_units_count": len(isolated_units),
         }
@@ -197,14 +242,23 @@ class SimService:
             modifiers_applied=scenario.model_dump(),
             baseline_stockouts=baseline_stockouts,
             simulated_stockouts=simulated_stockouts,
+            new_critical_stockouts=new_critical_stockouts,
             stockout_increase_percentage=stockout_increase,
             avg_convoy_delay_hours=simulated_delay,
+            simulated_stockout_risk=simulated_stockout_risk,
+            simulated_stockout_risk_pct=simulated_stockout_risk_pct,
+            stockout_risk=simulated_stockout_risk,
+            stockout_risk_pct=simulated_stockout_risk_pct,
+            recommended_action=recommended_action,
             recommended_prestage_depot=recommended_depot,
             isolated_units=isolated_units,
             unit_projections=projections,
+            baseline_depletion_curve=baseline_depletion_curve,
+            simulated_depletion_curve=simulated_depletion_curve,
             sandbox_isolation_verified=True,
             notice="Tactical state cloned strictly in-memory. Zero mutations applied to production tables."
         )
 
 
 sim_service = SimService()
+

@@ -10,7 +10,7 @@ from sqlalchemy import func
 
 from app.database import get_db
 from app.models.auth import User, AuditLog
-from app.models.logistics import Unit, Inventory, Convoy, Route
+from app.models.logistics import Unit, Inventory, Convoy, Route, Consumption
 from app.models.intelligence import Alert
 from app.security.dependencies import get_current_user, verify_rate_limit
 
@@ -52,6 +52,20 @@ def get_tactical_kpi_summary(
         penalty += min(20.0, blocked_passes * 4.0)
         readiness_index = max(10.0, round(100.0 - penalty, 1))
 
+    # Reconciled stock runway statistics across all inventory sectors
+    all_invs = db.query(Inventory).all()
+    runways = []
+    for inv in all_invs:
+        c_entry = (
+            db.query(Consumption.quantity_used)
+            .filter(Consumption.unit_id == inv.unit_id, Consumption.item_type == inv.item_type)
+            .limit(7)
+            .all()
+        )
+        burn = float(sum(c[0] for c in c_entry) / len(c_entry)) if c_entry else 60.0
+        runways.append(round(inv.quantity / max(burn, 1e-5), 1))
+    avg_runway = round(sum(runways) / len(runways), 1) if runways else 14.5
+
     recent_audits = db.query(AuditLog).order_by(AuditLog.timestamp.desc()).limit(5).all()
     audit_previews = [
         {
@@ -73,5 +87,7 @@ def get_tactical_kpi_summary(
         "blocked_mountain_passes": blocked_passes,
         "total_mountain_corridors": total_routes,
         "critical_stock_sectors": critical_stocks,
+        "avg_days_of_supply": avg_runway,
+        "avg_days_remaining": avg_runway,
         "recent_audit_events": audit_previews,
     }

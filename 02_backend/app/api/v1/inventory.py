@@ -36,6 +36,19 @@ def _calculate_stock_status(quantity: float, min_stock: float, max_stock: float)
     return "NORMAL"
 
 
+def get_daily_burn_rate(db: Session, unit_id: str, item_type: str) -> float:
+    recent_consumptions = (
+        db.query(Consumption.quantity_used)
+        .filter(Consumption.unit_id == unit_id, Consumption.item_type == item_type)
+        .order_by(Consumption.date.desc())
+        .limit(7)
+        .all()
+    )
+    if recent_consumptions:
+        return float(sum(c[0] for c in recent_consumptions) / len(recent_consumptions))
+    return 60.0
+
+
 @router.get("", response_model=List[InventoryRead])
 def get_inventory_roster(
     unit_id: Optional[str] = Query(None, description="Filter by military formation/post"),
@@ -58,19 +71,8 @@ def get_inventory_roster(
     results = []
 
     for inv in inventories:
-        # Compute days of supply based on recent average burn
-        recent_consumptions = (
-            db.query(Consumption.quantity_used)
-            .filter(Consumption.unit_id == inv.unit_id, Consumption.item_type == inv.item_type)
-            .limit(7)
-            .all()
-        )
-        avg_burn = (
-            sum(c[0] for c in recent_consumptions) / len(recent_consumptions)
-            if recent_consumptions
-            else 60.0
-        )
-        days_supply = round(inv.quantity / (avg_burn + 1e-5), 1)
+        avg_burn = get_daily_burn_rate(db, inv.unit_id, inv.item_type)
+        days_supply = round(inv.quantity / max(avg_burn, 1e-5), 1)
         status_label = _calculate_stock_status(inv.quantity, inv.minimum_stock, inv.maximum_stock)
 
         results.append(
@@ -84,6 +86,8 @@ def get_inventory_roster(
                 maximum_stock=inv.maximum_stock,
                 updated_at=inv.updated_at,
                 days_of_supply=days_supply,
+                days_remaining=days_supply,
+                daily_burn_rate=round(avg_burn, 1),
                 stock_status=status_label,
             )
         )
@@ -106,6 +110,8 @@ def get_unit_stock_summary(
     inv_reads = []
 
     for inv in inventories:
+        avg_burn = get_daily_burn_rate(db, inv.unit_id, inv.item_type)
+        days_supply = round(inv.quantity / max(avg_burn, 1e-5), 1)
         status_label = _calculate_stock_status(inv.quantity, inv.minimum_stock, inv.maximum_stock)
         inv_reads.append(
             InventoryRead(
@@ -117,7 +123,9 @@ def get_unit_stock_summary(
                 minimum_stock=inv.minimum_stock,
                 maximum_stock=inv.maximum_stock,
                 updated_at=inv.updated_at,
-                days_of_supply=round(inv.quantity / 80.0, 1),
+                days_of_supply=days_supply,
+                days_remaining=days_supply,
+                daily_burn_rate=round(avg_burn, 1),
                 stock_status=status_label,
             )
         )
@@ -175,6 +183,9 @@ def update_stock_level(
         request_payload=payload.model_dump(),
     )
 
+    avg_burn = get_daily_burn_rate(db, inv.unit_id, inv.item_type)
+    days_supply = round(inv.quantity / max(avg_burn, 1e-5), 1)
+
     return InventoryRead(
         id=inv.id,
         unit_id=inv.unit_id,
@@ -184,6 +195,9 @@ def update_stock_level(
         minimum_stock=inv.minimum_stock,
         maximum_stock=inv.maximum_stock,
         updated_at=inv.updated_at,
-        days_of_supply=round(inv.quantity / 80.0, 1),
+        days_of_supply=days_supply,
+        days_remaining=days_supply,
+        daily_burn_rate=round(avg_burn, 1),
         stock_status=_calculate_stock_status(inv.quantity, inv.minimum_stock, inv.maximum_stock),
     )
+

@@ -3,9 +3,10 @@ Intelligence, Forecast, Alerts, Weather, and War-Game Audit Models
 """
 
 import uuid
+from typing import Optional
 from datetime import datetime, timezone
 from sqlalchemy import (
-    Column, String, Float, Integer, Date, DateTime,
+    Column, String, Float, Integer, Date, DateTime, Boolean,
     ForeignKey, Text, JSON, Index, CheckConstraint
 )
 from app.models.base import Base
@@ -49,8 +50,15 @@ class Alert(Base):
     message = Column(Text, nullable=False)
     status = Column(String(32), nullable=False, default="ACTIVE", index=True)  # ACTIVE, ACKNOWLEDGED
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
+    updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=True)
+    acknowledged = Column(Boolean, default=False, nullable=True)
     acknowledged_by = Column(String(64), nullable=True)
     acknowledged_at = Column(DateTime(timezone=True), nullable=True)
+    stockout_risk = Column(Float, nullable=True)
+
+    @property
+    def stockout_risk_pct(self) -> Optional[float]:
+        return round(self.stockout_risk * 100.0, 1) if self.stockout_risk is not None else None
 
     __table_args__ = (
         Index("ix_alerts_status_severity", "status", "severity"),
