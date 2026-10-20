@@ -21,10 +21,21 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { ServerLoader } from '../components/ServerLoader';
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import { useTheme } from '../context/ThemeContext';
 import { formatProbability } from '../api';
+
+// Map resizer to ensure tiles fill the container without grey gaps
+const MapResizer: React.FC = () => {
+  const map = useMap();
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      map.invalidateSize();
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [map]);
+  return null;
+};
 
 const createMiniPin = (color: string, label: string, isBlocked: boolean = false, isTarget: boolean = false) => {
   return L.divIcon({
@@ -71,12 +82,8 @@ const activeBypassCoords: [number, number][] = [
 export const Dashboard: React.FC = () => {
   const { isReadOnly } = useAuth();
   const { addToast } = useToast();
-  const { theme } = useTheme();
 
-  const tileUrl =
-    theme === 'dark'
-      ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-      : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
+  const [miniMapStyle, setMiniMapStyle] = useState<'DARK' | 'SATELLITE' | 'TOPO'>('DARK');
 
   const [data, setData] = useState<DashboardResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -609,24 +616,64 @@ export const Dashboard: React.FC = () => {
         {/* LEFT 7 COLS: Mini-GIS Corridor Map */}
         <div className="lg:col-span-7 rounded-md bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 p-5 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200 dark:border-slate-800/80">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-3 border-b border-slate-200 dark:border-slate-800/80 gap-2">
               <div className="flex items-center gap-2">
                 <Compass className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
                 <h3 className="font-mono text-xs uppercase font-bold tracking-wider text-slate-900 dark:text-white">
                   Mini-GIS Corridor Map // Sector 04
                 </h3>
               </div>
-              <Link
-                to="/map"
-                className="font-mono text-xs bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 px-2.5 py-1 rounded border border-cyan-500/30 font-bold inline-flex items-center gap-1.5 transition-all active:scale-95"
-              >
-                <span>[Full Map &amp; Optimise Route]</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </Link>
+              
+              <div className="flex items-center gap-2">
+                {/* 100% Free Keyless Tile Style Switcher */}
+                <div className="flex items-center p-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono text-[10px]">
+                  <button
+                    type="button"
+                    onClick={() => setMiniMapStyle('DARK')}
+                    className={`px-2 py-0.5 rounded font-bold transition-all ${
+                      miniMapStyle === 'DARK'
+                        ? 'bg-slate-900 text-cyan-400 border border-cyan-500/40 shadow-xs'
+                        : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                    }`}
+                  >
+                    Dark OSM
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setMiniMapStyle('SATELLITE')}
+                    className={`px-2 py-0.5 rounded font-bold transition-all ${
+                      miniMapStyle === 'SATELLITE'
+                        ? 'bg-emerald-600 text-white font-extrabold shadow-xs'
+                        : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                    }`}
+                  >
+                    Satellite
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setMiniMapStyle('TOPO')}
+                    className={`px-2 py-0.5 rounded font-bold transition-all ${
+                      miniMapStyle === 'TOPO'
+                        ? 'bg-amber-600 text-white font-extrabold shadow-xs'
+                        : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                    }`}
+                  >
+                    Topo
+                  </button>
+                </div>
+
+                <Link
+                  to="/map"
+                  className="font-mono text-xs bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 px-2.5 py-1 rounded border border-cyan-500/30 font-bold inline-flex items-center gap-1.5 transition-all active:scale-95 shrink-0"
+                >
+                  <span>[Full Map]</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </Link>
+              </div>
             </div>
 
-            {/* Live Keyless CartoDB Mini-GIS Map with Animated Bypass & Radar Sweep */}
-            <div className="relative w-full h-80 rounded border border-slate-200 dark:border-slate-800 overflow-hidden shadow-inner z-0">
+            {/* Live Keyless Mini-GIS Map with Animated Bypass & Radar Sweep */}
+            <div className="relative w-full h-[320px] rounded border border-slate-200 dark:border-slate-800 overflow-hidden shadow-inner z-0">
               {/* Radar Sweep Telemetry Overlay */}
               <div className="radar-sweep-overlay pointer-events-none" />
 
@@ -636,10 +683,31 @@ export const Dashboard: React.FC = () => {
                 scrollWheelZoom={false}
                 style={{ height: '100%', width: '100%' }}
               >
-                <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-                  url={tileUrl}
-                />
+                <MapResizer />
+
+                {miniMapStyle === 'DARK' ? (
+                  <TileLayer
+                    key="mini-dark-osm"
+                    className="tactical-osm-dark-tiles"
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    maxZoom={19}
+                  />
+                ) : miniMapStyle === 'SATELLITE' ? (
+                  <TileLayer
+                    key="mini-esri-satellite"
+                    attribution="Tiles &copy; Esri &mdash; Source: Esri, USGS, NOAA"
+                    url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                    maxZoom={18}
+                  />
+                ) : (
+                  <TileLayer
+                    key="mini-opentopomap"
+                    attribution="Map data: &copy; OpenStreetMap contributors, SRTM | Map style: &copy; OpenTopoMap"
+                    url="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"
+                    maxZoom={17}
+                  />
+                )}
 
                 {/* Primary Route: Blocked Pass Echo (Red Dashed Line) */}
                 <Polyline

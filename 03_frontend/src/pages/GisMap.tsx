@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
-import { useTheme } from '../context/ThemeContext';
 import { useToast } from '../context/ToastContext';
 import type { RouteOptimiseResponse, RouteFallbackResponse } from '../types/api';
 import { 
@@ -425,7 +424,6 @@ const MapResizeWatcher: React.FC = () => {
 };
 
 export const GisMap: React.FC = () => {
-  const { theme } = useTheme();
   const { addToast } = useToast();
   const navigate = useNavigate();
 
@@ -434,8 +432,8 @@ export const GisMap: React.FC = () => {
   const [optimising, setOptimising] = useState(false);
   const [fetchingFallback, setFetchingFallback] = useState(false);
 
-  // Basemap selector: 'AUTO' | 'DARK' | 'LIGHT' | 'TOPO'
-  const [basemapStyle, setBasemapStyle] = useState<'AUTO' | 'DARK' | 'LIGHT' | 'TOPO'>('AUTO');
+  // Basemap selector: 'DARK' | 'SATELLITE' | 'TOPO' (100% Free & Keyless)
+  const [basemapStyle, setBasemapStyle] = useState<'DARK' | 'SATELLITE' | 'TOPO'>('DARK');
 
   // 5 Tactical GIS Layer toggles (Default all ON as per SIH spec)
   const [showUnits, setShowUnits] = useState(true);
@@ -446,21 +444,6 @@ export const GisMap: React.FC = () => {
 
   // State to force alternative polyline display when toggled
   const [showAlternativeCorridor, setShowAlternativeCorridor] = useState(false);
-
-  // Determine active keyless tile URL with zero API keys required
-  let activeTileUrl = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
-  let activeAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
-
-  if (basemapStyle === 'TOPO') {
-    activeTileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-    activeAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
-  } else if (basemapStyle === 'LIGHT' || (basemapStyle === 'AUTO' && theme === 'light')) {
-    activeTileUrl = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
-    activeAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
-  } else {
-    activeTileUrl = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
-    activeAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
-  }
 
   // Handle [Optimise Route] button click
   const handleOptimiseRoute = async () => {
@@ -629,41 +612,41 @@ export const GisMap: React.FC = () => {
           </button>
         </div>
 
-        {/* Basemap Switcher */}
+        {/* 100% Free Keyless Basemap Switcher */}
         <div className="flex items-center gap-1 border-t sm:border-t-0 sm:border-l border-slate-200 dark:border-slate-800 sm:pl-2.5 pt-1 sm:pt-0">
           <span className="text-[10px] uppercase font-bold text-slate-400 mr-1">BASEMAP:</span>
           <button
             type="button"
             onClick={() => setBasemapStyle('DARK')}
-            className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-              basemapStyle === 'DARK' || (basemapStyle === 'AUTO' && theme === 'dark')
-                ? 'bg-slate-900 text-cyan-400 border border-cyan-500/40'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
+            className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase transition-all ${
+              basemapStyle === 'DARK'
+                ? 'bg-slate-900 text-cyan-400 border border-cyan-500/40 shadow-xs'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
-            Dark Carto
+            Tactical Dark
           </button>
           <button
             type="button"
-            onClick={() => setBasemapStyle('LIGHT')}
-            className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-              basemapStyle === 'LIGHT' || (basemapStyle === 'AUTO' && theme === 'light')
-                ? 'bg-slate-200 text-slate-900 border border-slate-400 font-extrabold'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
+            onClick={() => setBasemapStyle('SATELLITE')}
+            className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase transition-all ${
+              basemapStyle === 'SATELLITE'
+                ? 'bg-emerald-600 text-white font-extrabold shadow-xs'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
-            Voyager
+            Satellite
           </button>
           <button
             type="button"
             onClick={() => setBasemapStyle('TOPO')}
-            className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+            className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase transition-all ${
               basemapStyle === 'TOPO'
-                ? 'bg-emerald-600 text-white'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
+                ? 'bg-amber-600 text-white font-extrabold shadow-xs'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
-            Topo/Terrain
+            Topo Terrain
           </button>
         </div>
       </div>
@@ -680,10 +663,29 @@ export const GisMap: React.FC = () => {
           style={{ height: '100%', width: '100%' }}
         >
           <MapResizeWatcher />
-          <TileLayer
-            attribution={activeAttribution}
-            url={activeTileUrl}
-          />
+          {basemapStyle === 'DARK' ? (
+            <TileLayer
+              key="gis-dark-osm"
+              className="tactical-osm-dark-tiles"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+              maxZoom={19}
+            />
+          ) : basemapStyle === 'SATELLITE' ? (
+            <TileLayer
+              key="gis-esri-satellite"
+              attribution="Tiles &copy; Esri &mdash; Source: Esri, USGS, NOAA"
+              url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+              maxZoom={18}
+            />
+          ) : (
+            <TileLayer
+              key="gis-opentopomap"
+              attribution="Map data: &copy; OpenStreetMap contributors, SRTM | Map style: &copy; OpenTopoMap"
+              url="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"
+              maxZoom={17}
+            />
+          )}
 
           {/* ===================================================================
               LAYER 1 & 2: UNITS & DEPOTS MARKERS (R / A / G Supply Status)
