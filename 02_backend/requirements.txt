@@ -24,7 +24,7 @@ slowapi>=0.1.9
 networkx>=3.3
 
 # Machine Learning, Ingress, & Quantile Invariants
-scikit-learn>=1.5.1
+scikit-learn>=1.5.1,<1.7.0
 joblib>=1.4.2
 numpy>=2.0.0
 scipy>=1.13.0
