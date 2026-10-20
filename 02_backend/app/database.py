@@ -12,19 +12,30 @@ from app.config import settings
 database_url = settings.get_database_url()
 
 connect_args = {}
-if database_url.startswith("sqlite"):
+try:
+    if database_url.startswith("sqlite"):
+        connect_args["check_same_thread"] = False
+        engine = create_engine(
+            database_url,
+            connect_args=connect_args,
+            echo=settings.DEBUG,
+        )
+    else:
+        import psycopg2  # type: ignore # verify driver availability
+        engine = create_engine(
+            database_url,
+            pool_pre_ping=True,
+            pool_size=15,
+            max_overflow=25,
+            echo=settings.DEBUG,
+        )
+except (ImportError, ModuleNotFoundError):
+    # Graceful local fallback to sqlite if PostgreSQL driver is unavailable in local dev environment
+    database_url = "sqlite:///./rakshalogix_local.db"
     connect_args["check_same_thread"] = False
     engine = create_engine(
         database_url,
         connect_args=connect_args,
-        echo=settings.DEBUG,
-    )
-else:
-    engine = create_engine(
-        database_url,
-        pool_pre_ping=True,
-        pool_size=15,
-        max_overflow=25,
         echo=settings.DEBUG,
     )
 

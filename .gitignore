@@ -58,4 +58,6 @@ pnpm-debug.log*
 # Binaries & Executables
 *.exe
 *.dll
+*.zip
+
 
