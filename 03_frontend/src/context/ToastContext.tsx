@@ -37,11 +37,12 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const addToast = useCallback((message: string, type: ToastType = 'info') => {
     const id = Math.random().toString(36).substring(2, 9);
-    setToasts((prev) => [...prev, { id, message, type }]);
+    // Limit to 1 active toast at a time to prevent notification spam
+    setToasts([{ id, message, type }]);
 
     setTimeout(() => {
       removeToast(id);
-    }, 4500);
+    }, 4000);
   }, [removeToast]);
 
   React.useEffect(() => {
@@ -54,31 +55,31 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   return (
     <ToastContext.Provider value={{ toasts, addToast, removeToast }}>
       {children}
-      {/* Toast Container */}
-      <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-md w-full pointer-events-none">
+      {/* Toast Container - Single active toast, high contrast, readable */}
+      <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-md w-full pointer-events-none">
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`pointer-events-auto flex items-center justify-between p-3 rounded shadow-xl border font-mono text-xs tracking-wider transition-all transform animate-in slide-in-from-bottom-2 ${
+            className={`pointer-events-auto flex items-center justify-between p-3.5 rounded-lg shadow-2xl border font-sans text-xs tracking-normal transition-all transform animate-in slide-in-from-bottom-2 ${
               toast.type === 'error'
-                ? 'bg-red-950/95 border-red-500 text-red-200'
+                ? 'bg-rose-950/95 border-rose-500/80 text-rose-100'
                 : toast.type === 'warning'
-                ? 'bg-amber-950/95 border-amber-500 text-amber-200'
+                ? 'bg-amber-950/95 border-amber-500/80 text-amber-100'
                 : toast.type === 'success'
-                ? 'bg-emerald-950/95 border-emerald-500 text-emerald-200'
-                : 'bg-slate-900/95 border-cyan-500 text-cyan-200'
+                ? 'bg-emerald-950/95 border-emerald-500/80 text-emerald-100'
+                : 'bg-slate-900/95 border-cyan-500/80 text-cyan-100'
             }`}
           >
-            <div className="flex items-center gap-2">
-              {toast.type === 'error' && <XCircle className="w-4 h-4 text-red-400 shrink-0" />}
+            <div className="flex items-center gap-2.5">
+              {toast.type === 'error' && <XCircle className="w-4 h-4 text-rose-400 shrink-0" />}
               {toast.type === 'warning' && <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />}
               {toast.type === 'success' && <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />}
               {toast.type === 'info' && <Info className="w-4 h-4 text-cyan-400 shrink-0" />}
-              <span>{toast.message}</span>
+              <span className="font-medium text-slate-100">{toast.message}</span>
             </div>
             <button
               onClick={() => removeToast(toast.id)}
-              className="ml-3 text-slate-400 hover:text-white transition-colors"
+              className="ml-3 p-1 text-slate-400 hover:text-white transition-colors"
             >
               <X className="w-3.5 h-3.5" />
             </button>

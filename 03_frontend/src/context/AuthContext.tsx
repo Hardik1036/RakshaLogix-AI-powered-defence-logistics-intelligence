@@ -33,7 +33,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   const [officerName, setOfficerName] = useState<string>(() => {
-    return sessionStorage.getItem('officer_name') || localStorage.getItem('officer_name') || 'Brig. K. Singh';
+    return sessionStorage.getItem('officer_name') || localStorage.getItem('officer_name') || 'Brig. V. Singh';
   });
 
   // Keep sessionStorage and localStorage in sync
@@ -55,7 +55,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     sessionStorage.setItem('access_token', newToken);
     sessionStorage.setItem('user_role', newRole);
     sessionStorage.setItem('user_name', newUsername);
-    const resolvedName = newName || (newRole === 'CORPS_COMMANDER' ? 'Brig. K. Singh' : newRole === 'LOGISTICS_OFFICER' ? 'Maj. V. Rathore' : 'Capt. C. Edge');
+    const resolvedName = newName || (newRole === 'CORPS_COMMANDER' ? 'Brig. V. Singh' : newRole === 'LOGISTICS_OFFICER' ? 'Maj. R. Sharma' : 'Sub. K. Gurung');
     sessionStorage.setItem('officer_name', resolvedName);
     sessionStorage.removeItem('explicit_logout');
 
@@ -93,16 +93,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       EDGE_READ_ONLY: 'edge_charlie',
     };
     const defaultNames: Record<UserRole, string> = {
-      CORPS_COMMANDER: 'Brig. K. Singh',
-      LOGISTICS_OFFICER: 'Maj. V. Rathore',
-      EDGE_READ_ONLY: 'Capt. C. Edge',
+      CORPS_COMMANDER: 'Brig. V. Singh',
+      LOGISTICS_OFFICER: 'Maj. R. Sharma',
+      EDGE_READ_ONLY: 'Sub. K. Gurung',
     };
     const newUsername = defaultUsernames[newRole] || 'commander_alpha';
-    const newName = defaultNames[newRole] || 'Maj. V. Rathore';
+    const newName = defaultNames[newRole] || 'Brig. V. Singh';
 
     sessionStorage.setItem('user_role', newRole);
     sessionStorage.setItem('user_name', newUsername);
     sessionStorage.setItem('officer_name', newName);
+
+    localStorage.setItem('user_role', newRole);
+    localStorage.setItem('user_name', newUsername);
+    localStorage.setItem('officer_name', newName);
 
     setRole(newRole);
     setUsername(newUsername);
@@ -116,7 +120,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     username,
     role,
     name: officerName,
-    rank: role === 'CORPS_COMMANDER' ? 'BRIGADIER' : role === 'LOGISTICS_OFFICER' ? 'MAJOR' : 'CAPTAIN',
+    rank: role === 'CORPS_COMMANDER' ? 'BRIGADIER' : role === 'LOGISTICS_OFFICER' ? 'MAJOR' : 'SUBEDAR',
     sector: 'SECTOR-04 LEH-SIACHEN',
   };
 

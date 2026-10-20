@@ -18,8 +18,10 @@ import {
   X,
   RefreshCw,
   ExternalLink,
-  ChevronRight
+  ChevronRight,
+  Lock
 } from 'lucide-react';
+import { useAppState } from '../context/AppStateContext';
 import { ServerLoader } from '../components/ServerLoader';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
@@ -82,6 +84,14 @@ const activeBypassCoords: [number, number][] = [
 export const Dashboard: React.FC = () => {
   const { isReadOnly } = useAuth();
   const { addToast } = useToast();
+  const { 
+    addConvoy, 
+    convoys, 
+    isDashboardMissionDispatched, 
+    setDashboardMissionDispatched,
+    modifiedMissionParams,
+    setModifiedMissionParams
+  } = useAppState();
 
   const [miniMapStyle, setMiniMapStyle] = useState<'DARK' | 'SATELLITE' | 'TOPO'>('DARK');
 
@@ -89,13 +99,12 @@ export const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [accepting, setAccepting] = useState(false);
-  const [convoyDispatched, setConvoyDispatched] = useState(false);
-  const [activeStep, setActiveStep] = useState<number>(3); // 1: PREDICTED, 2: ROUTE OPTIMISED, 3: OFFICER APPROVAL PENDING, 4: CONVOY IN TRANSIT
+  const [activeStep, setActiveStep] = useState<number>(isDashboardMissionDispatched ? 4 : 3);
 
   // Modify Recommendation Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [overrideVehicles, setOverrideVehicles] = useState(4);
-  const [overridePass, setOverridePass] = useState('Pass Echo // South Ridge Bypass (Valley Axis)');
+  const [overrideVehicles, setOverrideVehicles] = useState(modifiedMissionParams.vehicles);
+  const [overridePass, setOverridePass] = useState(modifiedMissionParams.corridor);
 
   useEffect(() => {
     loadDashboard();
@@ -120,36 +129,27 @@ export const Dashboard: React.FC = () => {
 
     try {
       setAccepting(true);
-      await api.createConvoy({
+      
+      // Dispatch and register in AppStateContext (so Convoy Ops Hub and Audit Logs update immediately)
+      const dispatchedConvoy = addConvoy({
+        convoy_id: 'CNV-ECHO-04',
         origin_depot: data.ai_recommendation.origin_depot || 'Kargil Forward Supply Depot',
-        destination: data.ai_recommendation.target_unit || 'FOB Charlie',
+        destination: data.ai_recommendation.target_unit || 'FOB Charlie [UNIT_03]',
         vehicle_count: overrideVehicles,
-        cargo_type: 'POL-88 Arctic Fuel',
-        manifest_quantity: `${overrideVehicles * 5000} Litres`,
+        cargo_manifest: `Class-III POL-88 (${overrideVehicles * 5}kL)`,
+        eta_countdown: '03h : 42m',
+        eta_seconds: 13320,
+        status: 'IN_TRANSIT',
         escort_type: '2x BMP-2 Armored QRF',
-        priority_level: 'DEFCON-2',
-        bypass_pass: overridePass,
+        priority: 'DEFCON-2',
       });
 
       api.dismissRecommendation();
-      setConvoyDispatched(true);
+      setDashboardMissionDispatched(true);
       setActiveStep(4);
 
-      setData((prev) =>
-        prev
-          ? {
-              ...prev,
-              kpis: {
-                ...prev.kpis,
-                units_critical_reserve: Math.max(0, prev.kpis.units_critical_reserve - 1),
-                active_convoys: prev.kpis.active_convoys + 1,
-              },
-            }
-          : null
-      );
-
       addToast(
-        `✓ CONVOY DISPATCHED: ${overrideVehicles}x 5kL Fuel Tankers en route to FOB Charlie via ${overridePass}`,
+        `✓ CONVOY DISPATCHED: ${dispatchedConvoy.convoy_id} (${overrideVehicles}x 5kL Tankers) en route to FOB Charlie via ${overridePass}`,
         'success'
       );
     } catch {
@@ -160,6 +160,7 @@ export const Dashboard: React.FC = () => {
   };
 
   const handleSaveOverride = () => {
+    setModifiedMissionParams({ vehicles: overrideVehicles, corridor: overridePass });
     setIsModalOpen(false);
     addToast(`Mission parameters updated: ${overrideVehicles} Tankers via ${overridePass}`, 'info');
   };
@@ -172,11 +173,20 @@ export const Dashboard: React.FC = () => {
     );
   }
 
-  const kpis = data?.kpis || {
+  const isDispatched = isDashboardMissionDispatched;
+  const baseKpis = data?.kpis || {
     units_critical_reserve: 4,
     active_convoys: 14,
     deficit_alerts_24h: 7,
     closed_passes: 2,
+  };
+
+  // Dynamically reactive KPIs
+  const kpis = {
+    units_critical_reserve: isDispatched ? Math.max(0, baseKpis.units_critical_reserve - 1) : baseKpis.units_critical_reserve,
+    active_convoys: isDispatched ? Math.max(baseKpis.active_convoys + 1, convoys.length) : baseKpis.active_convoys,
+    deficit_alerts_24h: isDispatched ? Math.max(0, baseKpis.deficit_alerts_24h - 1) : baseKpis.deficit_alerts_24h,
+    closed_passes: baseKpis.closed_passes,
   };
 
   const advisory = data?.ai_recommendation;
@@ -325,11 +335,11 @@ export const Dashboard: React.FC = () => {
           Clear focal point, generous whitespace (p-6), heartbeat pulse animation
           WHAT happened, WHY (causal factors), QUICK ACTION ([Accept] / [Modify])
           ========================================================================= */}
-      {advisory && !convoyDispatched ? (
+      {advisory && !isDashboardMissionDispatched ? (
         <div className="p-6 rounded-lg bg-white dark:bg-slate-900/90 border-2 border-rose-500/60 dark:border-rose-500/60 shadow-xl relative overflow-hidden transition-all tactical-critical-pulse">
           {/* Top Status Header */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
-            <div className="flex flex-col gap-1.5">
+            <div className="flex flex-col gap-1.5 flex-1">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-rose-600 text-white font-mono text-[10px] font-bold tracking-wider shadow-sm animate-pulse">
                   <Bot className="w-3.5 h-3.5" />
@@ -352,17 +362,34 @@ export const Dashboard: React.FC = () => {
                 </span>
               </div>
 
-              {/* 1. WHAT HAPPENED — Clear Military Action Statement */}
-              <div className="mt-2">
-                <span className="font-mono text-[10px] uppercase font-bold text-rose-600 dark:text-rose-400 tracking-wider">
-                  [WHAT HAPPENED]
-                </span>
-                <h2 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white">
-                  FOB Charlie (UNIT_03) Fuel drops from 4.2d static buffer to 34h (1.4d) critical stockout.
-                </h2>
-                <p className="text-xs text-slate-600 dark:text-slate-400 font-mono mt-0.5">
-                  Emergency dispatch of {overrideVehicles}x 5kL Tankers (20,000L POL-88) required from Kargil Supply Depot before Pass Echo weather interdiction.
-                </p>
+              {/* 1. SCANNABLE METRIC HEADLINE: Visual Fuel Tank Gauge dropping from 4.2d to 34h (1.4d) */}
+              <div className="mt-3 flex flex-col md:flex-row md:items-center justify-between gap-4 p-3.5 rounded-lg bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800">
+                <div className="flex flex-col">
+                  <span className="text-xs font-bold text-rose-500 uppercase tracking-wide">
+                    FOB Charlie (UNIT_03) Critical Depletion
+                  </span>
+                  <div className="text-sm font-semibold text-slate-900 dark:text-white mt-0.5">
+                    Emergency resupply tankers required before Pass Echo weather cutoff
+                  </div>
+                </div>
+
+                {/* Visual Fuel Tank Gauge Dropping from 4.2d to 34h (1.4d) */}
+                <div className="flex items-center gap-3 bg-white dark:bg-slate-900 px-3.5 py-2 rounded-lg border border-slate-300 dark:border-slate-700 shadow-xs shrink-0">
+                  <div className="flex flex-col items-start">
+                    <span className="text-[10px] text-slate-400 font-medium">Previous</span>
+                    <span className="font-mono-num text-xs font-semibold text-slate-400 line-through">4.2d static</span>
+                  </div>
+                  <div className="flex flex-col items-center px-1">
+                    <span className="text-[10px] text-rose-400 font-bold">Dropping to</span>
+                    <div className="w-20 h-2 bg-slate-800 rounded-full overflow-hidden mt-0.5 relative">
+                      <div className="h-full bg-rose-500 w-[24%] animate-pulse"></div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <span className="text-[10px] text-rose-400 font-bold uppercase">Critical Tank</span>
+                    <span className="font-mono-num text-sm font-extrabold text-rose-500">34h (1.4d)</span>
+                  </div>
+                </div>
               </div>
 
               {/* Stochastic Uncertainty Bounds */}
@@ -529,11 +556,17 @@ export const Dashboard: React.FC = () => {
               {/* Modify Mission Button */}
               <button
                 type="button"
+                disabled={isReadOnly}
                 onClick={() => setIsModalOpen(true)}
-                className="px-4 py-2.5 rounded-md border border-slate-300 hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 font-mono text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
+                title={isReadOnly ? 'Requires Command Clearance' : 'Modify vehicle count or route'}
+                className={`px-4 py-2.5 rounded-md border font-sans text-xs font-semibold transition-all flex items-center gap-1.5 shadow-sm active:scale-95 ${
+                  isReadOnly
+                    ? 'border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/60 text-slate-500 cursor-not-allowed'
+                    : 'border-slate-300 hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200'
+                }`}
               >
-                <Edit3 className="w-4 h-4 text-amber-500" />
-                <span>[✎ Modify Mission]</span>
+                {isReadOnly ? <Lock className="w-4 h-4 text-slate-400" /> : <Edit3 className="w-4 h-4 text-amber-500" />}
+                <span>{isReadOnly ? 'Clearance Required' : '[✎ Modify Mission]'}</span>
               </button>
 
               {/* Accept & Dispatch Convoy (Large Emerald Button) */}
@@ -541,8 +574,8 @@ export const Dashboard: React.FC = () => {
                 type="button"
                 disabled={isReadOnly || accepting}
                 onClick={handleAcceptRecommendation}
-                title={isReadOnly ? 'Read-only role: commander clearance required' : 'Dispatch convoy and authorize replenishment'}
-                className={`px-6 py-2.5 rounded-md font-mono text-xs font-extrabold transition-all shadow-lg flex items-center gap-2 active:scale-95 ${
+                title={isReadOnly ? 'Requires Command Clearance' : 'Dispatch convoy and authorize replenishment'}
+                className={`px-6 py-2.5 rounded-md font-sans text-xs font-bold transition-all shadow-lg flex items-center gap-2 active:scale-95 ${
                   isReadOnly
                     ? 'bg-slate-300 dark:bg-slate-800 text-slate-500 dark:text-slate-500 cursor-not-allowed border border-slate-300 dark:border-slate-700'
                     : 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-emerald-500/20'
@@ -551,7 +584,12 @@ export const Dashboard: React.FC = () => {
                 {accepting ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>AUTHORIZING DISPATCH...</span>
+                    <span>Authorizing Dispatch...</span>
+                  </>
+                ) : isReadOnly ? (
+                  <>
+                    <Lock className="w-4 h-4" />
+                    <span>Requires Command Clearance</span>
                   </>
                 ) : (
                   <>

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { api } from '../api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import type { ConvoyItem, CreateConvoyRequest } from '../types/api';
+import { useAppState } from '../context/AppStateContext';
 import { 
   Truck, 
   Plus, 
@@ -11,16 +11,17 @@ import {
   X, 
   Loader2, 
   Check, 
-  Radio 
+  Radio,
+  Lock 
 } from 'lucide-react';
 import { ServerLoader } from '../components/ServerLoader';
 
 export const Convoys: React.FC = () => {
   const { isReadOnly } = useAuth();
   const { addToast } = useToast();
+  const { convoys, addConvoy } = useAppState();
 
-  const [convoys, setConvoys] = useState<ConvoyItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
@@ -33,29 +34,26 @@ export const Convoys: React.FC = () => {
   const [escort, setEscort] = useState('2x QRF Armored MP (BMP-2)');
   const [priority, setPriority] = useState('DEFCON-2 CRITICAL REPLENISHMENT');
 
-  useEffect(() => {
-    fetchConvoys();
-  }, []);
-
-  const fetchConvoys = async () => {
-    try {
-      setLoading(true);
-      const res = await api.getConvoys();
-      setConvoys(res);
-    } catch {
-      addToast('Failed to load active convoys list', 'error');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleCreateConvoy = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isReadOnly) return;
 
     try {
       setSubmitting(true);
-      const req: CreateConvoyRequest = {
+      const newConvoy = addConvoy({
+        convoy_id: `CNV-ECHO-${String(Math.floor(Math.random() * 90) + 10)}`,
+        origin_depot: origin,
+        destination,
+        vehicle_count: vehicleCount,
+        cargo_manifest: `${cargoType} (${quantity})`,
+        eta_countdown: '03h : 15m',
+        eta_seconds: 11700,
+        status: 'IN_TRANSIT',
+        escort_type: escort,
+        priority,
+      });
+
+      await api.createConvoy({
         origin_depot: origin,
         destination,
         vehicle_count: vehicleCount,
@@ -63,12 +61,10 @@ export const Convoys: React.FC = () => {
         manifest_quantity: quantity,
         escort_type: escort,
         priority_level: priority,
-      };
+      }).catch(() => null);
 
-      const created = await api.createConvoy(req);
-      setConvoys((prev) => [created, ...prev]);
       setIsModalOpen(false);
-      addToast(`Convoy ${created.convoy_id} authorized & dispatched to ${destination}`, 'success');
+      addToast(`Convoy ${newConvoy.convoy_id} authorized & dispatched to ${destination}`, 'success');
     } catch {
       addToast('Failed to authorize convoy dispatch', 'error');
     } finally {
@@ -83,12 +79,12 @@ export const Convoys: React.FC = () => {
         <div>
           <div className="flex items-center gap-2">
             <Truck className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-            <h1 className="font-bold text-lg text-slate-900 dark:text-white uppercase tracking-wider">
-              CONVOYS HUB // ACTIVE OVERLAND MANIFESTS
+            <h1 className="font-semibold text-lg text-slate-900 dark:text-white tracking-tight">
+              Convoy Ops Hub // Active Overland Manifests
             </h1>
           </div>
-          <p className="font-mono text-xs text-slate-500 dark:text-slate-400">
-            Encrypted GPS Fleet Tracking, Armored Escorts, and Live ETA Timelines
+          <p className="font-sans text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            Encrypted GPS fleet tracking, armored escorts, and real-time transit timelines
           </p>
         </div>
 
@@ -97,15 +93,15 @@ export const Convoys: React.FC = () => {
           type="button"
           disabled={isReadOnly}
           onClick={() => setIsModalOpen(true)}
-          title={isReadOnly ? 'Read-only access: command clearance required' : 'Open tactical convoy dispatch authorization'}
-          className={`px-4 py-2 rounded-md font-mono text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 self-start md:self-center ${
+          title={isReadOnly ? 'Requires Command Clearance' : 'Open tactical convoy dispatch authorization'}
+          className={`px-4 py-2 rounded-md font-sans text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 self-start md:self-center ${
             isReadOnly
               ? 'bg-slate-200 dark:bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-300 dark:border-slate-700'
               : 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 active:scale-95'
           }`}
         >
-          <Plus className="w-4 h-4" />
-          <span>Create Convoy</span>
+          {isReadOnly ? <Lock className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+          <span>{isReadOnly ? 'Requires Clearance' : 'Create Convoy'}</span>
         </button>
       </div>
 

@@ -14,6 +14,7 @@ import {
   Radio
 } from 'lucide-react';
 import { useSidebar } from '../context/SidebarContext';
+import { useAppState } from '../context/AppStateContext';
 
 interface NavItem {
   name: string;
@@ -29,34 +30,41 @@ interface NavGroup {
   items: NavItem[];
 }
 
-const navGroups: NavGroup[] = [
-  {
-    title: 'COMMAND & TRIAGE',
-    items: [
-      { name: 'Command Dashboard', path: '/dashboard', icon: LayoutDashboard, kbd: 'F1' },
-      { name: 'GIS Logistics Map', path: '/map', icon: Map, kbd: 'F4', alertDot: true },
-      { name: 'Alerts Hub', path: '/alerts', icon: BellRing, kbd: 'F6', badge: '7' },
-    ],
-  },
-  {
-    title: 'SUSTAINMENT OPS',
-    items: [
-      { name: 'Inventory Matrix', path: '/inventory', icon: Boxes, kbd: 'F2' },
-      { name: 'Forecast Explorer', path: '/forecast', icon: TrendingUp, kbd: 'F3' },
-      { name: 'Convoy Ops', path: '/convoys', icon: Truck, kbd: 'F5' },
-    ],
-  },
-  {
-    title: 'WAR-GAMING & AUDIT',
-    items: [
-      { name: 'Simulation Lab', path: '/simulation', icon: Cpu, kbd: 'F7' },
-      { name: 'Reports & Audit', path: '/reports', icon: FileText, kbd: 'F8' },
-    ],
-  },
-];
-
 export const Sidebar: React.FC = () => {
   const { isCollapsed, toggleSidebar } = useSidebar();
+  const { unacknowledgedAlertsCount } = useAppState();
+
+  const navGroups: NavGroup[] = [
+    {
+      title: 'COMMAND & TRIAGE',
+      items: [
+        { name: 'Command Dashboard', path: '/dashboard', icon: LayoutDashboard, kbd: 'F1' },
+        { name: 'GIS Logistics Map', path: '/map', icon: Map, kbd: 'F4', alertDot: true },
+        { 
+          name: 'Alerts Hub', 
+          path: '/alerts', 
+          icon: BellRing, 
+          kbd: 'F6', 
+          badge: unacknowledgedAlertsCount > 0 ? String(unacknowledgedAlertsCount) : undefined 
+        },
+      ],
+    },
+    {
+      title: 'SUSTAINMENT OPS',
+      items: [
+        { name: 'Inventory Matrix', path: '/inventory', icon: Boxes, kbd: 'F2' },
+        { name: 'Forecast Explorer', path: '/forecast', icon: TrendingUp, kbd: 'F3' },
+        { name: 'Convoy Ops', path: '/convoys', icon: Truck, kbd: 'F5' },
+      ],
+    },
+    {
+      title: 'WAR-GAMING & AUDIT',
+      items: [
+        { name: 'Simulation Lab', path: '/simulation', icon: Cpu, kbd: 'F7' },
+        { name: 'Reports & Audit', path: '/reports', icon: FileText, kbd: 'F8' },
+      ],
+    },
+  ];
 
   return (
     <aside

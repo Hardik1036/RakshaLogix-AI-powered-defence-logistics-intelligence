@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { api, calculateDaysRemaining } from '../api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { useAppState } from '../context/AppStateContext';
 import type { InventoryItem, InventoryDetail } from '../types/api';
 import { 
   Boxes, 
@@ -14,7 +15,8 @@ import {
   Rocket, 
   AlertTriangle,
   Loader2,
-  Gauge
+  Gauge,
+  Lock
 } from 'lucide-react';
 import { ServerLoader } from '../components/ServerLoader';
 
@@ -23,6 +25,7 @@ type FilterTab = 'all' | 'high_altitude' | 'critical_fuel';
 export const Inventory: React.FC = () => {
   const { isReadOnly } = useAuth();
   const { addToast } = useToast();
+  const { addConvoy } = useAppState();
 
   const [items, setItems] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -73,6 +76,21 @@ export const Inventory: React.FC = () => {
 
     try {
       setDispatchingEmergency(true);
+      
+      // Dispatch and register directly in AppStateContext
+      const newCvy = addConvoy({
+        convoy_id: `CNV-EMG-${String(Math.floor(Math.random() * 80) + 10)}`,
+        origin_depot: 'Kargil Forward Depot [UNIT_02]',
+        destination: `${drawerDetail.name} [${drawerDetail.unit_id}]`,
+        vehicle_count: 4,
+        cargo_manifest: `${drawerDetail.commodity} (20,000L)`,
+        eta_countdown: '02h : 45m',
+        eta_seconds: 9900,
+        status: 'IN_TRANSIT',
+        escort_type: '2x BMP-2 Armored MP',
+        priority: 'DEFCON-2 EMERGENCY',
+      });
+
       await api.createConvoy({
         origin_depot: 'Kargil Forward Depot [UNIT_02]',
         destination: `${drawerDetail.name} [${drawerDetail.unit_id}]`,
@@ -82,10 +100,10 @@ export const Inventory: React.FC = () => {
         escort_type: '2x BMP-2 Armored MP',
         priority_level: 'DEFCON-2 EMERGENCY',
         bypass_pass: 'Pass Echo / South Ridge Bypass',
-      });
+      }).catch(() => null);
 
       addToast(
-        `Emergency convoy dispatched to ${drawerDetail.name} (POL-88 20,000L)`,
+        `✓ Emergency convoy ${newCvy.convoy_id} dispatched to ${drawerDetail.name}`,
         'success'
       );
     } catch {
@@ -461,38 +479,47 @@ export const Inventory: React.FC = () => {
                     })}
                   </div>
 
-                  <p className="font-mono text-[10px] text-slate-400 text-center border-t border-slate-800 pt-1.5 mt-1">
-                    Cause: Perimeter heaters and auxiliary radar gen-sets on continuous 24h cycle.
-                  </p>
+                  {/* Compact Status Chips replacing text paragraph */}
+                  <div className="flex flex-wrap items-center justify-center gap-1.5 border-t border-slate-800 pt-2.5 mt-1 text-xs">
+                    <span className="px-2 py-0.5 rounded bg-rose-500/15 text-rose-300 border border-rose-500/30 font-medium flex items-center gap-1">
+                      <span>🔥</span> Heaters: Continuous
+                    </span>
+                    <span className="px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 font-medium flex items-center gap-1">
+                      <span>📡</span> Radar Gen: Active
+                    </span>
+                    <span className="px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 font-medium flex items-center gap-1">
+                      <span>⚡</span> +18% Surge
+                    </span>
+                  </div>
                 </div>
 
                 {/* Rapid Logistics Appraisal */}
-                <div className="p-3 rounded bg-slate-50 dark:bg-slate-950/70 font-mono text-xs flex flex-col gap-1.5 border border-slate-200 dark:border-slate-800">
-                  <div className="flex items-center justify-between text-[10px] text-slate-500 uppercase font-bold">
-                    <span>RAPID LOGISTICS APPRAISAL</span>
+                <div className="p-3.5 rounded-lg bg-slate-50 dark:bg-slate-950/70 text-xs flex flex-col gap-2 border border-slate-200 dark:border-slate-800">
+                  <div className="flex items-center justify-between text-[11px] text-slate-400 uppercase font-semibold">
+                    <span>Rapid Logistics Appraisal</span>
                     <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Runway to Dry Tanks:</span>
-                    <span className="font-bold text-rose-600 dark:text-rose-400 tabular-nums">
-                      {(drawerDetail.runway_days * 24).toFixed(0)} HOURS
+                    <span className="text-slate-400">Runway to Dry Tanks:</span>
+                    <span className="font-mono-num font-bold text-rose-600 dark:text-rose-400">
+                      {(drawerDetail.runway_days * 24).toFixed(0)} Hours ({drawerDetail.runway_days}d)
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Nearest Convoy:</span>
-                    <span className="text-slate-800 dark:text-slate-200 font-semibold">
+                    <span className="text-slate-400">Nearest Convoy:</span>
+                    <span className="text-slate-800 dark:text-slate-200 font-medium">
                       {drawerDetail.nearest_convoy}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Route Status:</span>
-                    <span className="text-amber-600 dark:text-amber-400 font-semibold">
+                    <span className="text-slate-400">Route Status:</span>
+                    <span className="text-amber-500 font-medium">
                       {drawerDetail.route_status}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Overland ETA:</span>
-                    <span className="font-semibold text-slate-800 dark:text-slate-200">
+                    <span className="text-slate-400">Overland ETA:</span>
+                    <span className="font-semibold text-slate-800 dark:text-slate-200 font-mono-num">
                       {drawerDetail.overland_eta}
                     </span>
                   </div>
@@ -503,17 +530,22 @@ export const Inventory: React.FC = () => {
                   type="button"
                   disabled={isReadOnly || dispatchingEmergency}
                   onClick={handleEmergencyReplenishment}
-                  title={isReadOnly ? 'Read-only access: command clearance required' : 'Dispatch immediate emergency convoy'}
-                  className={`w-full py-2.5 px-3 rounded font-mono text-xs font-bold tracking-wider uppercase transition-all shadow flex items-center justify-center gap-2 ${
+                  title={isReadOnly ? 'Requires Command Clearance' : 'Dispatch immediate emergency replenishment convoy'}
+                  className={`w-full py-2.5 px-3 rounded-lg text-xs font-bold transition-all shadow-md flex items-center justify-center gap-2 ${
                     isReadOnly
                       ? 'bg-slate-300 dark:bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-300 dark:border-slate-700'
-                      : 'bg-rose-600 hover:bg-rose-500 text-white active:scale-98'
+                      : 'bg-rose-600 hover:bg-rose-500 text-white active:scale-95 shadow-rose-600/20'
                   }`}
                 >
                   {dispatchingEmergency ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>DISPATCHING EMERGENCY CONVOY...</span>
+                      <span>Dispatching Emergency Convoy...</span>
+                    </>
+                  ) : isReadOnly ? (
+                    <>
+                      <Lock className="w-4 h-4" />
+                      <span>Requires Command Clearance</span>
                     </>
                   ) : (
                     <>

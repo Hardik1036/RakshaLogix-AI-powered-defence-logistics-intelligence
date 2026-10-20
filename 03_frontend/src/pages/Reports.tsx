@@ -10,8 +10,11 @@ import {
 } from 'lucide-react';
 import { ServerLoader } from '../components/ServerLoader';
 
+import { useAppState } from '../context/AppStateContext';
+
 export const Reports: React.FC = () => {
   const { addToast } = useToast();
+  const { auditLogs: contextLogs } = useAppState();
 
   const [logs, setLogs] = useState<AuditLogEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -19,15 +22,19 @@ export const Reports: React.FC = () => {
 
   useEffect(() => {
     fetchAuditLogs();
-  }, []);
+  }, [contextLogs]);
 
   const fetchAuditLogs = async () => {
     try {
       setLoading(true);
       const res = await api.getAuditLogs();
-      setLogs(res);
+      // Merge contextLogs (which contains newly dispatched convoys & acks) at the top
+      const existingIds = new Set(contextLogs.map((l) => l.id));
+      const combined = [...contextLogs, ...res.filter((l) => !existingIds.has(l.id))];
+      setLogs(combined);
     } catch {
-      addToast('Failed to fetch audit records', 'error');
+      setLogs(contextLogs);
+      addToast('Loaded audit records from local session cache', 'info');
     } finally {
       setLoading(false);
     }

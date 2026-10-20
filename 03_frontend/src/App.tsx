@@ -4,6 +4,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
 import { SidebarProvider } from './context/SidebarContext';
+import { AppStateProvider } from './context/AppStateContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Layout } from './components/Layout';
 
@@ -22,8 +23,9 @@ export const App: React.FC = () => {
     <ThemeProvider>
       <ToastProvider>
         <AuthProvider>
-          <SidebarProvider>
-            <BrowserRouter>
+          <AppStateProvider>
+            <SidebarProvider>
+              <BrowserRouter>
               <Routes>
                 {/* Public Authentication Route */}
                 <Route path="/login" element={<Login />} />
@@ -48,9 +50,10 @@ export const App: React.FC = () => {
               </Routes>
             </BrowserRouter>
           </SidebarProvider>
-        </AuthProvider>
-      </ToastProvider>
-    </ThemeProvider>
+        </AppStateProvider>
+      </AuthProvider>
+    </ToastProvider>
+  </ThemeProvider>
   );
 };
 
