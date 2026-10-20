@@ -317,7 +317,7 @@ export const Inventory: React.FC = () => {
                           }}
                           className="px-3 py-1 rounded bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold border border-slate-300 dark:border-slate-700 transition-all inline-flex items-center gap-1"
                         >
-                          <span>View Details</span>
+                          <span>[View Unit Details]</span>
                           <ChevronRight className="w-3 h-3" />
                         </button>
                       </td>
@@ -333,7 +333,7 @@ export const Inventory: React.FC = () => {
             SLIDE-OVER DRAWER: Secondary telemetry, Buffer Bar, 14-Day Ledger & Emergency Dispatch
             ========================================================================= */}
         {selectedUnitId && (
-          <div className="xl:col-span-4 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl p-5 flex flex-col gap-4 transition-all">
+          <div className="xl:col-span-4 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl p-5 flex flex-col gap-4 transition-all tactical-drawer-enter">
             {/* Drawer Header */}
             <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2">

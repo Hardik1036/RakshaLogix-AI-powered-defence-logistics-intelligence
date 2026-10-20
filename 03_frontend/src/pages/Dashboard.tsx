@@ -10,9 +10,7 @@ import {
   Radio, 
   Snowflake, 
   Bot, 
-  Flame, 
   Compass, 
-  BatteryCharging, 
   CheckCheck, 
   Edit3, 
   ShieldAlert, 
@@ -20,8 +18,7 @@ import {
   X,
   RefreshCw,
   ExternalLink,
-  ChevronRight,
-  ShieldCheck
+  ChevronRight
 } from 'lucide-react';
 import { ServerLoader } from '../components/ServerLoader';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
@@ -29,15 +26,16 @@ import L from 'leaflet';
 import { useTheme } from '../context/ThemeContext';
 import { formatProbability } from '../api';
 
-const createMiniPin = (color: string, label: string, isBlocked: boolean = false) => {
+const createMiniPin = (color: string, label: string, isBlocked: boolean = false, isTarget: boolean = false) => {
   return L.divIcon({
     className: 'custom-mini-tactical-pin',
     html: `
       <div style="display:flex; flex-direction:column; align-items:center; transform: translate(-50%, -100%);">
-        <div style="background-color:${color}; width:13px; height:13px; border-radius:2px; border:1.5px solid #fff; box-shadow:0 0 8px ${color}; display:flex; align-items:center; justify-content:center;">
-          ${isBlocked ? '<span style="color:#fff; font-size:10px; font-weight:bold; line-height:1;">✕</span>' : '<div style="width:3px; height:3px; background:#fff; border-radius:1px;"></div>'}
+        <div style="background-color:${color}; width:14px; height:14px; border-radius:2px; border:1.5px solid #fff; box-shadow:0 0 10px ${color}; display:flex; align-items:center; justify-content:center; position:relative;">
+          ${isTarget ? '<span class="animate-ping" style="position:absolute; inset:-4px; border-radius:50%; background:rgba(239,68,68,0.7);"></span>' : ''}
+          ${isBlocked ? '<span style="color:#fff; font-size:10px; font-weight:900; line-height:1;">✕</span>' : '<div style="width:4px; height:4px; background:#fff; border-radius:1px;"></div>'}
         </div>
-        <div style="margin-top:2px; background:rgba(2,6,23,0.9); border:1px solid ${color}; color:#fff; font-family:'JetBrains Mono',monospace; font-size:8px; font-weight:bold; padding:1px 3px; border-radius:2px; white-space:nowrap;">
+        <div style="margin-top:2px; background:rgba(2,6,23,0.92); border:1px solid ${color}; color:#fff; font-family:'JetBrains Mono',monospace; font-size:8px; font-weight:bold; padding:1px 4px; border-radius:2px; white-space:nowrap; box-shadow:0 2px 4px rgba(0,0,0,0.6);">
           ${label}
         </div>
       </div>
@@ -48,28 +46,26 @@ const createMiniPin = (color: string, label: string, isBlocked: boolean = false)
 };
 
 const miniMapNodes = [
-  { id: 'KARGIL', name: 'Kargil Depot [UNIT_02]', pos: [34.55, 76.13] as [number, number], color: '#10b981', details: 'Forward Depot // 94,000L' },
-  { id: 'FOB_CHARLIE', name: 'FOB Charlie [UNIT_03]', pos: [34.62, 76.32] as [number, number], color: '#ef4444', details: 'CRITICAL // Fuel Exhaustion T-34h' },
-  { id: 'ZOJI_LA', name: 'Zoji La Pass [CLOSED]', pos: [34.28, 75.48] as [number, number], color: '#ef4444', details: 'BLOCKED // Avalanche 142cm Pack', isBlocked: true },
-  { id: 'LEH_HQ', name: 'Leh Central Hub', pos: [34.16, 77.58] as [number, number], color: '#10b981', details: 'HQ 14 Corps Logistics Hub' },
+  { id: 'KARGIL', name: 'Kargil Depot [UNIT_02]', pos: [34.56, 76.13] as [number, number], color: '#10b981', details: 'Forward Supply Depot // 94,000L Reserve' },
+  { id: 'FOB_CHARLIE', name: 'FOB Charlie [UNIT_03]', pos: [35.20, 77.20] as [number, number], color: '#ef4444', details: 'CRITICAL // Fuel Stockout T-34h', isTarget: true },
+  { id: 'PASS_ECHO', name: 'Pass Echo [BLOCKED]', pos: [34.80, 76.90] as [number, number], color: '#ef4444', details: 'BLOCKED // Blizzard 85mm Snowfall (Cutoff in 22h)', isBlocked: true },
+  { id: 'LEH_HQ', name: 'Leh HQ [UNIT_01]', pos: [34.15, 77.58] as [number, number], color: '#10b981', details: '14 Corps Logistic Hub & Command HQ' },
 ];
 
-const primaryCoords: [number, number][] = [
-  [34.15, 74.80],
-  [34.30, 75.35],
-  [34.42, 75.75],
-  [34.55, 76.13],
-  [34.35, 76.80],
-  [34.16, 77.58],
+// Blocked Primary Route through Pass Echo
+const blockedPrimaryCoords: [number, number][] = [
+  [34.56, 76.13],
+  [34.80, 76.90],
+  [35.20, 77.20],
 ];
 
-const fallbackCoords: [number, number][] = [
-  [34.15, 74.80],
-  [33.95, 75.20],
-  [34.05, 75.65],
-  [34.45, 76.10],
-  [34.35, 76.80],
-  [34.16, 77.58],
+// Active A* Valley Bypass Corridor (all-weather valley axis avoiding Pass Echo)
+const activeBypassCoords: [number, number][] = [
+  [34.56, 76.13],
+  [34.35, 76.60],
+  [34.50, 77.00],
+  [34.85, 77.30],
+  [35.20, 77.20],
 ];
 
 export const Dashboard: React.FC = () => {
@@ -86,11 +82,13 @@ export const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [accepting, setAccepting] = useState(false);
+  const [convoyDispatched, setConvoyDispatched] = useState(false);
+  const [activeStep, setActiveStep] = useState<number>(3); // 1: PREDICTED, 2: ROUTE OPTIMISED, 3: OFFICER APPROVAL PENDING, 4: CONVOY IN TRANSIT
 
   // Modify Recommendation Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [overrideVehicles, setOverrideVehicles] = useState(4);
-  const [overridePass, setOverridePass] = useState('South Ridge Bypass (Pass Echo)');
+  const [overridePass, setOverridePass] = useState('Pass Echo // South Ridge Bypass (Valley Axis)');
 
   useEffect(() => {
     loadDashboard();
@@ -116,8 +114,8 @@ export const Dashboard: React.FC = () => {
     try {
       setAccepting(true);
       await api.createConvoy({
-        origin_depot: data.ai_recommendation.origin_depot,
-        destination: data.ai_recommendation.target_unit,
+        origin_depot: data.ai_recommendation.origin_depot || 'Kargil Forward Supply Depot',
+        destination: data.ai_recommendation.target_unit || 'FOB Charlie',
         vehicle_count: overrideVehicles,
         cargo_type: 'POL-88 Arctic Fuel',
         manifest_quantity: `${overrideVehicles * 5000} Litres`,
@@ -127,11 +125,13 @@ export const Dashboard: React.FC = () => {
       });
 
       api.dismissRecommendation();
+      setConvoyDispatched(true);
+      setActiveStep(4);
+
       setData((prev) =>
         prev
           ? {
               ...prev,
-              ai_recommendation: null,
               kpis: {
                 ...prev.kpis,
                 units_critical_reserve: Math.max(0, prev.kpis.units_critical_reserve - 1),
@@ -142,11 +142,11 @@ export const Dashboard: React.FC = () => {
       );
 
       addToast(
-        `Dispatch scheduled: ${overrideVehicles}x Tankers deployed to FOB Charlie via ${overridePass}`,
+        `✓ CONVOY DISPATCHED: ${overrideVehicles}x 5kL Fuel Tankers en route to FOB Charlie via ${overridePass}`,
         'success'
       );
     } catch {
-      addToast('Dispatch failed. Command connection interdicted.', 'error');
+      addToast('Dispatch failed. Command link interdicted.', 'error');
     } finally {
       setAccepting(false);
     }
@@ -154,7 +154,7 @@ export const Dashboard: React.FC = () => {
 
   const handleSaveOverride = () => {
     setIsModalOpen(false);
-    addToast(`Override parameters updated: ${overrideVehicles} Tankers via ${overridePass}`, 'info');
+    addToast(`Mission parameters updated: ${overrideVehicles} Tankers via ${overridePass}`, 'info');
   };
 
   if (loading && !data) {
@@ -174,11 +174,11 @@ export const Dashboard: React.FC = () => {
 
   const advisory = data?.ai_recommendation;
 
-  // Filter top 3 critical stockout units for Tier 3 watchlist
+  // Filter top 3 critical stockout units for Tier 3 watchlist with standardized calculations
   const top3Watchlist: ForwardReserveItem[] = data?.forward_reserves
     ? [...data.forward_reserves].sort((a, b) => a.runway_days - b.runway_days).slice(0, 3)
     : [
-        { sku: 'POL-88 Arctic Diesel', location: 'FOB Charlie (Tiger Post)', on_hand: '4,200 L', daily_burn: '1,250 L/d', runway_days: 1.4, status: 'CRITICAL' },
+        { sku: 'POL-88 Arctic Diesel', location: 'FOB Charlie (Tiger Post)', on_hand: '320 L', daily_burn: '235 L/d', runway_days: 1.4, status: 'CRITICAL' },
         { sku: 'Medical Oxygen Cyl.', location: 'Siachen Base Camp', on_hand: '18 Cyl', daily_burn: '6 Cyl/d', runway_days: 2.1, status: 'CRITICAL' },
         { sku: '155mm HE Bofors Shells', location: 'Dras High-Ridge CP', on_hand: '142 Rds', daily_burn: '48 Rds/d', runway_days: 2.9, status: 'CRITICAL' },
       ];
@@ -190,11 +190,11 @@ export const Dashboard: React.FC = () => {
         <div className="flex flex-wrap items-center gap-2.5">
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-200/80 dark:bg-slate-800/80 text-slate-800 dark:text-cyan-400 font-mono text-[11px] font-bold uppercase tracking-wider border border-slate-300 dark:border-slate-700/80">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            SECTOR-04 // LIVE TELEMETRY
+            SECTOR-04 // 14 CORPS LIVE TELEMETRY
           </span>
           <span className="text-slate-500 font-mono text-[11px] tabular-nums">GRID 34°32'N 76°08'E</span>
           <span className="hidden md:inline text-slate-400 dark:text-slate-600 font-mono">•</span>
-          <span className="hidden md:inline text-slate-500 font-mono text-[11px]">DEFCON-2</span>
+          <span className="hidden md:inline text-rose-500 font-mono text-[11px] font-bold">DEFCON-2 OPERATIONAL</span>
         </div>
 
         <div className="flex items-center gap-2">
@@ -202,7 +202,7 @@ export const Dashboard: React.FC = () => {
             type="button"
             onClick={loadDashboard}
             disabled={refreshing}
-            className="px-3 py-1.5 rounded bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-mono text-xs font-semibold border border-slate-300 dark:border-slate-700/80 transition-all flex items-center gap-1.5"
+            className="px-3 py-1.5 rounded bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-mono text-xs font-semibold border border-slate-300 dark:border-slate-700/80 transition-all flex items-center gap-1.5 active:scale-95"
             title="Refresh Realtime Data"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-cyan-500' : ''}`} />
@@ -264,11 +264,11 @@ export const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* KPI 3: 24h Deficit Alerts (Amber Accent) */}
+        {/* KPI 3: 24h Shortage Alerts (Amber Accent) */}
         <div className="p-4 rounded-md bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 border-l-4 border-l-amber-500 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between mb-1">
             <span className="font-mono text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 tracking-wider">
-              24h Deficit Alerts
+              24h Shortage Alerts
             </span>
             <span className="px-1.5 py-0.5 rounded font-mono text-[9px] font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30">
               PENDING
@@ -303,11 +303,11 @@ export const Dashboard: React.FC = () => {
               {kpis.closed_passes.toString().padStart(2, '0')}
             </span>
             <span className="font-mono text-xs text-cyan-600 dark:text-cyan-400 font-medium">
-              Zoji La &amp; Khardung
+              Pass Echo &amp; Zoji La
             </span>
           </div>
           <div className="pt-2 border-t border-slate-100 dark:border-slate-800/50 flex items-center justify-between font-mono text-[10px] text-slate-500 dark:text-slate-400">
-            <span>Alt Corridor Active</span>
+            <span>A* Bypass Corridors Engaged</span>
             <Snowflake className="w-3.5 h-3.5 text-cyan-500" />
           </div>
         </div>
@@ -315,15 +315,16 @@ export const Dashboard: React.FC = () => {
 
       {/* =========================================================================
           TIER 2: CENTERPIECE HERO — HUMAN-IN-THE-LOOP AI ADVISORY CARD
-          Clear focal point, generous whitespace (p-6), max 3 causal factor pills
+          Clear focal point, generous whitespace (p-6), heartbeat pulse animation
+          WHAT happened, WHY (causal factors), QUICK ACTION ([Accept] / [Modify])
           ========================================================================= */}
-      {advisory ? (
-        <div className="p-6 rounded-lg bg-white dark:bg-slate-900/80 border-2 border-rose-500/50 dark:border-rose-500/40 shadow-lg relative overflow-hidden transition-all">
+      {advisory && !convoyDispatched ? (
+        <div className="p-6 rounded-lg bg-white dark:bg-slate-900/90 border-2 border-rose-500/60 dark:border-rose-500/60 shadow-xl relative overflow-hidden transition-all tactical-critical-pulse">
           {/* Top Status Header */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
             <div className="flex flex-col gap-1.5">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-rose-600 text-white font-mono text-[10px] font-bold tracking-wider">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-rose-600 text-white font-mono text-[10px] font-bold tracking-wider shadow-sm animate-pulse">
                   <Bot className="w-3.5 h-3.5" />
                   CRITICAL AI ADVISORY
                 </span>
@@ -342,19 +343,24 @@ export const Dashboard: React.FC = () => {
                 >
                   RUNWAY: <span className="tabular-nums">{advisory.days_of_supply}d</span> ({advisory.time_to_critical})
                 </span>
-                {advisory.anomaly_flag && (
-                  <span className="px-2 py-0.5 rounded bg-amber-500/15 text-amber-700 dark:text-amber-400 font-mono text-[11px] font-bold border border-amber-500/40 flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
-                    Anomaly Flagged
-                  </span>
-                )}
               </div>
-              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mt-1">
-                {advisory.recommendation_text}
-              </h2>
-              {/* p10 / p50 / p90 Uncertainty Bounds & Formula Reconciliation */}
+
+              {/* 1. WHAT HAPPENED — Clear Military Action Statement */}
+              <div className="mt-2">
+                <span className="font-mono text-[10px] uppercase font-bold text-rose-600 dark:text-rose-400 tracking-wider">
+                  [WHAT HAPPENED]
+                </span>
+                <h2 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white">
+                  FOB Charlie (UNIT_03) Fuel drops from 4.2d static buffer to 34h (1.4d) critical stockout.
+                </h2>
+                <p className="text-xs text-slate-600 dark:text-slate-400 font-mono mt-0.5">
+                  Emergency dispatch of {overrideVehicles}x 5kL Tankers (20,000L POL-88) required from Kargil Supply Depot before Pass Echo weather interdiction.
+                </p>
+              </div>
+
+              {/* Stochastic Uncertainty Bounds */}
               <div className="flex flex-wrap items-center gap-3 font-mono text-[11px] text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-950/60 px-3 py-1.5 rounded border border-slate-200 dark:border-slate-800 mt-2">
-                <span className="font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">Stochastic Demand Bounds:</span>
+                <span className="font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">Demand Forecast:</span>
                 <span>p10: <strong className="text-emerald-600 dark:text-emerald-400 tabular-nums">1,600 L</strong></span>
                 <span>•</span>
                 <span>p50: <strong className="text-cyan-600 dark:text-cyan-400 tabular-nums">2,050 L</strong></span>
@@ -362,76 +368,109 @@ export const Dashboard: React.FC = () => {
                 <span>p90: <strong className="text-rose-600 dark:text-rose-400 tabular-nums">2,500 L</strong></span>
                 <span className="hidden sm:inline text-slate-400">•</span>
                 <span className="hidden sm:inline text-slate-500 text-[10px]">
-                  Depletion: 320 L / 235 L/d = 1.4d (1.1d usable excl. 15% reserve)
+                  Depletion: 320 L / 235 L/d = 1.4d gross (1.1d usable excl. 15% reserve)
                 </span>
               </div>
             </div>
 
             <div className="flex items-center gap-3 self-start md:self-auto shrink-0">
-              <div className="px-3.5 py-2 bg-slate-50 dark:bg-slate-950/70 rounded border border-slate-200 dark:border-slate-800 flex flex-col items-end">
+              <div className="px-4 py-2.5 bg-slate-50 dark:bg-slate-950/80 rounded-md border border-slate-200 dark:border-slate-800 flex flex-col items-end shadow-inner">
                 <span className="font-mono text-[9px] uppercase text-slate-500 dark:text-slate-400 font-bold">
                   Time-To-Critical
                 </span>
-                <span className="font-mono text-base font-bold text-rose-600 dark:text-rose-400 tabular-nums">
+                <span className="font-mono text-lg font-extrabold text-rose-600 dark:text-rose-400 tabular-nums">
                   {advisory.time_to_critical}
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Center 3 Causal Factor Pills */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 my-5">
-            {/* Pill 1: Consumption Surge */}
-            <div className="p-3.5 rounded-md bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800/80 flex items-start gap-3">
-              <div className="p-2 rounded bg-rose-500/10 text-rose-500 shrink-0 mt-0.5">
-                <Flame className="w-4 h-4" />
+          {/* 2. WHY — High-Contrast Causal Factor Pills */}
+          <div className="mt-4 mb-5">
+            <span className="font-mono text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 tracking-wider block mb-2">
+              [WHY — ROOT CAUSAL FACTORS]
+            </span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+              {/* Factor 1: Blizzard Cold Snap */}
+              <div className="p-3 rounded-md bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/50 flex items-center gap-2.5">
+                <span className="text-lg">❄️</span>
+                <div>
+                  <div className="font-bold text-xs text-rose-900 dark:text-rose-200">
+                    -18°C Blizzard (2x Burn)
+                  </div>
+                  <div className="font-mono text-[10px] text-rose-700 dark:text-rose-400">
+                    Genset duty cycle 94%
+                  </div>
+                </div>
               </div>
-              <div className="min-w-0">
-                <div className="font-mono text-[10px] text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">
-                  Consumption Surge
+
+              {/* Factor 2: Pass Echo Interdiction */}
+              <div className="p-3 rounded-md bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 flex items-center gap-2.5">
+                <span className="text-lg">🚧</span>
+                <div>
+                  <div className="font-bold text-xs text-amber-900 dark:text-amber-200">
+                    Pass Echo Cut in 22h
+                  </div>
+                  <div className="font-mono text-[10px] text-amber-700 dark:text-amber-400">
+                    85mm snowfall / Avalanche
+                  </div>
                 </div>
-                <div className="font-bold text-xs text-slate-900 dark:text-slate-100 mt-0.5">
-                  1,250 L/d (+101.6% Spike)
+              </div>
+
+              {/* Factor 3: Hybrid Gate Trigger */}
+              <div className="p-3 rounded-md bg-cyan-50 dark:bg-cyan-950/30 border border-cyan-200 dark:border-cyan-900/50 flex items-center gap-2.5">
+                <span className="text-lg">📊</span>
+                <div>
+                  <div className="font-bold text-xs text-cyan-900 dark:text-cyan-200">
+                    Hybrid Gate: 78.0% Risk
+                  </div>
+                  <div className="font-mono text-[10px] text-cyan-700 dark:text-cyan-400">
+                    &lt;=48h runway threshold tripped
+                  </div>
                 </div>
-                <div className="font-mono text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 truncate">
-                  -28°C cold snap • Genset duty cycle 94%
+              </div>
+
+              {/* Factor 4: Isolation Forest Anomaly */}
+              <div className="p-3 rounded-md bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-900/50 flex items-center gap-2.5">
+                <span className="text-lg animate-bounce">⚠️</span>
+                <div>
+                  <div className="font-bold text-xs text-purple-900 dark:text-purple-200">
+                    ANOMALOUS CONSUMPTION
+                  </div>
+                  <div className="font-mono text-[10px] text-purple-700 dark:text-purple-400">
+                    Isolation Forest Score: 0.89
+                  </div>
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* Pill 2: Route Threat */}
-            <div className="p-3.5 rounded-md bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800/80 flex items-start gap-3">
-              <div className="p-2 rounded bg-amber-500/10 text-amber-500 shrink-0 mt-0.5">
-                <Snowflake className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="font-mono text-[10px] text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">
-                  Route Threat
-                </div>
-                <div className="font-bold text-xs text-slate-900 dark:text-slate-100 mt-0.5">
-                  Zoji La Closure in 22h
-                </div>
-                <div className="font-mono text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 truncate">
-                  Avalanche risk High • Bypass required
-                </div>
-              </div>
+          {/* 4-Step Animated Mission Progress Tracker */}
+          <div className="p-3.5 rounded-md bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80 mb-5">
+            <div className="flex items-center justify-between mb-2">
+              <span className="font-mono text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                EXECUTION PIPELINE PROGRESSION
+              </span>
+              <span className="font-mono text-[10px] font-semibold text-cyan-600 dark:text-cyan-400">
+                STEP {activeStep} OF 4
+              </span>
             </div>
-
-            {/* Pill 3: Exhaustion Point */}
-            <div className="p-3.5 rounded-md bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800/80 flex items-start gap-3">
-              <div className="p-2 rounded bg-rose-500/10 text-rose-500 shrink-0 mt-0.5">
-                <BatteryCharging className="w-4 h-4" />
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 font-mono text-xs">
+              <div className={`p-2 rounded border flex items-center gap-2 transition-all ${activeStep >= 1 ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-700 dark:text-emerald-300' : 'bg-slate-100 dark:bg-slate-900 border-slate-300 dark:border-slate-800 text-slate-400'}`}>
+                <span className="w-4 h-4 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center font-bold text-[10px]">✓</span>
+                <span className="font-bold text-[11px]">1. PREDICTED</span>
               </div>
-              <div className="min-w-0">
-                <div className="font-mono text-[10px] text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">
-                  Exhaustion Point
-                </div>
-                <div className="font-bold text-xs text-slate-900 dark:text-slate-100 mt-0.5">
-                  Dry Tanks in 34 Hours ({formatProbability(advisory.stockout_risk)})
-                </div>
-                <div className="font-mono text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 truncate">
-                  Zero buffer • Radar blackout threat
-                </div>
+              <div className={`p-2 rounded border flex items-center gap-2 transition-all ${activeStep >= 2 ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-700 dark:text-emerald-300' : 'bg-slate-100 dark:bg-slate-900 border-slate-300 dark:border-slate-800 text-slate-400'}`}>
+                <span className="w-4 h-4 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center font-bold text-[10px]">✓</span>
+                <span className="font-bold text-[11px]">2. ROUTE OPTIMISED</span>
+              </div>
+              <div className={`p-2 rounded border flex items-center gap-2 transition-all ${activeStep >= 3 ? 'bg-amber-500/15 border-amber-500/50 text-amber-800 dark:text-amber-300' : 'bg-slate-100 dark:bg-slate-900 border-slate-300 dark:border-slate-800 text-slate-400'}`}>
+                <span className="w-4 h-4 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center font-bold text-[10px]">3</span>
+                <span className="font-bold text-[11px]">3. OFFICER APPROVAL</span>
+              </div>
+              <div className={`p-2 rounded border flex items-center gap-2 transition-all ${activeStep >= 4 ? 'bg-emerald-500/20 border-emerald-500 text-emerald-700 dark:text-emerald-300' : 'bg-slate-100 dark:bg-slate-900 border-slate-300 dark:border-slate-800 text-slate-400'}`}>
+                <span className="w-4 h-4 rounded-full bg-slate-300 dark:bg-slate-700 text-slate-800 dark:text-slate-200 flex items-center justify-center font-bold text-[10px]">4</span>
+                <span className="font-bold text-[11px]">4. CONVOY IN TRANSIT</span>
               </div>
             </div>
           </div>
@@ -443,7 +482,7 @@ export const Dashboard: React.FC = () => {
                 <span className="text-[10px] uppercase text-slate-500 dark:text-slate-400 block font-bold">
                   Recommended Corridor
                 </span>
-                <span className="font-semibold text-slate-900 dark:text-slate-200">
+                <span className="font-bold text-emerald-600 dark:text-emerald-400">
                   {overridePass}
                 </span>
               </div>
@@ -459,7 +498,7 @@ export const Dashboard: React.FC = () => {
               <div className="hidden sm:block h-6 w-px bg-slate-300 dark:bg-slate-700"></div>
               <div>
                 <span className="text-[10px] uppercase text-slate-500 dark:text-slate-400 block font-bold">
-                  Target Destination
+                  Target Unit
                 </span>
                 <span className="font-semibold text-slate-900 dark:text-slate-200">
                   {advisory.target_unit} [UNIT_03]
@@ -468,38 +507,38 @@ export const Dashboard: React.FC = () => {
             </div>
 
             <div className="text-[11px] text-slate-600 dark:text-slate-400">
-              Payload: <strong className="text-slate-900 dark:text-slate-200 tabular-nums">{overrideVehicles * 5000}L POL-88</strong> ({overrideVehicles} Tankers)
+              Payload: <strong className="text-slate-900 dark:text-slate-200 tabular-nums">{overrideVehicles * 5000}L POL-88</strong> ({overrideVehicles} Tankers + 2x BMP-2 QRF)
             </div>
           </div>
 
-          {/* Action Footer: Clear, high signal-to-noise button controls */}
+          {/* 3. QUICK ACTION — Prominent Human-in-the-Loop CTA Buttons */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
             <div className="flex items-center gap-2 font-mono text-xs text-slate-600 dark:text-slate-400">
               <ShieldAlert className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
-              <span>Command authorization required [AUTH_ROLE: MAJ_LOGIX_HQ]</span>
+              <span>Human-in-the-Loop clearance required before dispatch</span>
             </div>
 
             <div className="flex items-center gap-3">
-              {/* Modify Recommendation (Slate Outline) */}
+              {/* Modify Mission Button */}
               <button
                 type="button"
                 onClick={() => setIsModalOpen(true)}
-                className="px-4 py-2 rounded-md border border-slate-300 hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 font-mono text-xs font-semibold transition-all flex items-center gap-1.5 shadow-xs"
+                className="px-4 py-2.5 rounded-md border border-slate-300 hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 font-mono text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
               >
-                <Edit3 className="w-3.5 h-3.5" />
-                <span>Modify Recommendation</span>
+                <Edit3 className="w-4 h-4 text-amber-500" />
+                <span>[✎ Modify Mission]</span>
               </button>
 
-              {/* Accept Recommendation (Emerald Primary) */}
+              {/* Accept & Dispatch Convoy (Large Emerald Button) */}
               <button
                 type="button"
                 disabled={isReadOnly || accepting}
                 onClick={handleAcceptRecommendation}
-                title={isReadOnly ? 'Read-only role: command clearance required' : 'Dispatch convoy and authorize replenishment'}
-                className={`px-5 py-2 rounded-md font-mono text-xs font-bold transition-all shadow-md flex items-center gap-2 ${
+                title={isReadOnly ? 'Read-only role: commander clearance required' : 'Dispatch convoy and authorize replenishment'}
+                className={`px-6 py-2.5 rounded-md font-mono text-xs font-extrabold transition-all shadow-lg flex items-center gap-2 active:scale-95 ${
                   isReadOnly
                     ? 'bg-slate-300 dark:bg-slate-800 text-slate-500 dark:text-slate-500 cursor-not-allowed border border-slate-300 dark:border-slate-700'
-                    : 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 active:scale-95'
+                    : 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-emerald-500/20'
                 }`}
               >
                 {accepting ? (
@@ -510,7 +549,7 @@ export const Dashboard: React.FC = () => {
                 ) : (
                   <>
                     <CheckCheck className="w-4 h-4" />
-                    <span>Accept Recommendation</span>
+                    <span>[✓ Accept &amp; Dispatch Convoy]</span>
                   </>
                 )}
               </button>
@@ -518,47 +557,82 @@ export const Dashboard: React.FC = () => {
           </div>
         </div>
       ) : (
-        <div className="p-4 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300 font-mono text-xs flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-emerald-500" />
-            <span>AI Recommendation ADV-2026-089 authorized and added to Convoy Dispatch queue.</span>
+        /* Confirmed "✓ CONVOY DISPATCHED" Card State */
+        <div className="p-6 rounded-lg bg-emerald-500/10 border-2 border-emerald-500/40 text-emerald-900 dark:text-emerald-200 font-mono text-xs shadow-lg space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-emerald-500/20">
+            <div className="flex items-center gap-2.5">
+              <span className="w-7 h-7 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center font-bold text-sm shadow">
+                ✓
+              </span>
+              <div>
+                <h3 className="font-extrabold text-sm sm:text-base text-emerald-800 dark:text-emerald-300">
+                  ✓ CONVOY DISPATCHED — MISSION IN TRANSIT
+                </h3>
+                <p className="text-[11px] text-emerald-700 dark:text-emerald-400 mt-0.5">
+                  Payload: {overrideVehicles}x 5kL Tankers (20,000L POL-88) en route from Kargil Depot to FOB Charlie via {overridePass}.
+                </p>
+              </div>
+            </div>
+            <span className="px-2.5 py-1 rounded bg-emerald-500 text-slate-950 font-mono text-[10px] font-extrabold uppercase">
+              DEFCON-2 EXECUTED
+            </span>
           </div>
-          <span className="text-[10px] uppercase font-bold text-emerald-600 dark:text-emerald-400">
-            [STATUS: DISPATCH COMMENCED]
-          </span>
+
+          {/* Completed 4-Step Progress Tracker */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 font-mono text-xs">
+            <div className="p-2 rounded bg-emerald-500/20 border border-emerald-500/50 text-emerald-800 dark:text-emerald-200 flex items-center gap-2">
+              <span className="w-4 h-4 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center font-bold text-[10px]">✓</span>
+              <span className="font-bold text-[11px]">1. PREDICTED ✓</span>
+            </div>
+            <div className="p-2 rounded bg-emerald-500/20 border border-emerald-500/50 text-emerald-800 dark:text-emerald-200 flex items-center gap-2">
+              <span className="w-4 h-4 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center font-bold text-[10px]">✓</span>
+              <span className="font-bold text-[11px]">2. ROUTE OPTIMISED ✓</span>
+            </div>
+            <div className="p-2 rounded bg-emerald-500/20 border border-emerald-500/50 text-emerald-800 dark:text-emerald-200 flex items-center gap-2">
+              <span className="w-4 h-4 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center font-bold text-[10px]">✓</span>
+              <span className="font-bold text-[11px]">3. OFFICER APPROVED ✓</span>
+            </div>
+            <div className="p-2 rounded bg-emerald-500 text-slate-950 border border-emerald-400 flex items-center gap-2 shadow-sm animate-pulse">
+              <span className="w-4 h-4 rounded-full bg-slate-950 text-emerald-400 flex items-center justify-center font-bold text-[10px]">🚚</span>
+              <span className="font-extrabold text-[11px]">4. CONVOY IN TRANSIT</span>
+            </div>
+          </div>
         </div>
       )}
 
       {/* =========================================================================
           TIER 3: 2-COLUMN SPLIT (7 cols Left / 5 cols Right)
-          Left 7 cols: Mini-GIS Situational Viewport with link to full map
-          Right 5 cols: Compact "Top 3 Critical Stockout Watchlist" table
+          Left 7 cols: Interactive Mini-GIS Corridor Map (Blocked primary + animated A* bypass)
+          Right 5 cols: Compact "Priority Stockout Watchlist" with Red/Amber/Green progress bars
           ========================================================================= */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* LEFT 7 COLS: Mini-GIS Situational Viewport */}
+        {/* LEFT 7 COLS: Mini-GIS Corridor Map */}
         <div className="lg:col-span-7 rounded-md bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 p-5 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200 dark:border-slate-800/80">
               <div className="flex items-center gap-2">
                 <Compass className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
                 <h3 className="font-mono text-xs uppercase font-bold tracking-wider text-slate-900 dark:text-white">
-                  Mini-GIS Situational Viewport
+                  Mini-GIS Corridor Map // Sector 04
                 </h3>
               </div>
               <Link
                 to="/map"
-                className="font-mono text-xs text-cyan-600 hover:text-cyan-500 dark:text-cyan-400 dark:hover:text-cyan-300 font-semibold inline-flex items-center gap-1 transition-colors"
+                className="font-mono text-xs bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 px-2.5 py-1 rounded border border-cyan-500/30 font-bold inline-flex items-center gap-1.5 transition-all active:scale-95"
               >
-                <span>Full Tactical Map</span>
+                <span>[Full Map &amp; Optimise Route]</span>
                 <ExternalLink className="w-3.5 h-3.5" />
               </Link>
             </div>
 
-            {/* Live Keyless CartoDB Mini-GIS Map */}
-            <div className="relative w-full h-72 rounded border border-slate-200 dark:border-slate-800 overflow-hidden shadow-inner z-0">
+            {/* Live Keyless CartoDB Mini-GIS Map with Animated Bypass & Radar Sweep */}
+            <div className="relative w-full h-80 rounded border border-slate-200 dark:border-slate-800 overflow-hidden shadow-inner z-0">
+              {/* Radar Sweep Telemetry Overlay */}
+              <div className="radar-sweep-overlay pointer-events-none" />
+
               <MapContainer
-                center={[34.55, 77.15]}
-                zoom={7}
+                center={[34.75, 76.75]}
+                zoom={8}
                 scrollWheelZoom={false}
                 style={{ height: '100%', width: '100%' }}
               >
@@ -567,24 +641,25 @@ export const Dashboard: React.FC = () => {
                   url={tileUrl}
                 />
 
-                {/* Primary Route: Solid Emerald (#10b981) */}
+                {/* Primary Route: Blocked Pass Echo (Red Dashed Line) */}
                 <Polyline
-                  positions={primaryCoords}
+                  positions={blockedPrimaryCoords}
                   pathOptions={{
-                    color: '#10b981',
+                    color: '#ef4444',
                     weight: 3.5,
-                    opacity: 0.9,
+                    dashArray: '6, 6',
+                    opacity: 0.85,
                   }}
                 />
 
-                {/* Alternative Bypass Route: Dashed Amber (#f59e0b) */}
+                {/* Active A* Valley Bypass Corridor (Animated Glowing Green Line) */}
                 <Polyline
-                  positions={fallbackCoords}
+                  positions={activeBypassCoords}
                   pathOptions={{
-                    color: '#f59e0b',
-                    weight: 3,
-                    dashArray: '6, 6',
-                    opacity: 0.9,
+                    color: '#10b981',
+                    weight: 4.5,
+                    opacity: 0.95,
+                    className: 'convoy-route-animated',
                   }}
                 />
 
@@ -606,84 +681,101 @@ export const Dashboard: React.FC = () => {
               </MapContainer>
             </div>
 
-            {/* Radar Legend */}
+            {/* Corridor Map Legend */}
             <div className="grid grid-cols-3 gap-2 mt-3 font-mono text-[10px] text-slate-500 dark:text-slate-400">
               <div className="flex items-center gap-1.5">
-                <span className="w-3 h-0.5 bg-emerald-500"></span>
-                <span>Primary Route</span>
+                <span className="w-3.5 h-1 rounded bg-emerald-500"></span>
+                <span className="font-bold text-emerald-600 dark:text-emerald-400">A* Valley Bypass</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="w-3 h-0.5 border-t border-dashed border-amber-400"></span>
-                <span>South Ridge Bypass</span>
+                <span className="w-3.5 h-0.5 border-t-2 border-dashed border-rose-500"></span>
+                <span className="text-rose-500 font-bold">Pass Echo (Blocked)</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="text-rose-500 font-bold">✕</span>
-                <span>Pass Blocked</span>
+                <span className="text-rose-500 font-extrabold text-xs">✕</span>
+                <span>Interdicted Route</span>
               </div>
             </div>
           </div>
 
           <div className="pt-3 border-t border-slate-200 dark:border-slate-800/80 flex items-center justify-between mt-3 font-mono text-[11px] text-slate-500 dark:text-slate-400">
-            <span>TRACKED UNITS: <strong className="text-slate-800 dark:text-slate-200 tabular-nums">{kpis.active_convoys} CONVOYS</strong></span>
-            <span>MET FORECAST: <strong className="text-rose-600 dark:text-rose-400 font-semibold">-28°C BLIZZARD</strong></span>
+            <span>CORRIDOR: <strong className="text-emerald-600 dark:text-emerald-400 tabular-nums">KARGIL -&gt; FOB CHARLIE (48.4 KM)</strong></span>
+            <span>MET FORECAST: <strong className="text-rose-600 dark:text-rose-400 font-semibold">-18°C BLIZZARD</strong></span>
           </div>
         </div>
 
-        {/* RIGHT 5 COLS: Compact "Top 3 Critical Stockout Watchlist" Table */}
+        {/* RIGHT 5 COLS: Compact "Priority Stockout Watchlist" Table with Progress Bars */}
         <div className="lg:col-span-5 rounded-md bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 p-5 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200 dark:border-slate-800/80">
               <div className="flex items-center gap-2">
                 <AlertTriangle className="w-4 h-4 text-rose-500" />
                 <h3 className="font-mono text-xs uppercase font-bold tracking-wider text-slate-900 dark:text-white">
-                  Top 3 Critical Stockout Watchlist
+                  Priority Stockout Watchlist
                 </h3>
               </div>
               <span className="font-mono text-[10px] text-rose-600 dark:text-rose-400 font-bold uppercase">
-                PRIORITY TRIAGE
+                &lt; 72H RESERVES
               </span>
             </div>
 
-            {/* Watchlist Table */}
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse font-mono text-xs">
-                <thead>
-                  <tr className="border-b border-slate-200 dark:border-slate-800 text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                    <th className="py-2 px-1">UNIT / SKU</th>
-                    <th className="py-2 px-2 text-right" title="Days of Supply = Current Stock / Daily Burn Rate (1 decimal precision)">DAYS OF SUPPLY (STOCK / BURN)</th>
-                    <th className="py-2 px-2 text-right">ON-HAND</th>
-                    <th className="py-2 px-1 text-right">STATUS</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
-                  {top3Watchlist.map((item, index) => (
-                    <tr key={index} className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
-                      <td className="py-2.5 px-1">
-                        <div className="font-bold text-slate-900 dark:text-slate-200 truncate max-w-[140px]">
+            {/* Watchlist Table with Animated Progress Bars */}
+            <div className="space-y-3.5 font-mono">
+              {top3Watchlist.map((item, index) => {
+                // Color-coded runway thresholds: Red (<3d), Amber (3-7d), Green (>7d)
+                const isCritical = item.runway_days < 3.0;
+                const isWarning = item.runway_days >= 3.0 && item.runway_days <= 7.0;
+                const barColor = isCritical ? 'bg-rose-500' : isWarning ? 'bg-amber-500' : 'bg-emerald-500';
+                const textColor = isCritical ? 'text-rose-600 dark:text-rose-400' : isWarning ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400';
+                const badgeColor = isCritical
+                  ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border-rose-500/30'
+                  : isWarning
+                  ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30'
+                  : 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30';
+
+                // Bar width normalized to 10 days max
+                const barWidth = Math.min(100, Math.max(10, (item.runway_days / 10) * 100));
+
+                return (
+                  <div
+                    key={index}
+                    className="p-3 rounded-md bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700 transition-colors"
+                  >
+                    <div className="flex items-center justify-between mb-1.5">
+                      <div className="min-w-0 pr-2">
+                        <div className="font-bold text-xs text-slate-900 dark:text-slate-100 truncate">
                           {item.location}
                         </div>
-                        <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate max-w-[140px]">
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
                           {item.sku}
                         </div>
-                      </td>
-                      <td
-                        className="py-2.5 px-2 text-right font-bold tabular-nums text-rose-600 dark:text-rose-400 cursor-help"
-                        title={`${item.on_hand} on-hand / ${item.daily_burn} burn = ${item.runway_days.toFixed(1)} days of supply (Stock / Burn)`}
-                      >
-                        {item.runway_days.toFixed(1)}d
-                      </td>
-                      <td className="py-2.5 px-2 text-right text-slate-700 dark:text-slate-300 tabular-nums">
-                        {item.on_hand}
-                      </td>
-                      <td className="py-2.5 px-1 text-right">
-                        <span className="inline-block px-1.5 py-0.5 rounded text-[9px] font-bold bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30">
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className={`font-mono text-xs font-extrabold tabular-nums ${textColor}`}>
+                          {item.runway_days.toFixed(1)}d
+                        </span>
+                        <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold border ${badgeColor}`}>
                           {item.status}
                         </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                      </div>
+                    </div>
+
+                    {/* Animated Stock Runway Bar */}
+                    <div className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2 overflow-hidden my-1.5">
+                      <div
+                        className={`h-full rounded-full runway-progress-bar ${barColor}`}
+                        style={{ width: `${barWidth}%` }}
+                        title={`${item.on_hand} on-hand / ${item.daily_burn} daily burn = ${item.runway_days.toFixed(1)} days`}
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between text-[10px] text-slate-500 dark:text-slate-400 pt-1">
+                      <span>Stock: <strong className="text-slate-800 dark:text-slate-200 tabular-nums">{item.on_hand}</strong></span>
+                      <span>Burn: <strong className="text-slate-800 dark:text-slate-200 tabular-nums">{item.daily_burn}</strong></span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -693,8 +785,8 @@ export const Dashboard: React.FC = () => {
               to="/inventory"
               className="text-cyan-600 hover:text-cyan-500 dark:text-cyan-400 dark:hover:text-cyan-300 font-semibold inline-flex items-center gap-1 transition-colors"
             >
-              <span>View All 18 Forward Units</span>
-              <ChevronRight className="w-3 h-3" />
+              <span>View Full Inventory Matrix</span>
+              <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
         </div>

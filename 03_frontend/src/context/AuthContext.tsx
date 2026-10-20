@@ -8,6 +8,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (token: string, role: UserRole, username: string, name?: string) => void;
   logout: () => void;
+  switchRole: (newRole: UserRole) => void;
   isReadOnly: boolean;
 }
 
@@ -67,6 +68,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setToken(null);
   };
 
+  const switchRole = (newRole: UserRole) => {
+    const defaultUsernames: Record<UserRole, string> = {
+      CORPS_COMMANDER: 'commander_alpha',
+      LOGISTICS_OFFICER: 'logistics_bravo',
+      EDGE_READ_ONLY: 'edge_charlie',
+    };
+    const defaultNames: Record<UserRole, string> = {
+      CORPS_COMMANDER: 'Brig. K. Singh',
+      LOGISTICS_OFFICER: 'Maj. V. Rathore',
+      EDGE_READ_ONLY: 'Capt. C. Edge',
+    };
+    const newUsername = defaultUsernames[newRole] || 'commander_alpha';
+    const newName = defaultNames[newRole] || 'Maj. V. Rathore';
+
+    sessionStorage.setItem('user_role', newRole);
+    sessionStorage.setItem('user_name', newUsername);
+    sessionStorage.setItem('officer_name', newName);
+
+    setRole(newRole);
+    setUsername(newUsername);
+    setOfficerName(newName);
+  };
+
   const isExplicitLogout = sessionStorage.getItem('explicit_logout') === 'true';
   const isAuthenticated = Boolean(token) || (DEV_DISABLE_AUTH && !isExplicitLogout);
 
@@ -81,7 +105,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const isReadOnly = role === 'EDGE_READ_ONLY';
 
   return (
-    <AuthContext.Provider value={{ token, role, user, isAuthenticated, login, logout, isReadOnly }}>
+    <AuthContext.Provider value={{ token, role, user, isAuthenticated, login, logout, switchRole, isReadOnly }}>
       {children}
     </AuthContext.Provider>
   );

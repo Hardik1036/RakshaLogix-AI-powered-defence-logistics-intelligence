@@ -60,7 +60,7 @@ export const Layout: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-100 dark:bg-[#0b0f19] text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors">
       <Navbar />
-      <div className="flex flex-1 pt-16 min-h-[calc(100vh-4rem)]">
+      <div className="flex flex-1 pt-20 min-h-[calc(100vh-5rem)]">
         <Sidebar />
         {/* Main Content Area: generous padding and max-w-[1600px] wrapper */}
         <main className="flex-1 min-w-0 p-4 md:p-6 overflow-y-auto">

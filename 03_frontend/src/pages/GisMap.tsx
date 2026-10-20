@@ -29,10 +29,30 @@ import L from 'leaflet';
 
 // Create tactical HTML DivIcon helpers
 const createTacticalPin = (statusColor: string, code: string, isDepot = false) => {
+  const isCritical = statusColor === '#ef4444';
   return L.divIcon({
     className: 'custom-tactical-pin',
     html: `
-      <div style="display:flex; flex-direction:column; align-items:center; transform: translate(-50%, -100%);">
+      <div style="display:flex; flex-direction:column; align-items:center; transform: translate(-50%, -100%); position:relative;">
+        ${
+          isCritical
+            ? `
+          <div style="
+            position: absolute;
+            top: ${isDepot ? '9px' : '7.5px'};
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid #ef4444;
+            animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+            pointer-events: none;
+            opacity: 0.8;
+          "></div>
+        `
+            : ''
+        }
         <div style="
           background-color: ${isDepot ? '#020617' : statusColor};
           width: ${isDepot ? '18px' : '15px'};
@@ -43,6 +63,8 @@ const createTacticalPin = (statusColor: string, code: string, isDepot = false) =
           display: flex;
           align-items: center;
           justify-content: center;
+          position: relative;
+          z-index: 2;
         ">
           <div style="
             width: 5px;
@@ -63,6 +85,8 @@ const createTacticalPin = (statusColor: string, code: string, isDepot = false) =
           border-radius: 3px;
           white-space: nowrap;
           box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+          position: relative;
+          z-index: 2;
         ">
           ${code}
         </div>
@@ -428,8 +452,8 @@ export const GisMap: React.FC = () => {
   let activeAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
 
   if (basemapStyle === 'TOPO') {
-    activeTileUrl = 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png';
-    activeAttribution = 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> | &copy; <a href="https://opentopomap.org">OpenTopoMap</a>';
+    activeTileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    activeAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
   } else if (basemapStyle === 'LIGHT' || (basemapStyle === 'AUTO' && theme === 'light')) {
     activeTileUrl = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
     activeAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
@@ -646,6 +670,9 @@ export const GisMap: React.FC = () => {
 
       {/* Main Map Viewport */}
       <div className="w-full h-[650px] rounded-md overflow-hidden border border-slate-200 dark:border-slate-800/80 shadow-lg relative">
+        {/* Radar Sweep Telemetry Overlay */}
+        <div className="radar-sweep-overlay pointer-events-none" />
+
         <MapContainer
           center={[34.55, 77.15]}
           zoom={8}
@@ -737,6 +764,7 @@ export const GisMap: React.FC = () => {
                   color: '#10b981',
                   weight: 4,
                   opacity: 0.9,
+                  className: 'convoy-route-animated',
                 }}
               >
                 <Tooltip sticky>
@@ -824,6 +852,7 @@ export const GisMap: React.FC = () => {
                     weight: 3.5,
                     dashArray: '8, 8',
                     opacity: 0.95,
+                    className: 'convoy-route-animated',
                   }}
                 >
                   <Tooltip sticky>

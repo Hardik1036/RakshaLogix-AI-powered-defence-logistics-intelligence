@@ -60,7 +60,7 @@ export const Sidebar: React.FC = () => {
 
   return (
     <aside
-      className={`sticky top-16 h-[calc(100vh-4rem)] shrink-0 z-30 bg-slate-50/95 dark:bg-[#070d1f]/90 backdrop-blur-md border-r border-slate-200 dark:border-slate-800/80 flex flex-col justify-between transition-[width] duration-200 ease-in-out select-none ${
+      className={`sticky top-20 h-[calc(100vh-5rem)] shrink-0 z-30 bg-slate-50/95 dark:bg-[#070d1f]/90 backdrop-blur-md border-r border-slate-200 dark:border-slate-800/80 flex flex-col justify-between transition-[width] duration-200 ease-in-out select-none ${
         isCollapsed ? 'w-[72px]' : 'w-[280px]'
       }`}
     >
