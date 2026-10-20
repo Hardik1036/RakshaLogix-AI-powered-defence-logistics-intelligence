@@ -19,30 +19,35 @@ const DEV_DISABLE_AUTH = import.meta.env.VITE_DEV_DISABLE_AUTH !== 'false';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [token, setToken] = useState<string | null>(() => {
-    return sessionStorage.getItem('access_token');
+    return sessionStorage.getItem('access_token') || localStorage.getItem('access_token');
   });
 
   const [role, setRole] = useState<UserRole>(() => {
-    const savedRole = sessionStorage.getItem('user_role') as UserRole;
+    const savedRole = (sessionStorage.getItem('user_role') || localStorage.getItem('user_role')) as UserRole;
     if (savedRole) return savedRole;
     return 'CORPS_COMMANDER';
   });
 
   const [username, setUsername] = useState<string>(() => {
-    return sessionStorage.getItem('user_name') || 'MAJ_RATHORE';
+    return sessionStorage.getItem('user_name') || localStorage.getItem('user_name') || 'commander_alpha';
   });
 
   const [officerName, setOfficerName] = useState<string>(() => {
-    return sessionStorage.getItem('officer_name') || 'Maj. V. Rathore';
+    return sessionStorage.getItem('officer_name') || localStorage.getItem('officer_name') || 'Brig. K. Singh';
   });
 
-  // Keep sessionStorage in sync
+  // Keep sessionStorage and localStorage in sync
   useEffect(() => {
     if (token) {
       sessionStorage.setItem('access_token', token);
       sessionStorage.setItem('user_role', role);
       sessionStorage.setItem('user_name', username);
       sessionStorage.setItem('officer_name', officerName);
+
+      localStorage.setItem('access_token', token);
+      localStorage.setItem('user_role', role);
+      localStorage.setItem('user_name', username);
+      localStorage.setItem('officer_name', officerName);
     }
   }, [token, role, username, officerName]);
 
@@ -52,6 +57,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     sessionStorage.setItem('user_name', newUsername);
     const resolvedName = newName || (newRole === 'CORPS_COMMANDER' ? 'Brig. K. Singh' : newRole === 'LOGISTICS_OFFICER' ? 'Maj. V. Rathore' : 'Capt. C. Edge');
     sessionStorage.setItem('officer_name', resolvedName);
+    sessionStorage.removeItem('explicit_logout');
+
+    localStorage.setItem('access_token', newToken);
+    localStorage.setItem('user_role', newRole);
+    localStorage.setItem('user_name', newUsername);
+    localStorage.setItem('officer_name', resolvedName);
+    localStorage.removeItem('explicit_logout');
     
     setToken(newToken);
     setRole(newRole);
@@ -65,6 +77,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     sessionStorage.removeItem('user_name');
     sessionStorage.removeItem('officer_name');
     sessionStorage.setItem('explicit_logout', 'true');
+
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('user_role');
+    localStorage.removeItem('user_name');
+    localStorage.removeItem('officer_name');
+    localStorage.setItem('explicit_logout', 'true');
     setToken(null);
   };
 

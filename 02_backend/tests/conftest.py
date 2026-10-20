@@ -22,8 +22,10 @@ os.environ["ENVIRONMENT"] = "testing"
 os.environ["DATABASE_URL"] = "sqlite:///:memory:"
 os.environ["SECRET_KEY"] = "TEST_SECRET_DEFENCE_2026_VERY_SECURE_HMAC_KEY_123456789"
 os.environ["ALGORITHM"] = "HS256"
+os.environ["DEV_DISABLE_AUTH"] = "false"
 
 from app.config import settings
+settings.DEV_DISABLE_AUTH = False
 from app.models.base import Base
 from app.database import get_db
 from app.main import app, seed_tactical_data

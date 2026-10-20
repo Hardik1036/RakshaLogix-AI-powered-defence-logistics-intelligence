@@ -4,6 +4,8 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { Shield, Key, BadgeCheck, Eye, EyeOff, ArrowRight, Lock, Radio } from 'lucide-react';
 import { ServerLoader } from '../components/ServerLoader';
+import { api } from '../api';
+export { DEMO_USERS } from '../api';
 import type { UserRole } from '../types/auth';
 
 export const Login: React.FC = () => {
@@ -23,80 +25,49 @@ export const Login: React.FC = () => {
     setPassword(passVal);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const executeLogin = async (userVal: string, passVal: string, roleVal?: UserRole) => {
     setIsLoading(true);
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'https://rakshalogix-backend.onrender.com';
-      const useMock = import.meta.env.VITE_USE_MOCK === 'true';
-
-      if (!useMock) {
-        const response = await fetch(`${apiUrl}/api/v1/auth/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, password }),
-        });
-
-        if (response.status === 403) {
-          addToast('Permission Denied: Command clearance required', 'error');
-          setIsLoading(false);
-          return;
-        }
-
-        if (response.status === 401) {
-          addToast('Invalid tactical credentials. Access denied (401).', 'error');
-          setIsLoading(false);
-          return;
-        }
-
-        if (!response.ok) {
-          let msg = `Authentication error (${response.status})`;
-          try {
-            const errData = await response.json();
-            msg = errData.detail || msg;
-          } catch {
-            // ignore
-          }
-          addToast(msg, 'error');
-          setIsLoading(false);
-          return;
-        }
-
-        const data = await response.json();
-        const token = data.access_token;
-        const roleToUse: UserRole = (data.user?.role as UserRole) || selectedRole;
-        const officerName =
-          roleToUse === 'CORPS_COMMANDER'
-            ? 'Brig. K. Singh'
-            : roleToUse === 'LOGISTICS_OFFICER'
-            ? 'Maj. V. Rathore'
-            : 'Capt. C. Edge';
-
-        login(token, roleToUse, data.user?.username || username, officerName);
-        addToast(`Session authenticated: [${roleToUse}] ${officerName}`, 'success');
-        navigate('/dashboard');
-        return;
-      }
-
-      // Mock Mode fallback
-      const token = 'mock_jwt_token_' + Date.now();
-      const roleToUse: UserRole = selectedRole;
+      const data = await api.login(userVal, passVal);
+      const token = data.access_token;
+      const roleToUse: UserRole = (data.user?.role as UserRole) || roleVal || selectedRole;
       const officerName =
-        selectedRole === 'CORPS_COMMANDER'
+        roleToUse === 'CORPS_COMMANDER'
           ? 'Brig. K. Singh'
-          : selectedRole === 'LOGISTICS_OFFICER'
+          : roleToUse === 'LOGISTICS_OFFICER'
           ? 'Maj. V. Rathore'
           : 'Capt. C. Edge';
 
-      login(token, roleToUse, username, officerName);
+      // Store in both sessionStorage and localStorage for rock-solid session retention
+      sessionStorage.setItem('access_token', token);
+      sessionStorage.setItem('user_role', roleToUse);
+      sessionStorage.setItem('user_name', data.user?.username || userVal);
+      sessionStorage.setItem('officer_name', officerName);
+      sessionStorage.setItem('user', JSON.stringify(data.user));
+      sessionStorage.removeItem('explicit_logout');
+
+      localStorage.setItem('access_token', token);
+      localStorage.setItem('user_role', roleToUse);
+      localStorage.setItem('user_name', data.user?.username || userVal);
+      localStorage.setItem('officer_name', officerName);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      localStorage.removeItem('explicit_logout');
+
+      login(token, roleToUse, data.user?.username || userVal, officerName);
       addToast(`Session authenticated: [${roleToUse}] ${officerName}`, 'success');
       navigate('/dashboard');
-    } catch {
-      addToast('Authentication failed. Check tactical credentials.', 'error');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Authentication failed. Check tactical credentials.';
+      addToast(msg, 'error');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await executeLogin(username, password, selectedRole);
   };
 
   return (
@@ -258,10 +229,13 @@ export const Login: React.FC = () => {
               {/* Preset 1: Commander */}
               <button
                 type="button"
-                onClick={() => applyRolePreset('CORPS_COMMANDER', 'commander_alpha', 'Commander@DefSec2026!')}
-                className={`p-2.5 flex flex-col text-left transition border ${
+                onClick={() => {
+                  applyRolePreset('CORPS_COMMANDER', 'commander_alpha', 'Commander@DefSec2026!');
+                  executeLogin('commander_alpha', 'Commander@DefSec2026!', 'CORPS_COMMANDER');
+                }}
+                className={`p-2.5 flex flex-col text-left transition border cursor-pointer hover:brightness-110 active:scale-[0.98] ${
                   selectedRole === 'CORPS_COMMANDER'
-                    ? 'bg-slate-800 dark:bg-surface-container border-cyan-400'
+                    ? 'bg-slate-800 dark:bg-surface-container border-cyan-400 ring-1 ring-cyan-400/40'
                     : 'bg-slate-950 dark:bg-surface-container-lowest border-slate-700 hover:border-slate-500'
                 }`}
               >
@@ -270,7 +244,7 @@ export const Login: React.FC = () => {
                     Commander
                   </span>
                   <span className="font-mono text-[9px] text-emerald-300 px-1 bg-emerald-950/60 rounded">
-                    CMD
+                    1-CLICK ENTER
                   </span>
                 </div>
                 <span className="font-mono text-[10px] text-slate-300 truncate">
@@ -284,10 +258,13 @@ export const Login: React.FC = () => {
               {/* Preset 2: Logistics Officer */}
               <button
                 type="button"
-                onClick={() => applyRolePreset('LOGISTICS_OFFICER', 'logistics_bravo', 'Logistics@DefSec2026!')}
-                className={`p-2.5 flex flex-col text-left transition border ${
+                onClick={() => {
+                  applyRolePreset('LOGISTICS_OFFICER', 'logistics_bravo', 'Logistics@DefSec2026!');
+                  executeLogin('logistics_bravo', 'Logistics@DefSec2026!', 'LOGISTICS_OFFICER');
+                }}
+                className={`p-2.5 flex flex-col text-left transition border cursor-pointer hover:brightness-110 active:scale-[0.98] ${
                   selectedRole === 'LOGISTICS_OFFICER'
-                    ? 'bg-slate-800 dark:bg-surface-container border-amber-400'
+                    ? 'bg-slate-800 dark:bg-surface-container border-amber-400 ring-1 ring-amber-400/40'
                     : 'bg-slate-950 dark:bg-surface-container-lowest border-slate-700 hover:border-slate-500'
                 }`}
               >
@@ -296,7 +273,7 @@ export const Login: React.FC = () => {
                     Logistics
                   </span>
                   <span className="font-mono text-[9px] text-amber-300 px-1 bg-amber-950/60 rounded">
-                    HQ-14
+                    1-CLICK ENTER
                   </span>
                 </div>
                 <span className="font-mono text-[10px] text-slate-300 truncate">
@@ -310,10 +287,13 @@ export const Login: React.FC = () => {
               {/* Preset 3: Read-Only */}
               <button
                 type="button"
-                onClick={() => applyRolePreset('EDGE_READ_ONLY', 'edge_charlie', 'EdgeReadOnly@DefSec2026!')}
-                className={`p-2.5 flex flex-col text-left transition border ${
+                onClick={() => {
+                  applyRolePreset('EDGE_READ_ONLY', 'edge_charlie', 'EdgeReadOnly@DefSec2026!');
+                  executeLogin('edge_charlie', 'EdgeReadOnly@DefSec2026!', 'EDGE_READ_ONLY');
+                }}
+                className={`p-2.5 flex flex-col text-left transition border cursor-pointer hover:brightness-110 active:scale-[0.98] ${
                   selectedRole === 'EDGE_READ_ONLY'
-                    ? 'bg-slate-800 dark:bg-surface-container border-cyan-400'
+                    ? 'bg-slate-800 dark:bg-surface-container border-cyan-400 ring-1 ring-cyan-400/40'
                     : 'bg-slate-950 dark:bg-surface-container-lowest border-slate-700 hover:border-slate-500'
                 }`}
               >
@@ -322,7 +302,7 @@ export const Login: React.FC = () => {
                     Read-Only
                   </span>
                   <span className="font-mono text-[9px] text-cyan-300 px-1 bg-cyan-950/60 rounded">
-                    RO
+                    1-CLICK ENTER
                   </span>
                 </div>
                 <span className="font-mono text-[10px] text-slate-300 truncate">

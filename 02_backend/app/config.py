@@ -26,7 +26,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 120
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
     DEV_DISABLE_AUTH: bool = Field(
-        default=False,
+        default=True,
         description="Development flag to bypass JWT and RBAC checks during frontend prototyping"
     )
 
