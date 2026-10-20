@@ -226,7 +226,7 @@ npm run dev
 
 | Avatar | Team Member | Primary Role | Operational Responsibilities | GitHub Profile |
 | :---: | :--- | :--- | :--- | :---: |
-| <img src="https://github.com/Hardik1036.png" width="48" height="48" style="border-radius:50%"/> | **Hardik** | **Team Lead & Full-Stack Architect** | System Architecture, FastAPI Backend Orchestration, React HUD, PostGIS Integration & Deployment | [@Hardik1036](https://github.com/Hardik1036) |
+| <img src="https://github.com/Hardik1036.png" width="48" height="48" style="border-radius:50%"/> | **Hardik** | **Team Lead & Backend Architect** | System Architecture, FastAPI Backend Orchestration | [@Hardik1036](https://github.com/Hardik1036) |
 | <img src="https://github.com/identicons/app.png" width="48" height="48" style="border-radius:50%"/> | **Team Member 2** | **ML & Predictive Analytics Engineer** | 17-Feature Vector Pipeline, XGBoost Quantile Regressors ($P_{10}, P_{50}, P_{90}$), Anomaly Detection | [@username](https://github.com/) |
 | <img src="https://github.com/identicons/app.png" width="48" height="48" style="border-radius:50%"/> | **Team Member 3** | **GIS & Tactical Routing Specialist** | NetworkX A* / Dijkstra Mountain Pass Routing, PostGIS Spatial Indexing & Detour Calculation | [@username](https://github.com/) |
 | <img src="https://github.com/identicons/app.png" width="48" height="48" style="border-radius:50%"/> | **Team Member 4** | **UI/UX & Tactical Frontend Developer** | Military Glass HUD Components, Leaflet Map Integration, Recharts Visuals & Motion Graphics | [@username](https://github.com/) |
